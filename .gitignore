@@ -27,13 +27,11 @@ replay_pid*
 /out/
 build/
 target/
+/html/
 
 # ignore per progetti su netbeans maven
-/*/nbproject/private/
-/*/build/
-/*/dist/
-/*/html/
-/*/target/
+/nbproject/private/
+/target/
 
 # ignore per progetti su intellij
 .idea
