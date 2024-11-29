@@ -1,0 +1,26 @@
+@startuml
+
+class Contatto {
+    - String nome
+    - String cognome
+    - String[] numeri
+    - String[] emails
+    - byte[] fotoProfilo
+    - Set<String> tags
+
+    + Contatto(String nome, String cognome)
+    + String getNome()
+    + String getCognome()
+    + String[] getNumeri()
+    + String[] getEmails()
+    + byte[] getFotoProfilo()
+    + Set<String> getTags()
+    + void setNome(String nome)
+    + void setCognome(String cognome)
+    + void setNumeri(String[] numeri)
+    + void setEmails(String[] emails)
+    + void setFotoProfilo(byte[] fotoProfilo)
+    + void setTags(Set<String> tags)
+}
+
+@enduml
