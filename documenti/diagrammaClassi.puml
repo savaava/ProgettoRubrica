@@ -1,26 +1,86 @@
-@startuml
+@startuml DiagrammaDelleClassi
+skinparam linetype ortho
+left to right direction
 
-class Contatto {
-    - String nome
-    - String cognome
-    - String[] numeri
+class Contact {
+    - String name 
+    - String surname 
+    - String[] numbers
     - String[] emails
-    - byte[] fotoProfilo
+    - byte[] profilePicture
     - Set<String> tags
 
-    + Contatto(String nome, String cognome)
-    + String getNome()
-    + String getCognome()
-    + String[] getNumeri()
+    + Contact(String name, String surname)
+    + String getName()
+    + void setName(String name)
+    + String getSurname()
+    + void setSurname(String surname)
+    + String[] getNumbers()
+    + void setNumbers(String[] numbers)
     + String[] getEmails()
-    + byte[] getFotoProfilo()
-    + Set<String> getTags()
-    + void setNome(String nome)
-    + void setCognome(String cognome)
-    + void setNumeri(String[] numeri)
     + void setEmails(String[] emails)
-    + void setFotoProfilo(byte[] fotoProfilo)
+    + byte[] getProfilePicture()
+    + void setProfilePicture(byte[] profilePicture)
+    + Set<String> getTags()
     + void setTags(Set<String> tags)
+    + boolean equals(Object o)
+    
+}
+class AddressBook {
+    - ObservableList<Contact> contacts
+    - ObservableSet<String> tags
+    - static AddressBook instance
+    - String dbUrl 
+    - AddressBook()
+    + ObservableList<Contact> getContacts()
+    + void addContact(Contact c)
+    + Contact removeContact(Contact c)
+    + ObservableSet<String> getTags()
+    + void addTag(String tag)
+    + String removeTag(String tag)
+    + static AddressBook getInstance()
+    + void setDbUrl(String dbUrl)
+    + String getDbUrl()
+    + void saveOBJ(String filename)
+    + static AddressBook loadOBJ(String filename)
+    + void saveSuDB()
+    + static AddressBook loadDaDB()
+    
 }
 
+interface Serializable
+
+Contact ..|> Serializable
+AddressBook "1" o-- "0..*" Contact
+
+class MainController {
+    - AddressBook addressBook
+    - Button deleteButton
+    - Button saveButton
+    - Button editButton
+    - Button cancelButton
+    - VBox tagVBox
+    - VBox lettersVBox
+    - TextField searchField
+    - TextField nameField
+    - TextField surnameField
+    - TextField emailField
+    - TextField numberField
+    - ImageView profileImageView
+    - ImageView filterImage
+    - ListView<Contact> contactsListView
+    - AnchorPane contactDetailsPane
+    - GridPane numbersPane
+    - GridPane emailsPane
+    + void initialize(URL location, ResourceBundle resources)
+    + void showImportPopup(ActionEvent event)
+    + void showExportPopup(ActionEvent event)
+    + void showConfigPopup(ActionEvent event)
+    + void showImagePopup(ActionEvent event)
+    + void onAddButtonPressed(ActionEvent event)
+}
+
+interface Initializable
+MainController ..|> Initializable
+MainController "1" o-- "1" AddressBook : manages 
 @enduml
