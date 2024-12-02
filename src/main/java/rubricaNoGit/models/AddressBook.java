@@ -1,5 +1,6 @@
 package rubricaNoGit.models;
 
+import java.io.Serializable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -8,11 +9,11 @@ import javafx.collections.ObservableSet;
  * @brief Rappresenta una rubrica telefonica, può contenere 0 o più contatti.
  * @see Contact
  */
-public class AddressBook {
-    private static AddressBook instance; ///< Unica istanza di AddressBook.
+public class AddressBook implements Serializable{
+    private transient static AddressBook instance; ///< Unica istanza di AddressBook.
     private ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
     private ObservableSet<String> tags; ///< Insieme dei tag inseriti.
-    private String dbUrl; ///< Link del database.
+    private transient String dbUrl; ///< Link del database.
 
     /**
      * @brief Crea un'istanza della classe AddressBook.
