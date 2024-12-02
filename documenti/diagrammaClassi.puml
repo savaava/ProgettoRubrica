@@ -51,6 +51,7 @@ class AddressBook {
 interface Serializable
 
 Contact ..|> Serializable
+AddressBook ..|> Serializable
 AddressBook "1" o-- "0..*" Contact
 
 class MainController {
@@ -73,14 +74,34 @@ class MainController {
     - GridPane numbersPane
     - GridPane emailsPane
     + void initialize(URL location, ResourceBundle resources)
-    + void showImportPopup(ActionEvent event)
-    + void showExportPopup(ActionEvent event)
-    + void showConfigPopup(ActionEvent event)
-    + void showImagePopup(ActionEvent event)
-    + void onAddButtonPressed(ActionEvent event)
+    - void showImportPopup(ActionEvent event)
+    - void showExportPopup(ActionEvent event)
+    - void showConfigPopup(ActionEvent event)
+    - void showImagePopup(ActionEvent event)
+    - void showManageTagsPopup(ActionEvent event)
+    - void onAddButtonPressed(ActionEvent event)
+    - void onContactClicked(MouseEvent event)
+    - void onSaveContact(ActionEvent event)
+    - void onModifyContact(ActionEvent event)
+    - void onRemoveContact(ActionEvent event)
+    - void onCancelContact(ActionEvent event)
 }
+
 
 interface Initializable
 MainController ..|> Initializable
-MainController "1" o-- "1" AddressBook : manages 
+MainController "1" o-- "1" AddressBook : manages
+
+class ImportPopupController {
+    - AddressBook addressBook
+    - Button importButton
+    + void initialize(URL location, ResourceBundle resources)
+    - void selectFile(ActionEvent event)
+    - void onImportButtonPressed(ActionEvent event)
+    - boolean checkCSVFormat()
+    - boolean checkVCardFormat()
+}
+
+ImportPopupController ..|> Initializable
+ImportPopupController "1" o-- "1" AddressBook:uses
 @enduml
