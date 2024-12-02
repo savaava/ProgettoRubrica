@@ -13,7 +13,7 @@ public class AddressBook implements Serializable{
     private transient static AddressBook instance; ///< Unica istanza di AddressBook.
     private ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
     private ObservableSet<String> tags; ///< Insieme dei tag inseriti.
-    private transient String dbUrl; ///< Link del database.
+    private String dbUrl; ///< Link del database.
 
     /**
      * @brief Crea un'istanza della classe AddressBook.
