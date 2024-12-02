@@ -1,6 +1,6 @@
 @startuml DiagrammaDelleClassi
 skinparam linetype ortho
-left to right direction
+'left to right direction
 
 class Contact {
     - String name 
@@ -26,6 +26,14 @@ class Contact {
     + boolean equals(Object o)
     
 }
+
+interface MongoSerializable {
+    +void toDocument() 
+    +void fromDocument()
+}
+
+Contact ..|> MongoSerializable
+
 class AddressBook {
     - ObservableList<Contact> contacts
     - ObservableSet<String> tags
@@ -43,8 +51,8 @@ class AddressBook {
     + String getDbUrl()
     + void saveOBJ(String filename)
     + static AddressBook loadOBJ(String filename)
-    + void saveSuDB()
-    + static AddressBook loadDaDB()
+    + void saveToDB()
+    + static AddressBook loadFromDB()
     
 }
 
@@ -92,10 +100,12 @@ class MainController {
     - void showManageTagsPopup(ActionEvent event)
 }
 
+MainController ..> ImagePopupController
+
 
 interface Initializable
 MainController ..|> Initializable
-MainController "1" o-- "1" AddressBook : manages
+MainController "1" o-- "1" AddressBook
 
 class ImportPopupController {
     - AddressBook addressBook
@@ -108,5 +118,50 @@ class ImportPopupController {
 }
 
 ImportPopupController ..|> Initializable
-ImportPopupController "1" o-- "1" AddressBook:uses
+ImportPopupController "1" o-- "1" AddressBook
+
+class ExportPopupController {
+    - AddressBook addressBook
+    - ChoiceBox<String> exportChoiceBox
+    - RadioButton vCardButton
+    - RadioButton csvButton
+    - ToggleGroup ext
+    - Button saveButton
+
+    + void initialize(URL location, ResourceBundle resources)
+    - void choosePath(ActionEvent event)
+}
+
+ExportPopupController ..|> Initializable
+ExportPopupController "1" o-- "1" AddressBook
+
+class ManageTagsPopupController {
+    - AddressBook addressBook
+    - Button addButton
+    - Button updateButton
+    - Button deleteButton
+
+    + void initialize(URL location, ResourceBundle resources)
+    - void onAddButtonPressed(ActionEvent event)
+    - void onUpdateButtonPressed(ActionEvent event)
+    - void onDeleteButtonPressed(ActionEvent event)
+}
+
+ManageTagsPopupController ..|> Initializable
+ManageTagsPopupController "1" o-- "1" AddressBook
+
+class ImagePopupController {
+    - ImageView imgAdd
+    - HBox defaultImgHBox
+    - File selectedImage
+    - int imageIndex
+
+    + void initialize(URL location, ResourceBundle resources)
+    + File getSelectedImage()
+    + int getImageIndex()
+}
+
+ImagePopupController ..|> Initializable
+
+
 @enduml
