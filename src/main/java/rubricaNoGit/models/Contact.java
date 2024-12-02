@@ -19,7 +19,7 @@ public class Contact implements Serializable {
 
     /**
      * @brief Costruttore per creare un'istanza Contact con solo nome e cognome valorizzati. 
-     * Gli altri attributi non vengono valorizzati      * 
+     * Gli altri attributi non vengono valorizzati
      * @param[in] name
      * @param[in] surname
      */
