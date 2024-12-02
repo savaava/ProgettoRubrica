@@ -73,18 +73,23 @@ class MainController {
     - AnchorPane contactDetailsPane
     - GridPane numbersPane
     - GridPane emailsPane
+    - ContextMenu contextMenu
+
     + void initialize(URL location, ResourceBundle resources)
-    - void showImportPopup(ActionEvent event)
-    - void showExportPopup(ActionEvent event)
-    - void showConfigPopup(ActionEvent event)
-    - void showImagePopup(ActionEvent event)
-    - void showManageTagsPopup(ActionEvent event)
+    - void setImageCircle()
+    - void searchFieldBinding()    
+    - void onFilterClicked()
     - void onAddButtonPressed(ActionEvent event)
     - void onContactClicked(MouseEvent event)
     - void onSaveContact(ActionEvent event)
     - void onModifyContact(ActionEvent event)
     - void onRemoveContact(ActionEvent event)
     - void onCancelContact(ActionEvent event)
+    - void showImportPopup(ActionEvent event)
+    - void showExportPopup(ActionEvent event)
+    - void showConfigPopup(ActionEvent event)
+    - void showImagePopup(ActionEvent event)
+    - void showManageTagsPopup(ActionEvent event)
 }
 
 
