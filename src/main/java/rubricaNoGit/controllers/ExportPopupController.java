@@ -30,7 +30,7 @@ public class ExportPopupController implements Initializable {
     }
 
     @FXML
-    void choosePath(ActionEvent event) {
+    private void choosePath(ActionEvent event) {
 
     }
 }

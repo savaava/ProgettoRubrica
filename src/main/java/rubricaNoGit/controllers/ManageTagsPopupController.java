@@ -4,11 +4,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import rubricaNoGit.models.AddressBook;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ManageTagsPopupController implements Initializable {
+    private AddressBook addressBook;
+
     @FXML
     private Button addButton, updateButton, deleteButton;
 
@@ -18,17 +21,17 @@ public class ManageTagsPopupController implements Initializable {
     }
 
     @FXML
-    public void onAddButtonPressed(ActionEvent event) {
+    private void onAddButtonPressed(ActionEvent event) {
 
     }
 
     @FXML
-    public void onUpdateButtonPressed(ActionEvent event) {
+    private void onUpdateButtonPressed(ActionEvent event) {
 
     }
 
     @FXML
-    public void onDeleteButtonPressed(ActionEvent event) {
+    private void onDeleteButtonPressed(ActionEvent event) {
 
     }
 }
