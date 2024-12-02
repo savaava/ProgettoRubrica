@@ -1,5 +1,6 @@
 package rubricaNoGit.controllers;
 
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseEvent;
 import rubricaNoGit.models.Contact;
@@ -45,6 +46,7 @@ public class MainController implements Initializable {
 
     private ContextMenu contextMenu;
 
+    private FilteredList<Contact> filteredContacts;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -237,6 +239,6 @@ public class MainController implements Initializable {
      * @return Il menù contestuale
      */
     private ContextMenu createContextMenu(){
-
+        return null;
     }
 }
