@@ -1,0 +1,26 @@
+@startuml AggiungereContatto
+
+actor Utente as u  
+participant "a MainController" as mc 
+participant "an AddressBook" as ab 
+
+u -> mc ** : Apre rubrica
+activate mc 
+mc -> mc : Initialize(...)
+u -> mc :  clicca "+" o "Aggiungi contatto"
+
+
+mc -> "a Contact" **
+deactivate "a Contact"
+mc -> ab : addContact(Contact c)
+u -> mc : "clicca sull'immagine"
+mc -> "ImagePopupController" ** : showImagePopup(ActionEvent event)
+u -> "ImagePopupController" : sceglie un'immagine
+activate "ImagePopupController"
+"ImagePopupController" -> "ImagePopupController" : carica un'immagine
+mc -> "ImagePopupController" : getSelectedImage() 
+
+
+
+
+@enduml
