@@ -1,0 +1,15 @@
+@startuml
+actor Utente
+participant MainController
+participant ExportPopupController
+
+Utente -> MainController : apre Rubrica
+activate MainController
+MainController -> MainController : Inizialize(...)
+deactivate MainController
+Utente -> MainController : clicca "Esporta"
+MainController -> ExportPopupController : showExportPopup(...)
+ExportPopupController -> ExportPopupController : Inizialize(...)
+ExportPopupController -> ExportPopupController : choosePath(...)
+ExportPopupController -> Utente : genera file .csv o .vCard
+@enduml
