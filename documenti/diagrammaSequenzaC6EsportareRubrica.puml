@@ -1,15 +1,21 @@
 @startuml
 actor Utente
-participant MainController
-participant ExportPopupController
+participant "a MainController" as MC
+participant "an ExportPopupController" as EPC
 
-Utente -> MainController : apre Rubrica
-activate MainController
-MainController -> MainController : Inizialize(...)
-deactivate MainController
-Utente -> MainController : clicca "Esporta"
-MainController -> ExportPopupController : showExportPopup(...)
-ExportPopupController -> ExportPopupController : Inizialize(...)
-ExportPopupController -> ExportPopupController : choosePath(...)
-ExportPopupController -> Utente : genera file .csv o .vCard
+Utente -> MC ** : apre Rubrica
+activate MC
+MC -> MC : Initialize(...)
+deactivate MC
+Utente -> MC : clicca "Esporta"
+activate MC
+MC -> EPC ** : showExportPopup(...)
+deactivate MC
+activate EPC
+EPC -> EPC : Initialize(...)
+EPC -> EPC : choosePath(...)
+Utente -> EPC : sceglie percorso
+EPC -> EPC : genera file .csv o .vCard
+EPC -> EPC : salva file
+destroy EPC
 @enduml
