@@ -1,0 +1,80 @@
+@startuml DiagrammaDelleClassiEssenziale
+skinparam linetype ortho
+'top to bottom direction
+
+class Contact {
+    - String name 
+    - String surname 
+    - String[] numbers
+    - String[] emails
+    - byte[] profilePicture
+    - Set<String> tags   
+}
+
+interface MongoSerializable {
+    +void toDocument() 
+    +void fromDocument()
+}
+Contact ..|> MongoSerializable
+Contact ..|> Serializable
+
+class AddressBook {
+    - ObservableList<Contact> contacts
+    - ObservableSet<String> tags
+    - static AddressBook instance
+    - String dbUrl 
+    + void addContact(Contact c)
+    + Contact removeContact(Contact c)
+    + void addTag(String tag)
+    + String removeTag(String tag)
+    + void saveOBJ()
+    + static AddressBook loadOBJ()
+    + void saveToDB()
+    + static AddressBook loadFromDB()    
+}
+AddressBook ..|> Serializable
+AddressBook "1" o-- "0..*" Contact
+
+class MainController {
+    - AddressBook addressBook
+
+    - void onAddButtonPressed()
+    - void onContactClicked()
+    - void onSaveContact()
+    - void onModifyContact()
+    - void onRemoveContact()
+    - void onCancelContact()
+    - void showImportPopup()
+    - void showExportPopup()
+    - void showConfigPopup()
+    - void showImagePopup()
+    - void showManageTagsPopup()
+}
+MainController "1" o-- "1" AddressBook
+
+class ImportPopupController {
+    - AddressBook addressBook
+    - void onImportButtonPressed()
+}
+ImportPopupController "1" o-- "1" AddressBook
+
+class ExportPopupController {
+    - AddressBook addressBook
+    - void choosePath()
+}
+ExportPopupController "1" o-- "1" AddressBook
+
+class ManageTagsPopupController {
+    - AddressBook addressBook
+    - void onAddButtonPressed()
+    - void onUpdateButtonPressed()
+    - void onDeleteButtonPressed()
+}
+ManageTagsPopupController "1" o-- "1" AddressBook
+
+class ImagePopupController {
+    + File getSelectedImage()
+}
+MainController ..> ImagePopupController
+
+@enduml

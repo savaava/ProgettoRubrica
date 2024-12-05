@@ -3,24 +3,36 @@
 actor Utente as u  
 participant "a MainController" as mc 
 participant "an AddressBook" as ab 
+participant "ImagePopupController" as ipc
+participant "a Contact" as c
 
 u -> mc ** : Apre rubrica
 activate mc 
 mc -> mc : Initialize(...)
+mc -> ab ** : getInstance()
+deactivate mc
+
 u -> mc :  clicca "+" o "Aggiungi contatto"
+activate mc 
+mc -> mc : onAddButtonPressed(...)
+mc --> u : mostra schermata di aggiunta contatto
+u -> mc : inserisce i campi del contatto
 
+alt utente clicca sull'immagine
+u -> mc : clicca sull'immagine
+activate mc
+mc -> ipc ** : showImagePopup(...)
+deactivate mc
+u -> ipc : sceglie un'immagine
+activate ipc
+ipc -> ipc : carica un'immagine
+mc -> ipc : getSelectedImage()
+destroy ipc
+end
 
-mc -> "a Contact" **
-deactivate "a Contact"
+u -> mc : clicca "Salva"
+mc -> mc : onSaveContact(...)
+mc -> c ** : crea il contatto
 mc -> ab : addContact(Contact c)
-u -> mc : "clicca sull'immagine"
-mc -> "ImagePopupController" ** : showImagePopup(ActionEvent event)
-u -> "ImagePopupController" : sceglie un'immagine
-activate "ImagePopupController"
-"ImagePopupController" -> "ImagePopupController" : carica un'immagine
-mc -> "ImagePopupController" : getSelectedImage() 
-
-
-
 
 @enduml

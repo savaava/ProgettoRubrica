@@ -1,0 +1,45 @@
+@startuml EliminareModificareContatto
+
+actor Utente as u
+participant "a MainController" as mc 
+participant "an AddressBook" as ab 
+participant "a Contact" as c
+
+u -> mc ** : Apre rubrica
+activate mc 
+mc -> mc : Initialize(...)
+mc -> ab ** : getInstance()
+activate ab
+ab --> mc : lista dei contatti
+deactivate ab
+mc --> u : mostra la lista dei contatti
+deactivate mc
+
+u -> mc : utente clicca su un contatto della lista
+activate mc
+mc -> mc : onContactClicked(...)
+mc --> u : mostra la visione dettagliata del contatto
+deactivate mc
+
+alt utente clicca su "Elimina"
+u -> mc : utente clicca su "Elimina"
+activate mc
+mc -> mc : onRemoveContact(...)
+mc -> u : mostra la schermata di conferma
+u -> mc : conferma l'operazione
+mc -> ab : removeContact(Contact c)
+deactivate mc
+
+else utente clicca su "Modifica"
+u -> mc : utente clicca su "Modifica"
+activate mc
+mc -> mc : onModifyContact(...)
+mc -> u : rende modificabili i campi
+u -> mc : modifica qualsiasi campo
+u -> mc : clicca "Salva"
+mc -> c ** : modifica il contatto
+deactivate mc
+
+end
+
+@enduml
