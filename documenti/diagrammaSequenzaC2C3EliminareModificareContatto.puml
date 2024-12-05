@@ -9,6 +9,11 @@ u -> mc ** : Apre rubrica
 activate mc 
 mc -> mc : Initialize(...)
 mc -> ab ** : getInstance()
+activate ab
+ab --> mc : lista dei contatti
+deactivate ab
+mc --> u : mostra la lista dei contatti
+deactivate
 loop Utente digita nel TextField searchField una sottostringa o sceglie un tag
     u -> mc : Digita una sottostringa nella barra di ricerca
     mc -> mc : searchFieldBinding()
@@ -16,16 +21,12 @@ loop Utente digita nel TextField searchField una sottostringa o sceglie un tag
     break Quando l'utente clicca su un contatto
         u -> mc : clicca su un contatto
         mc -> mc : onContactclicked(MouseEvent event)
-        deactivate "a Contact"
+
     end
 end
 deactivate mc
 
-alt "Utente clicca Annulla"
-    u -> mc : L'utente clicca sul pulsante "Annulla"
-    mc -> mc : onCancelContact(ActionEvent event)
-
-else utente clicca su "Elimina"
+alt utente clicca su "Elimina"
 u -> mc : utente clicca su "Elimina"
 activate mc
 mc -> mc : onRemoveContact(...)
