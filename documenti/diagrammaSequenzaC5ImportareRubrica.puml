@@ -1,0 +1,29 @@
+@startuml C5ImportareRubrica
+
+actor Utente as u
+participant "a MainController" as mc
+participant "an ImportPopupContoller" as ipc
+participant "an AddressBook" as ab
+
+u -> mc ** : Apre rubrica
+activate mc
+mc -> mc : Initialize(...)
+deactivate mc
+
+u -> mc : Clicca "Importa" dal menù a tendina
+activate mc
+mc -> ipc ** : showImportPopup(...)
+deactivate mc
+activate ipc
+ipc -> ipc : Initialize(...)
+ipc -> ipc : choosePath(...)
+u -> ipc : Inserisce percorso file .csv o .vCard
+ipc -> ipc : checkCSVFormat();
+ipc -> ipc : checkVCardFormat();
+u -> ipc : Utente clicca il pulsante "Import"
+ipc -> ipc : onImportButtonPressed(ActionEvent event)
+ipc -> ab : Importa rubrica
+destroy ipc
+ab --> u : Visualizza la lista dei contatti aggiornata
+
+@enduml

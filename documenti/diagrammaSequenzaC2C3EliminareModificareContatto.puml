@@ -22,7 +22,7 @@ loop Utente digita nel TextField searchField una sottostringa o sceglie un tag
         u -> mc : clicca su un contatto
         mc -> mc : onContactclicked(MouseEvent event)
 
-    end
+end
 end
 deactivate mc
 
