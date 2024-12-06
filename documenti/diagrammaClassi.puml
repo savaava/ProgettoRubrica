@@ -2,13 +2,28 @@
 skinparam linetype ortho
 'left to right direction
 
+
+'****************** CLASSI ******************
+class Tag {
+    - final int id
+    - String descrizione
+    - {static} int index
+
+    + Tag(String descrizione)
+    + int getId()
+    + String getDescrizione()
+    + void setDescrizione(String descrizione)
+    + {static} void setIndex(int index)
+    + boolean equals(Object o)
+}
+
 class Contact {
     - String name 
     - String surname 
     - String[] numbers
     - String[] emails
     - byte[] profilePicture
-    - Set<String> tags
+    - Set<Integer> tagIndexes
 
     + Contact(String name, String surname)
     + String getName()
@@ -21,46 +36,38 @@ class Contact {
     + void setEmails(String[] emails)
     + byte[] getProfilePicture()
     + void setProfilePicture(byte[] profilePicture)
-    + Set<String> getTags()
-    + void setTags(Set<String> tags)
+    + Set<Integer> getAllTagIndexes()
+    + Integer removeTagIndex(Integer tagIndex)
+    + void addTagIndex(Integer tagIndex)
     + boolean equals(Object o)
     
 }
 
-interface MongoSerializable {
-    +void toDocument() 
-    +void fromDocument()
-}
-
-Contact ..|> MongoSerializable
-
 class AddressBook {
+    - {static} AddressBook instance
     - ObservableList<Contact> contacts
-    - ObservableList<String> tags
-    - static AddressBook instance
-    - String dbUrl 
+    - ObservableList<Tag> tags
+    - String dbUrl
+    - Database db
 
     - AddressBook()
-    + ObservableList<Contact> getContacts()
+    + ObservableList<Contact> getAllContacts()
     + void addContact(Contact c)
     + Contact removeContact(Contact c)
-    + ObservableList<String> getTags()
-    + void addTag(String tag)
-    + String removeTag(String tag)
-    + static AddressBook getInstance()
+    + ObservableList<Tag> getAllTags()
+    + void addTag(Tag tag)
+    + Tag removeTag(Tag tag)
+    + {static} AddressBook getInstance()
     + void setDbUrl(String dbUrl)
-    + String getDbUrl()    
-    + void saveConfig()
-    + void loadConfig()
+    + String getDbUrl()
     + void saveOBJ()
     + AddressBook loadOBJ()
     + void saveToDB()
-    + AddressBook loadFromDB()    
+    + AddressBook loadFromDB()   
+    + void loadConfig()
+    + void saveConfig()
+    + void initDb() 
 }
-
-interface Serializable
-Contact ..|> Serializable
-AddressBook "1" o-- "0..*" Contact
 
 class MainController {
     - AddressBook addressBook
@@ -85,7 +92,7 @@ class MainController {
     - GridPane emailsPane
     - ContextMenu contextMenu
 
-    + void initialize(URL location, ResourceBundle resources)
+    + void initialize()
     - void setImageCircle()
     - void searchFieldBinding()    
     - void onFilterClicked()
@@ -102,57 +109,44 @@ class MainController {
     - void showManageTagsPopup(ActionEvent event)
 }
 
-MainController ..> ImagePopupController
-
-
-interface Initializable
-MainController ..|> Initializable
-MainController "1" o-- "1" AddressBook
-
 class ImportPopupController {
-    - AddressBook addressBook
+    - ContactManager contactManager
     - Button importButton
-    + void initialize(URL location, ResourceBundle resources)
+
+    + void initialize()
     - void selectFile(ActionEvent event)
     - void onImport(ActionEvent event)
     - boolean checkCSVFormat()
     - boolean checkVCardFormat()
 }
 
-ImportPopupController ..|> Initializable
-ImportPopupController "1" o-- "1" AddressBook
-
 class ExportPopupController {
-    - AddressBook addressBook
+    - ContactManager contactManager
     - ChoiceBox<String> exportChoiceBox
     - RadioButton vCardButton
     - RadioButton csvButton
     - ToggleGroup ext
     - Button saveButton
 
-    + void initialize(URL location, ResourceBundle resources)
+    + void initialize()
     - void choosePath(ActionEvent event)
     - void onExport()
+    - void onExportCSV()
+    - void onExportVCard()
 }
 
-ExportPopupController ..|> Initializable
-ExportPopupController "1" o-- "1" AddressBook
-
 class ManageTagsPopupController {
-    - AddressBook addressBook
+    - TagManager tagManager
     - ListView<String> tagsListView
     - Button addButton
     - Button updateButton
     - Button deleteButton
 
-    + void initialize(URL location, ResourceBundle resources)
+    + void initialize()
     - void onAdd(ActionEvent event)
     - void onUpdate(ActionEvent event)
     - void onDelete(ActionEvent event)
 }
-
-ManageTagsPopupController ..|> Initializable
-ManageTagsPopupController "1" o-- "1" AddressBook
 
 class ImagePopupController {
     - ImageView imgAdd
@@ -160,18 +154,75 @@ class ImagePopupController {
     - File selectedImage
     - int imageIndex
 
-    + void initialize(URL location, ResourceBundle resources)
+    + void initialize()
     - void onImageAdd(MouseEvent event)
     + File getSelectedImage()
     + int getImageIndex()
 }
-ImagePopupController ..|> Initializable
 
 class ConfirmPopupController {
     - onConfirm()
     - onCancel()
 }
+
+class Database {
+    + Database(String url)
+    + void insertContact(Contact c)
+    + void updateContact(Contact c)
+    + void removeContact(Contact c)
+    + void insertTag(Tag tag)
+    + void updateTag(Tag tag)
+    + void removeTag(Tag tag)
+    + Collection<Contact> getAllContacts()
+    + Collection<Tag> getAllTags()
+    + void insertManyContacts(Collection<Contact> contacts)
+    + void insertManyTags(Collection<Tag> tags)
+} 
+
+
+'****************** INTERFACCE ******************
+interface MongoSerializable {
+    +void toDocument() 
+    +void fromDocument()
+}
+
+interface Serializable
+
+interface Initializable
+
+interface TagManager {
+    void addTag(Tag tag)
+    Tag removeTag(Tag tag)
+    Tag getTag(int id)
+    ObservableList<Tag> getAllTags()
+}
+
+interface ContactManager {
+    ObservableList<Contact> getAllContacts()
+    addContact(Contact c)
+    removeContact(Contact c)
+}
+
+
+'****************** RELAZIONI ******************
+Contact ..|> MongoSerializable
+Contact ..|> Serializable
+AddressBook "1" o-- "0..*" Contact
+MainController ..|> Initializable
+MainController "1" o-- "1" AddressBook
+MainController ..> ImagePopupController
+ImportPopupController ..|> Initializable
+ExportPopupController ..|> Initializable
+ManageTagsPopupController ..|> Initializable
+ImagePopupController ..|> Initializable
 MainController ..> ConfirmPopupController
 ManageTagsPopupController ..> ConfirmPopupController
+ManageTagsPopupController "1" o-- "1" TagManager
+AddressBook ..|> TagManager
+AddressBook ..|> ContactManager
+ExportPopupController "1" o-- "1" ContactManager
+ImportPopupController "1" o-- "1" ContactManager
+AddressBook "1" o-- "1" Database
+AddressBook "1" o-- "0..*" Tag
 
 @enduml

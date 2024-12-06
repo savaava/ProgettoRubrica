@@ -1,7 +1,9 @@
 @startuml DiagrammaDelleClassiEssenziale
 skinparam linetype ortho
-'top to bottom direction
+'left to right direction
 
+
+'****************** CLASSI ******************
 class Contact {
     - String name 
     - String surname 
@@ -11,23 +13,13 @@ class Contact {
     - Set<String> tags   
 }
 
-interface Serializable 
-interface MongoSerializable {
-    +void toDocument() 
-    +void fromDocument()
-}
-Contact ..|> MongoSerializable
-Contact ..|> Serializable
-
 class AddressBook {
+    - {static} AddressBook instance
     - ObservableList<Contact> contacts
     - ObservableSet<String> tags
-    - static AddressBook instance
-    - String dbUrl 
-    + void addContact(Contact c)
-    + Contact removeContact(Contact c)
-    + void addTag(String tag)
-    + String removeTag(String tag)
+    - String dbUrl
+    - Database db
+
     + void saveConfig()
     + void loadConfig()
     + void saveOBJ()
@@ -35,7 +27,6 @@ class AddressBook {
     + void saveToDB()
     + AddressBook loadFromDB()    
 }
-AddressBook "1" o-- "0..*" Contact
 
 class MainController {
     - AddressBook addressBook
@@ -52,39 +43,76 @@ class MainController {
     - void showImagePopup()
     - void showManageTagsPopup()
 }
-MainController "1" o-- "1" AddressBook
 
 class ImportPopupController {
-    - AddressBook addressBook
+    - ContactManager contactManager
     - void onImport()
 }
-ImportPopupController "1" o-- "1" AddressBook
 
 class ExportPopupController {
-    - AddressBook addressBook
-    - void choosePath()
+    - ContactManager contactManager
     - void onExport()
 }
-ExportPopupController "1" o-- "1" AddressBook
 
 class ManageTagsPopupController {
-    - AddressBook addressBook
+    - TagManager tagManager
     - void onAdd()
     - void onUpdate()
     - void onDelete()
 }
-ManageTagsPopupController "1" o-- "1" AddressBook
 
 class ImagePopupController {
     + File getSelectedImage()
 }
-MainController ..> ImagePopupController
 
 class ConfirmPopupController {
     onConfirm()
     onCancel()
 }
+
+class Tag {
+    - final int id
+    - String descrizione
+}
+
+class Database {
+
+} 
+
+'****************** INTERFACCE ******************
+interface MongoSerializable {
+    +void toDocument() 
+    +void fromDocument()
+}
+
+interface Serializable
+
+interface TagManager {
+    void addTag(Tag tag)
+    Tag removeTag(Tag tag)
+    Tag getTag(int id)
+    ObservableList<Tag> getAllTags()
+}
+
+interface ContactManager {
+    ObservableList<Contact> getAllContacts()
+    addContact(Contact c)
+    removeContact(Contact c)
+}
+
+'****************** RELAZIONI ******************
+Contact ..|> MongoSerializable
+Contact ..|> Serializable
+AddressBook "1" o-- "0..*" Contact
+MainController "1" o-- "1" AddressBook
+MainController ..> ImagePopupController
 MainController ..> ConfirmPopupController
 ManageTagsPopupController ..> ConfirmPopupController
+AddressBook ..|> TagManager
+AddressBook ..|> ContactManager
+ExportPopupController "1" o-- "1" ContactManager
+ImportPopupController "1" o-- "1" ContactManager
+AddressBook "1" o-- "0..*" Tag
+AddressBook "1" o-- "1" Database
 
 @enduml
