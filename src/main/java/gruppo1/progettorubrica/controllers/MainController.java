@@ -35,26 +35,27 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField searchField;  ///< campo di ricerca dei contatti
-    private TextField nameField, surnameField, emailField, numberField;  ///< campi testuali del contatto nella visione dettagliata
+    private TextField nameField, surnameField, emailField, numberField; ///< campi testuali del contatto nella visione dettagliata {@link MainController#}
 
     @FXML
-    private ImageView profileImageView, filterImage;
+    private ImageView profileImageView; ///< immagine profilo del contatto
+    private ImageView filterImage; ///< immagine del filtro
 
     @FXML
-    private TableView<Contact> contactsTable;
+    private TableView<Contact> contactsTable;   ///< elenco con tutti i contatti della rubrica
 
     @FXML
-    private TableColumn<Contact, String> nameColumn,surnameColumn;
+    private TableColumn<Contact, String> nameColumn,surnameColumn;   ///< colonne della {@link MainController#contactsTable}.
 
     @FXML
-    private AnchorPane contactDetailsPane;
+    private AnchorPane contactDetailsPane;   ///< Pane con la visione dettagliata del contatto
 
     @FXML
-    private GridPane numbersPane, emailsPane;
+    private GridPane numbersPane, emailsPane;  ///< GridPane appartenente a {@link MainController#contactsDetailsPane} che contiene gli eventuali numeri di telefono e/o emails
 
-    private ContextMenu contextMenu;
+    private ContextMenu contextMenu;  ///< menù per importare, esportare e configurare database
 
-    private FilteredList<Contact> filteredContacts;
+    private FilteredList<Contact> filteredContacts;  ///< lista filtrata in base a tag e/o alla sottostringa presente in searchField
 
     /**
      * @brief Inizializza il main controller

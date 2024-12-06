@@ -26,15 +26,19 @@ deactivate ipc
 u -> ipc : Inserisce percorso file .csv o .vCard
 ipc -> ipc : choosePath(...)
 activate ipc
+alt Il file scelto è in formato .csv
 deactivate ipc
 ipc -> ipc : checkCSVFormat();
 activate ipc
+else Il file scelto è in formato .VCard
 deactivate ipc
 ipc -> ipc : checkVCardFormat();
 activate ipc
+
+end
 deactivate ipc
 u -> ipc : Utente clicca il pulsante "Import"
-ipc -> ipc : onImportButtonPressed(...)
+ipc -> ipc : onImport(...)
 activate ipc
 ipc -> ab : Importa rubrica 
 ipc --> u : mostra la lista dei contatti aggiornata
