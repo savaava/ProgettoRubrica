@@ -57,9 +57,7 @@ class AddressBook {
 }
 
 interface Serializable
-
 Contact ..|> Serializable
-AddressBook ..|> Serializable
 AddressBook "1" o-- "0..*" Contact
 
 class MainController {
