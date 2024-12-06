@@ -21,17 +21,17 @@ public class ManageTagsPopupController implements Initializable {
     }
 
     @FXML
-    private void onAddButtonPressed(ActionEvent event) {
+    private void onAdd(ActionEvent event) {
 
     }
 
     @FXML
-    private void onUpdateButtonPressed(ActionEvent event) {
+    private void onUpdate(ActionEvent event) {
 
     }
 
     @FXML
-    private void onDeleteButtonPressed(ActionEvent event) {
+    private void onDelete(ActionEvent event) {
 
     }
 }

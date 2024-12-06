@@ -14,7 +14,7 @@
             <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#choosePath" text="Scegli percorso" />
             <HBox alignment="CENTER" layoutX="10.0" layoutY="133.0" spacing="20.0">
                <children>
-                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onExportButtonPressed" text="Esporta" />
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onExport" text="Esporta" />
                </children>
                <padding>
                   <Insets left="10.0" right="10.0" />

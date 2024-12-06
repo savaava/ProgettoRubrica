@@ -15,9 +15,9 @@
             <HBox spacing="5.0">
                <children>
                   <TextField HBox.hgrow="ALWAYS" />
-                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAddButtonPressed" text="Aggiungi" />
-                  <Button fx:id="updateButton" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#onUpdateButtonPressed" text="Aggiorna" />
-                  <Button fx:id="deleteButton" layoutX="226.0" layoutY="10.0" mnemonicParsing="false" onAction="#onDeleteButtonPressed" text="Elimina" />
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAdd" text="Aggiungi" />
+                  <Button fx:id="updateButton" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#onUpdate" text="Aggiorna" />
+                  <Button fx:id="deleteButton" layoutX="226.0" layoutY="10.0" mnemonicParsing="false" onAction="#onDelete" text="Elimina" />
                </children>
                <padding>
                   <Insets left="5.0" right="5.0" />

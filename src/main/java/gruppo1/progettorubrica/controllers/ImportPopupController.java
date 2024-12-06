@@ -26,7 +26,7 @@ public class ImportPopupController implements Initializable {
     }
 
     @FXML
-    private void onImportButtonPressed(ActionEvent event) {
+    private void onImport(ActionEvent event) {
 
     }
 
