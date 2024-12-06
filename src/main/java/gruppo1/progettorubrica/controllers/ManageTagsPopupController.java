@@ -11,8 +11,13 @@ import javafx.scene.control.ListView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @brief Controller che visualizza il popup dei tag.
+ * 
+ * Tale popup permette di aggiungere, modificare o eliminare i tag.
+ */
 public class ManageTagsPopupController implements Initializable {
-    private TagManager tagManager; ///< Riferimento all'AddressBook
+    private TagManager tagManager; ///< Riferimento all'interfaccia TagManager, implementata da AddressBook
 
     @FXML
     private ListView<String> tagsListView; ///< Riferimento alla lista di tag
