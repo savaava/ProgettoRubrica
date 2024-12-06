@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rubricaNoGit.controllers.ExportPopupController">
+   <children>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="157.0" text="Seleziona cosa esportare" />
+            <ChoiceBox fx:id="exportChoiceBox" prefWidth="150.0" />
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#choosePath" text="Scegli percorso" />
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="133.0" spacing="20.0">
+               <children>
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onExportButtonPressed" text="Esporta" />
+               </children>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
