@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.input.MouseEvent;
 
 /**
  * @brief Controller che visualizza il popup contenente immagini contatto.
@@ -42,6 +43,14 @@ public class ImagePopupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+    
+    /**
+    * @brief L'utente sceglie il file da cui caricare l'immagine personalizzata.
+    */
+    @FXML
+    private void onImageAdd(MouseEvent event) {
+        
+    }
 
     /**
      * @return Il file dell'immagine caricata dall'utente.
@@ -58,6 +67,9 @@ public class ImagePopupController implements Initializable {
     public int getImageIndex() {
         return this.imageIndex;
     }
+
+    
+    
     
     
 }

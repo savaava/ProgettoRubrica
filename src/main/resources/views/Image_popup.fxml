@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="100.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.ImagePopupController">
+<AnchorPane prefHeight="100.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.ImagePopupController">
    <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -14,7 +18,7 @@
                   <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageAdd" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
             <ImageView fx:id="imgAdd" fitHeight="200.0" fitWidth="200.0" layoutX="610.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
