@@ -9,8 +9,8 @@ import javafx.collections.ObservableSet;
  * @brief Tale classe rappresenta una rubrica telefonica, può contenere 0 o più contatti.
  * @see Contact
  */
-public class AddressBook implements Serializable{
-    private transient static AddressBook instance; ///< Unica istanza di AddressBook.
+public class AddressBook {
+    private static AddressBook instance; ///< Unica istanza di AddressBook.
     private ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
     private ObservableSet<String> tags; ///< Insieme dei tag inseriti.
     private String dbUrl; ///< Link del database.
@@ -129,7 +129,21 @@ public class AddressBook implements Serializable{
      * @brief Carica la rubrica telefonica dal database.
      * @return La rubrica telefonica caricata.
      */
-    public static AddressBook loadFromDB() {
+    public AddressBook loadFromDB() {
         return null;
+    }
+
+    /**
+     * @brief Carica la configurazione da Config.bin, se presente
+     */
+    public void loadConfig() {
+
+    }
+
+    /**
+     * @brief Salva la configurazione su Config.bin
+     */
+    public void saveConfig() {
+
     }
 }
