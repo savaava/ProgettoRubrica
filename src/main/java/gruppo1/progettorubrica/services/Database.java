@@ -13,33 +13,54 @@ import java.util.Collection;
 public class Database {
     /**
      * @brief Costruttore della classe Database
-     * @param[in] uri URI del database
+     * @param[in] uri URL del database
      */
-    public Database(String uri) {
+    public Database(String url) {
 
     }
 
     /**
      * @brief Aggiunge un contatto al database
-     * @param[in] contact Contatto da aggiungere
+     * @param[in] c Contatto da aggiungere
      */
-    public void addContact(Contact contact) {
+    public void insertContact(Contact c) {
 
     }
 
     /**
      * @brief Aggiorna un contatto nel database
-     * @param[in] contact Contatto da aggiornare
+     * @param[in] c Contatto da aggiornare
      */
-    public void updateContact(Contact contact) {
+    public void updateContact(Contact c) {
 
     }
 
     /**
      * @brief Rimuove un contatto dal database
-     * @param[in] contact Contatto da rimuovere
+     * @param[in] c Contatto da rimuovere
      */
-    public void removeContact(Contact contact) {
+    public void removeContact(Contact c) {
+
+    }
+
+    /**
+     * @brief Aggiunge un tag al database
+     */
+    public void insertTag(Tag tag) {
+
+    }
+
+    /**
+     * @brief Aggiorna un tag nel database
+     */
+    public void updateTag(Tag tag) {
+
+    }
+
+    /**
+     * @brief Rimuove un tag dal database
+     */
+    public void removeTag(Tag tag) {
 
     }
 

@@ -63,9 +63,5 @@ public class ImagePopupController implements Initializable {
         return this.imageIndex;
     }
 
-    
-    
-    
-    
 }
 
