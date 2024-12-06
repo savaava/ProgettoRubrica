@@ -1,6 +1,7 @@
 package gruppo1.progettorubrica.controllers;
 
 import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.TagManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +12,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ManageTagsPopupController implements Initializable {
-    private AddressBook addressBook; ///< Riferimento all'AddressBook
+    private TagManager tagManager; ///< Riferimento all'AddressBook
 
     @FXML
     private ListView<String> tagsListView; ///< Riferimento alla lista di tag
@@ -27,7 +28,7 @@ public class ManageTagsPopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        this.tagManager = AddressBook.getInstance();
     }
 
     /**
