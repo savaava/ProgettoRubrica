@@ -24,18 +24,40 @@ public class ExportPopupController implements Initializable {
     @FXML
     private Button saveButton;
 
+    /**
+     * @brief Inizializzazione controller
+     *
+     *  Tramite questo metodo carichiamo su questo controller l'istanza della rubrica in esame.
+     * 
+     * @param[in] location
+     * @param[in] resources 
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.addressBook = AddressBook.getInstance();
     }
 
+    /**
+     * @brief Scelta del percorso del file di esportazione
+     *
+     * Invocando questo metodo il controller permette all'utente di scegliere 
+     * il path su dove salvare il file di export della rubrica
+     *
+     * @param[in] event
+     */
     @FXML
     private void choosePath(ActionEvent event) {
 
     }
 
+    /**
+     * @brief Esporta la rubrica
+     * 
+     * Questo metodo, che viene invocato cliccando il pulsante "Esporta", permette di esportare la rubrica
+     * @param[in] event 
+     */
     @FXML
-    private void onExportButtonPressed(ActionEvent event) {
+    private void onExport(ActionEvent event) {
 
     }
 }
