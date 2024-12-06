@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rubricaNoGit.controllers.ManageTagsPopupController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ListView fx:id="tagsListView" editable="true" onEditCommit="#onEditCommit" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <HBox spacing="5.0">
+               <children>
+                  <TextField HBox.hgrow="ALWAYS" />
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAddButtonPressed" text="Aggiungi" />
+                  <Button fx:id="updateButton" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#onUpdateButtonPressed" text="Aggiorna" />
+                  <Button fx:id="deleteButton" layoutX="226.0" layoutY="10.0" mnemonicParsing="false" onAction="#onDeleteButtonPressed" text="Elimina" />
+               </children>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

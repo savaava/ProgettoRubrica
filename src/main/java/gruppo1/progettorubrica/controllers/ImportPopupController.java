@@ -10,14 +10,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ImportPopupController implements Initializable {
-    private AdressBook AdressBook;
+    private AddressBook AddressBook;
 
     @FXML
     private Button importButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.AdressBook = AdressBook.getInstance();
+        this.AddressBook = AddressBook.getInstance();
     }
 
     @FXML
