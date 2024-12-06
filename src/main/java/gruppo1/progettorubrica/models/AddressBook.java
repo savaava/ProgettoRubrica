@@ -9,7 +9,7 @@ import javafx.collections.ObservableSet;
  * @brief Tale classe rappresenta una rubrica telefonica, può contenere 0 o più contatti.
  * @see Contact
  */
-public class AddressBook implements TagManager {
+public class AddressBook implements TagManager, ContactManager {
     private static AddressBook instance; ///< Unica istanza di AddressBook.
     private ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
     private ObservableList<String> tags; ///< Insieme dei tag inseriti.
@@ -35,9 +35,8 @@ public class AddressBook implements TagManager {
         return instance;
     }
 
-    /**
-     * @return La lista di contatti.
-     */
+    
+    @Override
     public ObservableList<Contact> getContacts() {
         return contacts;
     }
