@@ -12,7 +12,7 @@ import javafx.collections.ObservableSet;
 public class AddressBook {
     private static AddressBook instance; ///< Unica istanza di AddressBook.
     private ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
-    private ObservableSet<String> tags; ///< Insieme dei tag inseriti.
+    private ObservableList<String> tags; ///< Insieme dei tag inseriti.
     private String dbUrl; ///< Link del database.
 
     /**
@@ -20,7 +20,7 @@ public class AddressBook {
      */
     private AddressBook() {
         this.contacts = FXCollections.observableArrayList();
-        this.tags = FXCollections.observableSet();
+        this.tags = FXCollections.observableArrayList();
     }
 
     /**
@@ -64,7 +64,7 @@ public class AddressBook {
      * 
      * @return L'insieme di tag inseriti. 
      */
-    public ObservableSet<String> getTags() {
+    public ObservableList<String> getTags() {
         return tags;
     }
 

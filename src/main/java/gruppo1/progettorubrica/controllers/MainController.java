@@ -104,7 +104,7 @@ public class MainController implements Initializable {
      * @param[in] event
      */
     @FXML
-    private void onAddButtonPressed(ActionEvent event) {
+    private void onAddContact(ActionEvent event) {
 
     }
 
@@ -168,7 +168,7 @@ public class MainController implements Initializable {
      * @see onModifyContact()
      */
     @FXML
-    private void onCancelContact(ActionEvent event) {
+    private void onCancel(ActionEvent event) {
 
     }
 

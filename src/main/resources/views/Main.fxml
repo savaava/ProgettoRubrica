@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rubricaNoGit.controllers.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.MainController">
    <children>
       <SplitPane dividerPositions="0.30434782608695654" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -42,7 +42,7 @@
                             </Menu>
                               <Menu mnemonicParsing="false" text="Rubrica">
                                  <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#onAddButtonPressed" text="Crea contatto" />
+                                    <MenuItem mnemonicParsing="false" onAction="#onAddContact" text="Crea contatto" />
                                     <MenuItem mnemonicParsing="false" onAction="#showManageTagsPopup" text="Gestisci Tag" />
                                  </items>
                               </Menu>
@@ -60,7 +60,7 @@
                                     <Insets />
                                  </HBox.margin>
                               </TextField>
-                              <Button mnemonicParsing="false" onAction="#onAddButtonPressed" text="+" HBox.hgrow="NEVER">
+                              <Button mnemonicParsing="false" onAction="#onAddContact" text="+" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets right="10.0" />
                                  </HBox.margin>
@@ -72,7 +72,7 @@
                               <VBox fx:id="lettersVBox" alignment="TOP_CENTER" prefHeight="319.0" prefWidth="15.0" style="-fx-background-color: grey;" HBox.hgrow="NEVER" />
                               <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <TableView fx:id="contactsTable" VBox.vgrow="ALWAYS">
+                                    <TableView fx:id="contactsTable" onMouseClicked="#onContactClicked" VBox.vgrow="ALWAYS">
                                       <columns>
                                         <TableColumn fx:id="surnameColumn" prefWidth="75.0" text="Cognome" />
                                         <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Nome" />
@@ -94,7 +94,7 @@
                               <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveContact" text="Salva" />
-                                    <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelContact" text="Annulla" />
+                                    <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancel" text="Annulla" />
                                  </children>
                                  <HBox.margin>
                                     <Insets />
