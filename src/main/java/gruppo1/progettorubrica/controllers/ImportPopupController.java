@@ -5,19 +5,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.ContactManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ImportPopupController implements Initializable {
-    private AddressBook AddressBook;
+    private ContactManager contactManager;
 
     @FXML
     private Button importButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.AddressBook = AddressBook.getInstance();
+        this.contactManager = AddressBook.getInstance();
     }
 
     @FXML
