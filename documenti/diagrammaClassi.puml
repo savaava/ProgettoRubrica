@@ -76,7 +76,6 @@ class MainController {
     - Button editButton
     - Button cancelButton
     - VBox tagVBox
-    - VBox lettersVBox
     - TextField searchField
     - TextField nameField
     - TextField surnameField

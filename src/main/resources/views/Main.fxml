@@ -66,21 +66,16 @@
                                  </HBox.margin>
                               </Button>
                            </children>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
                         </HBox>
-                        <HBox VBox.vgrow="ALWAYS">
-                           <children>
-                              <VBox fx:id="lettersVBox" alignment="TOP_CENTER" prefHeight="319.0" prefWidth="15.0" style="-fx-background-color: grey;" HBox.hgrow="NEVER" />
-                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <TableView fx:id="contactsTable" onMouseClicked="#onContactClicked" VBox.vgrow="ALWAYS">
-                                      <columns>
-                                        <TableColumn fx:id="surnameColumn" prefWidth="75.0" text="Cognome" />
-                                        <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Nome" />
-                                      </columns>
-                                    </TableView>
-                                 </children></VBox>
-                           </children>
-                        </HBox>
+                        <TableView fx:id="contactsTable" onMouseClicked="#onContactClicked" VBox.vgrow="ALWAYS">
+                          <columns>
+                            <TableColumn fx:id="surnameColumn" prefWidth="89.0" text="Cognome" />
+                            <TableColumn fx:id="nameColumn" prefWidth="89.0" text="Nome" />
+                          </columns>
+                        </TableView>
                      </children>
                   </VBox>
                </children>

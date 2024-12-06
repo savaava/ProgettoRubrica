@@ -31,7 +31,6 @@ public class MainController implements Initializable {
 
     @FXML
     private VBox tagVBox;   ///< VBox in cui sono elencati i tag associati al contatto, se presenti
-    private VBox lettersVBox;  ///< VBox in cui sono presenti le iniziali 
 
     @FXML
     private TextField searchField;  ///< campo di ricerca dei contatti
