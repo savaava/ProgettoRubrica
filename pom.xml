@@ -16,5 +16,13 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-    </build>   
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gruppo1.progettorubrica.services;
 
-/**
- *
- * @author franz
- */
-public interface MongoSerializable {
-    
+import org.bson.Document;
+
+public interface MongoSerializable<T> {
+    Document toDocument();
+    T fromDocument(Document document);
 }
