@@ -27,13 +27,15 @@ public class MainController implements Initializable {
     private AddressBook addressBook;
 
     @FXML
-    private Button deleteButton, saveButton, editButton, cancelButton;
+    private Button deleteButton, saveButton, editButton, cancelButton;  ///< riferimenti ai pulsanti della visione dettagliata del contatto
 
     @FXML
-    private VBox tagVBox, lettersVBox;
+    private VBox tagVBox;   ///< VBox in cui sono elencati i tag associati al contatto, se presenti
+    private VBox lettersVBox;  ///< VBox in cui sono presenti le iniziali 
 
     @FXML
-    private TextField searchField, nameField, surnameField, emailField, numberField;
+    private TextField searchField;  ///< campo di ricerca dei contatti
+    private TextField nameField, surnameField, emailField, numberField;  ///< campi testuali del contatto nella visione dettagliata
 
     @FXML
     private ImageView profileImageView, filterImage;
