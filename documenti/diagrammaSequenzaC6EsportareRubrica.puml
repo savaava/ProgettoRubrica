@@ -16,6 +16,8 @@ EPC -> EPC : Initialize(...)
 EPC -> EPC : choosePath(...)
 Utente -> EPC : sceglie percorso
 EPC -> EPC : genera file .csv o .vCard
+Utente -> EPC : Clicca sul pulsante "Esporta"
+EPC -> EPC : onExportButtonPressed(ActionEvent event)
 EPC -> EPC : salva file
 destroy EPC
 @enduml
