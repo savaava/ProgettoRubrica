@@ -28,10 +28,12 @@ class AddressBook {
     + Contact removeContact(Contact c)
     + void addTag(String tag)
     + String removeTag(String tag)
+    + void saveConfig()
+    + void loadConfig()
     + void saveOBJ()
-    + static AddressBook loadOBJ()
+    + AddressBook loadOBJ()
     + void saveToDB()
-    + static AddressBook loadFromDB()    
+    + AddressBook loadFromDB()    
 }
 AddressBook "1" o-- "0..*" Contact
 
@@ -54,21 +56,22 @@ MainController "1" o-- "1" AddressBook
 
 class ImportPopupController {
     - AddressBook addressBook
-    - void onImportButtonPressed()
+    - void onImport()
 }
 ImportPopupController "1" o-- "1" AddressBook
 
 class ExportPopupController {
     - AddressBook addressBook
     - void choosePath()
+    - void onExport()
 }
 ExportPopupController "1" o-- "1" AddressBook
 
 class ManageTagsPopupController {
     - AddressBook addressBook
-    - void onAddButtonPressed()
-    - void onUpdateButtonPressed()
-    - void onDeleteButtonPressed()
+    - void onAdd()
+    - void onUpdate()
+    - void onDelete()
 }
 ManageTagsPopupController "1" o-- "1" AddressBook
 
@@ -76,5 +79,12 @@ class ImagePopupController {
     + File getSelectedImage()
 }
 MainController ..> ImagePopupController
+
+class ConfirmPopupController {
+    onConfirm()
+    onCancel()
+}
+MainController ..> ConfirmPopupController
+ManageTagsPopupController ..> ConfirmPopupController
 
 @enduml

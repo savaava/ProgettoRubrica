@@ -39,6 +39,7 @@ class AddressBook {
     - ObservableSet<String> tags
     - static AddressBook instance
     - String dbUrl 
+
     - AddressBook()
     + ObservableList<Contact> getContacts()
     + void addContact(Contact c)
@@ -48,11 +49,13 @@ class AddressBook {
     + String removeTag(String tag)
     + static AddressBook getInstance()
     + void setDbUrl(String dbUrl)
-    + String getDbUrl()
+    + String getDbUrl()    
+    + void saveConfig()
+    + void loadConfig()
     + void saveOBJ()
-    + static AddressBook loadOBJ()
+    + AddressBook loadOBJ()
     + void saveToDB()
-    + static AddressBook loadFromDB()
+    + AddressBook loadFromDB()
     
 }
 
@@ -112,7 +115,7 @@ class ImportPopupController {
     - Button importButton
     + void initialize(URL location, ResourceBundle resources)
     - void selectFile(ActionEvent event)
-    - void onImportButtonPressed(ActionEvent event)
+    - void onImport(ActionEvent event)
     - boolean checkCSVFormat()
     - boolean checkVCardFormat()
 }
@@ -130,6 +133,7 @@ class ExportPopupController {
 
     + void initialize(URL location, ResourceBundle resources)
     - void choosePath(ActionEvent event)
+    - void onExport()
 }
 
 ExportPopupController ..|> Initializable
@@ -142,9 +146,9 @@ class ManageTagsPopupController {
     - Button deleteButton
 
     + void initialize(URL location, ResourceBundle resources)
-    - void onAddButtonPressed(ActionEvent event)
-    - void onUpdateButtonPressed(ActionEvent event)
-    - void onDeleteButtonPressed(ActionEvent event)
+    - void onAdd(ActionEvent event)
+    - void onUpdate(ActionEvent event)
+    - void onDelete(ActionEvent event)
 }
 
 ManageTagsPopupController ..|> Initializable
@@ -157,11 +161,17 @@ class ImagePopupController {
     - int imageIndex
 
     + void initialize(URL location, ResourceBundle resources)
+    - void onImageAdd(MouseEvent event)
     + File getSelectedImage()
     + int getImageIndex()
 }
-
 ImagePopupController ..|> Initializable
 
+class ConfirmPopupController {
+    - onConfirm()
+    - onCancel()
+}
+MainController ..> ConfirmPopupController
+ManageTagsPopupController ..> ConfirmPopupController
 
 @enduml
