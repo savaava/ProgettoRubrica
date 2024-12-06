@@ -6,24 +6,39 @@ participant "an ImportPopupContoller" as ipc
 participant "an AddressBook" as ab
 
 u -> mc ** : Apre rubrica
-activate mc
 mc -> mc : Initialize(...)
+activate mc
+
+mc -> ab ** : getInstance()
+activate ab
+ab --> mc : lista dei contatti
+deactivate ab
+
 deactivate mc
 
 u -> mc : Clicca "Importa" dal menù a tendina
 activate mc
 mc -> ipc ** : showImportPopup(...)
 deactivate mc
-activate ipc
 ipc -> ipc : Initialize(...)
-ipc -> ipc : choosePath(...)
+activate ipc
+deactivate ipc
 u -> ipc : Inserisce percorso file .csv o .vCard
+ipc -> ipc : choosePath(...)
+activate ipc
+deactivate ipc
 ipc -> ipc : checkCSVFormat();
+activate ipc
+deactivate ipc
 ipc -> ipc : checkVCardFormat();
+activate ipc
+deactivate ipc
 u -> ipc : Utente clicca il pulsante "Import"
-ipc -> ipc : onImportButtonPressed(ActionEvent event)
-ipc -> ab : Importa rubrica
+ipc -> ipc : onImportButtonPressed(...)
+activate ipc
+ipc -> ab : Importa rubrica 
+ipc --> u : mostra la lista dei contatti aggiornata
+deactivate ipc
 destroy ipc
-ab --> u : Visualizza la lista dei contatti aggiornata
 
 @enduml

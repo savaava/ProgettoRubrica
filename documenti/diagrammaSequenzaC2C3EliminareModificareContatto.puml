@@ -6,8 +6,8 @@ participant "an AddressBook" as ab
 participant "a Contact" as c
 
 u -> mc ** : Apre rubrica
-activate mc 
 mc -> mc : Initialize(...)
+activate mc 
 mc -> ab ** : getInstance()
 activate ab
 ab --> mc : lista dei contatti
@@ -17,10 +17,14 @@ deactivate
 loop Utente digita nel TextField searchField una sottostringa o sceglie un tag
     u -> mc : Digita una sottostringa nella barra di ricerca
     mc -> mc : searchFieldBinding()
+    activate mc
     mc --> u : Restituisce i contatti che rispecchiano i criteri di ricerca
+    deactivate mc
     break Quando l'utente clicca su un contatto
         u -> mc : clicca su un contatto
         mc -> mc : onContactclicked(MouseEvent event)
+        activate mc
+        deactivate mc
 
 end
 end
@@ -28,8 +32,8 @@ deactivate mc
 
 alt utente clicca su "Elimina"
 u -> mc : utente clicca su "Elimina"
-activate mc
 mc -> mc : onRemoveContact(...)
+activate mc
 mc -> u : mostra la schermata di conferma
 u -> mc : conferma l'operazione
 mc -> ab : removeContact(Contact c)
@@ -37,8 +41,8 @@ deactivate mc
 
 else utente clicca su "Modifica"
 u -> mc : utente clicca su "Modifica"
-activate mc
 mc -> mc : onModifyContact(...)
+activate mc
 mc -> u : rende modificabili i campi
 u -> mc : modifica qualsiasi campo
 u -> mc : clicca "Salva"
