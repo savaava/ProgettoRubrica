@@ -5,12 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.ContactManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ExportPopupController implements Initializable {
-    private AddressBook addressBook;
+    private ContactManager contactManager;
 
     @FXML
     private ChoiceBox<String> exportChoiceBox;
@@ -34,7 +35,7 @@ public class ExportPopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.addressBook = AddressBook.getInstance();
+        this.contactManager = AddressBook.getInstance();
     }
 
     /**
@@ -55,9 +56,29 @@ public class ExportPopupController implements Initializable {
      * 
      * Questo metodo, che viene invocato cliccando il pulsante "Esporta", permette di esportare la rubrica
      * @param[in] event 
+     * @see onExportCSV(ActionEvent event)
+     * @see onExportVCard(ActionEvent event)
      */
     @FXML
     private void onExport(ActionEvent event) {
 
     }
+    
+    
+    /**
+     * @brief Esporta la rubrica in un file nel formato .csv
+     * @param[in] event 
+     */
+    private void onExportCSV(ActionEvent event) {
+        
+    }
+    
+    /**
+     * @brief Esporta la rubrica in un file nel formato .vCard
+     * @param[in] event 
+     */
+    private void onExportVCard(ActionEvent event) {
+        
+    }
+    
 }

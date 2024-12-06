@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import gruppo1.progettorubrica.models.ContactManager;
 import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.ContactManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
