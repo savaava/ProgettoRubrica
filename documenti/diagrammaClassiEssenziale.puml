@@ -11,6 +11,7 @@ class Contact {
     - Set<String> tags   
 }
 
+interface Serializable 
 interface MongoSerializable {
     +void toDocument() 
     +void fromDocument()
@@ -32,7 +33,6 @@ class AddressBook {
     + void saveToDB()
     + static AddressBook loadFromDB()    
 }
-AddressBook ..|> Serializable
 AddressBook "1" o-- "0..*" Contact
 
 class MainController {
