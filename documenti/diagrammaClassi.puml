@@ -36,7 +36,7 @@ Contact ..|> MongoSerializable
 
 class AddressBook {
     - ObservableList<Contact> contacts
-    - ObservableSet<String> tags
+    - ObservableList<String> tags
     - static AddressBook instance
     - String dbUrl 
 
@@ -44,7 +44,7 @@ class AddressBook {
     + ObservableList<Contact> getContacts()
     + void addContact(Contact c)
     + Contact removeContact(Contact c)
-    + ObservableSet<String> getTags()
+    + ObservableList<String> getTags()
     + void addTag(String tag)
     + String removeTag(String tag)
     + static AddressBook getInstance()
@@ -55,8 +55,7 @@ class AddressBook {
     + void saveOBJ()
     + AddressBook loadOBJ()
     + void saveToDB()
-    + AddressBook loadFromDB()
-    
+    + AddressBook loadFromDB()    
 }
 
 interface Serializable
@@ -90,12 +89,12 @@ class MainController {
     - void setImageCircle()
     - void searchFieldBinding()    
     - void onFilterClicked()
-    - void onAddButtonPressed(ActionEvent event)
+    - void onAddContact(ActionEvent event)
     - void onContactClicked(MouseEvent event)
     - void onSaveContact(ActionEvent event)
     - void onModifyContact(ActionEvent event)
     - void onRemoveContact(ActionEvent event)
-    - void onCancelContact(ActionEvent event)
+    - void onCancel(ActionEvent event)
     - void showImportPopup(ActionEvent event)
     - void showExportPopup(ActionEvent event)
     - void showConfigPopup(ActionEvent event)
@@ -141,6 +140,7 @@ ExportPopupController "1" o-- "1" AddressBook
 
 class ManageTagsPopupController {
     - AddressBook addressBook
+    - ListView<String> tagsListView
     - Button addButton
     - Button updateButton
     - Button deleteButton

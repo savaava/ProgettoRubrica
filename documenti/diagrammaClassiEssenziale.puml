@@ -40,12 +40,12 @@ AddressBook "1" o-- "0..*" Contact
 class MainController {
     - AddressBook addressBook
 
-    - void onAddButtonPressed()
+    - void onAddContact()
     - void onContactClicked()
     - void onSaveContact()
     - void onModifyContact()
     - void onRemoveContact()
-    - void onCancelContact()
+    - void onCancel()
     - void showImportPopup()
     - void showExportPopup()
     - void showConfigPopup()
