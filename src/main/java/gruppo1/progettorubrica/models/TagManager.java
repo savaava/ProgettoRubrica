@@ -7,17 +7,19 @@ public interface TagManager {
      * @brief Aggiunge un tag.
      * @param[in] tag Tag da aggiungere.
      */
-    void addTag(String tag);
+    void addTag(Tag tag);
 
     /**
      * @brief Rimuove un tag.
      * @param[in] tag Tag da rimuovere.
      * @return Il tag rimosso.
      */
-    String removeTag(String tag);
+    Tag removeTag(Tag tag);
+
+    Tag getTag(int id);
 
     /**
      * @return L'insieme di tag inseriti.
      */
-    ObservableList<String> getTags();
+    ObservableList<Tag> getAllTags();
 }

@@ -1,6 +1,7 @@
 package gruppo1.progettorubrica.services;
 
 import gruppo1.progettorubrica.models.Contact;
+import gruppo1.progettorubrica.models.Tag;
 
 import java.util.Collection;
 
@@ -54,7 +55,23 @@ public class Database {
      * @brief Restituisce tutti i tag presenti nel database
      * @return Collezione di String con i tag del database
      */
-    public Collection<String> getTags() {
+    public Collection<Tag> getTags() {
         return null;
+    }
+
+    /**
+     * @brief Inserisce una collezione di contatti nel database
+     * @param[in] contacts Collezione di contatti da inserire
+     */
+    public void insertManyContacts(Collection<Contact> contacts) {
+
+    }
+
+    /**
+     * @brief Inserisce una collezione di tag nel database
+     * @param[in] tags Collezione di tag da inserire
+     */
+    public void insertManyTags(Collection<Tag> tags) {
+
     }
 }

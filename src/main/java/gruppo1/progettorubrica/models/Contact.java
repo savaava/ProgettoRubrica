@@ -15,7 +15,7 @@ public class Contact implements Serializable {
     private String[] numbers; ///< gli eventuali numeri di telefono in formato stringa dell'entità contatto
     private String[] emails; ///< le eventuali emails in formato stringa dell'entità contatto
     private byte[] profilePicture; ///< l'immagine in formato vettore di byte associata all'entità contatto
-    private Set<String> tags; ///< gli eventuali, contenuti nella collezione, in formato stringa associati all'entità contatto
+    private Set<Integer> tagIndexes; ///< gli eventuali, contenuti nella collezione, in formato stringa associati all'entità contatto
 
     /**
      * @brief Costruttore per creare un'istanza Contact con solo nome e cognome valorizzati. 
@@ -29,7 +29,7 @@ public class Contact implements Serializable {
         this.numbers = new String[3];
         this.emails = new String[3];
         this.profilePicture = null;
-        this.tags = new HashSet<>();
+        this.tagIndexes = new HashSet<>();
     }
 
     /**
@@ -116,16 +116,25 @@ public class Contact implements Serializable {
      * 
      * @return la collezione di tag associati al contatto 
      */
-    public Set<String> getTags() {
-        return tags;
+    public Set<Integer> getAllTagIndexes() {
+        return tagIndexes;
     }
 
     /**
-     * @brief imposta la collezione di tag in ingresso come l'insieme di tag dell'istanza Contact
-     * @param[in] tags 
+     * @brief rimuove l'indice del tag passato come parametro
+     * @param[in] indice del tag da rimuovere
+     * @return il tag rimosso
      */
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
+    public Integer removeTagIndex(Integer tagIndex) {
+        return null;
+    }
+
+    /**
+     * @brief aggiunge l'indice del tag passato come parametro
+     * @param[in] indice del tag da aggiungere
+     */
+    public void addTagIndex(Integer tagIndex) {
+
     }
     
     /**

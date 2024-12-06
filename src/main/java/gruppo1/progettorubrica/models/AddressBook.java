@@ -1,9 +1,8 @@
 package gruppo1.progettorubrica.models;
 
-import java.io.Serializable;
+import gruppo1.progettorubrica.services.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 
 /**
  * @brief Tale classe rappresenta una rubrica telefonica, può contenere 0 o più contatti.
@@ -11,9 +10,10 @@ import javafx.collections.ObservableSet;
  */
 public class AddressBook implements TagManager, ContactManager {
     private static AddressBook instance; ///< Unica istanza di AddressBook.
-    private ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
-    private ObservableList<String> tags; ///< Insieme dei tag inseriti.
+    private final ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
+    private final ObservableList<Tag> tags; ///< Insieme dei tag inseriti.
     private String dbUrl; ///< Link del database.
+    private Database db;
 
     /**
      * @brief Crea un'istanza della classe AddressBook.
@@ -37,7 +37,7 @@ public class AddressBook implements TagManager, ContactManager {
 
     
     @Override
-    public ObservableList<Contact> getContacts() {
+    public ObservableList<Contact> getAllContacts() {
         return contacts;
     }
 
@@ -54,17 +54,22 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     @Override
-    public ObservableList<String> getTags() {
+    public ObservableList<Tag> getAllTags() {
         return tags;
     }
 
     @Override
-    public void addTag(String tag) {
+    public Tag getTag(int id) {
+        return null;
+    }
+
+    @Override
+    public void addTag(Tag tag) {
 
     }
 
     @Override
-    public String removeTag(String tag) {
+    public Tag removeTag(Tag tag) {
         return null;
     }
 
@@ -127,6 +132,15 @@ public class AddressBook implements TagManager, ContactManager {
      * @brief Salva la configurazione su Config.bin
      */
     public void saveConfig() {
+
+    }
+
+    /**
+     * @brief Inizializza il database
+     * @pre È valorizzato il campo dbUrl
+     * @post L'attributo db contiene l'istanza del database
+     */
+    public void initDb() {
 
     }
 }
