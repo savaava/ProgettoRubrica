@@ -24,14 +24,14 @@ import javafx.scene.input.MouseEvent;
 public class ImagePopupController implements Initializable {
 
     @FXML
-    private ImageView imgAdd; ///< pulsante per poter caricare un'immagine personalizzata
+    private ImageView imgAdd; ///< Pulsante per poter caricare un'immagine personalizzata.
 
     @FXML
-    private HBox defaultImgHBox; ///< contiene le immagini suggerite
+    private HBox defaultImgHBox; ///< Contiene le immagini suggerite.
 
-    private File selectedImage; ///< file dell'immagine caricata dall'utente
+    private File selectedImage; ///< File dell'immagine caricata dall'utente.
     
-    private int imageIndex; ///< indice dell'immagine scelta dall'utente
+    private int imageIndex; ///< Indice dell'immagine scelta dall'utente.
 
 
     /**

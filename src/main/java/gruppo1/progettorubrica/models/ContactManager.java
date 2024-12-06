@@ -7,10 +7,7 @@ package gruppo1.progettorubrica.models;
 
 import javafx.collections.ObservableList;
 
-/**
- *
- * @author solon
- */
+
 public interface ContactManager {
     
     /**
@@ -18,6 +15,18 @@ public interface ContactManager {
      */
     ObservableList<Contact> getContacts();
     
+    /**
+     * @brief Aggiunge un contatto alla rubrica telefonica.
+     * 
+     * @param[in] c Contatto da aggiungere.
+     */
+    void addContact(Contact c);
     
+    /**
+     * @brief Rimuove la prima occorrenza del contatto.
+     * @param[in] c Contatto da rimuovere.
+     * @return Contatto rimosso.
+     */
+    Contact removeContact(Contact c);
     
 }

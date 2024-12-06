@@ -10,23 +10,23 @@ import gruppo1.progettorubrica.models.ContactManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @brief Controller che visualizza il popup per l'export della rubrica.
+ * 
+ * Tramite tale popup è possibile selezionare il percorso del file .csv o .vCard in cui esportare la rubrica.
+ */
+
 public class ExportPopupController implements Initializable {
-    private ContactManager contactManager;
+    private ContactManager contactManager; ///< Riferimento all'interfaccia ContactManager, implementata da AddressBook.
 
     @FXML
-    private ChoiceBox<String> exportChoiceBox;
+    private ChoiceBox<String> exportChoiceBox; ///< Permette all'utente di scegliere quali contatti esportare.
 
     @FXML
-    private RadioButton vCardButton, csvButton;
-
-    @FXML
-    private ToggleGroup ext;
-
-    @FXML
-    private Button saveButton;
+    private Button saveButton; ///<Pulsante per concludere l'esportazione.
 
     /**
-     * @brief Inizializzazione controller
+     * @brief Inizializzazione controller.
      *
      *  Tramite questo metodo carichiamo su questo controller l'istanza della rubrica in esame.
      * 
@@ -39,10 +39,10 @@ public class ExportPopupController implements Initializable {
     }
 
     /**
-     * @brief Scelta del percorso del file di esportazione
+     * @brief Scelta del percorso del file di esportazione.
      *
      * Invocando questo metodo il controller permette all'utente di scegliere 
-     * il path su dove salvare il file di export della rubrica
+     * il path su dove salvare il file di export della rubrica.
      *
      * @param[in] event
      */
@@ -52,9 +52,9 @@ public class ExportPopupController implements Initializable {
     }
 
     /**
-     * @brief Esporta la rubrica
+     * @brief Esporta la rubrica.
      * 
-     * Questo metodo, che viene invocato cliccando il pulsante "Esporta", permette di esportare la rubrica
+     * Questo metodo, che viene invocato cliccando il pulsante "Esporta", permette di esportare la rubrica.
      * @param[in] event 
      * @see onExportCSV(ActionEvent event)
      * @see onExportVCard(ActionEvent event)
@@ -66,7 +66,7 @@ public class ExportPopupController implements Initializable {
     
     
     /**
-     * @brief Esporta la rubrica in un file nel formato .csv
+     * @brief Esporta la rubrica in un file nel formato .csv.
      * @param[in] event 
      */
     private void onExportCSV(ActionEvent event) {
@@ -74,7 +74,7 @@ public class ExportPopupController implements Initializable {
     }
     
     /**
-     * @brief Esporta la rubrica in un file nel formato .vCard
+     * @brief Esporta la rubrica in un file nel formato .vCard.
      * @param[in] event 
      */
     private void onExportVCard(ActionEvent event) {

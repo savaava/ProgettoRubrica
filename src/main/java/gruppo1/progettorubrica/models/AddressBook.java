@@ -41,20 +41,14 @@ public class AddressBook implements TagManager, ContactManager {
         return contacts;
     }
 
-    /**
-     * @brief Aggiunge un contatto alla rubrica telefonica.
-     * 
-     * @param[in] c Contatto da aggiungere.
-     */
+    
+    @Override
     public void addContact(Contact c) {
 
     }
 
-    /**
-     * @brief Rimuove la prima occorrenza del contatto.
-     * @param[in] c Contatto da rimuovere.
-     * @return Contatto rimosso.
-     */
+    
+    @Override
     public Contact removeContact(Contact c) {
         return null;
     }

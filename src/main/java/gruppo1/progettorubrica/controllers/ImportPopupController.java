@@ -11,14 +11,19 @@ import gruppo1.progettorubrica.models.ContactManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @brief Controller che visualizza il popup per l'import di una rubrica.
+ * 
+ * Tramite tale popup è possibile selezionare il percorso del file .csv o .vCard da cui importare la rubrica.
+ */
 public class ImportPopupController implements Initializable {
-    private ContactManager contactManager;  ///< istanza dell'interfaccia con i metodi utilizzabili dal controller
+    private ContactManager contactManager;  ///< Istanza dell'interfaccia con i metodi utilizzabili dal controller.
 
     @FXML
-    private Button importButton;   ///< riferimento al pulsante per importare la rubrica da file
+    private Button importButton;   ///< Riferimento al pulsante per importare la rubrica da file.
 
     /**
-     * @brief Inizializzazione controller
+     * @brief Inizializzazione controller.
      *
      *  Tramite questo metodo carichiamo su questo controller l'istanza della rubrica in esame.
      * 
@@ -32,9 +37,9 @@ public class ImportPopupController implements Initializable {
     }
     
     /**
-     * @brief  Selezione percorso
+     * @brief  Selezione percorso.
      *
-     *  Tramite questo metodo l'utente fornisce al controller il file di import della rubrica 
+     *  Tramite questo metodo l'utente fornisce al controller il file di import della rubrica.
      * 
      * @param[in] event
      */
@@ -44,9 +49,9 @@ public class ImportPopupController implements Initializable {
     }
 
     /**
-     * @brief Importa rubrica
+     * @brief Importa rubrica.
      *
-     * Questo metodo, che viene invocato cliccando il pulsante "Importa", permette di importare la rubrica
+     * Questo metodo, che viene invocato cliccando il pulsante "Importa", permette di importare la rubrica.
      * @param[in] event
      */
     
@@ -56,7 +61,7 @@ public class ImportPopupController implements Initializable {
     }
 
     /**
-     * @brief Controllo formato .csv
+     * @brief Controllo formato .csv.
      *
      *  Tramite questo metodo il controller verifica che il file fornito sia di formato .csv.
      * 
@@ -66,7 +71,7 @@ public class ImportPopupController implements Initializable {
     }
 
     /**
-     * @brief Controllo formato .VCard
+     * @brief Controllo formato .VCard.
      *
      *  Tramite questo metodo il controller verifica che il file fornito sia di formato .csv.
      * 

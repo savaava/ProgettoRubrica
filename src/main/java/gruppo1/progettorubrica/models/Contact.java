@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @brief la classe Contact modella un'entità contatto.
+ * @brief La classe Contact modella un'entità contatto.
  * 1 o più istanze di Contact possono far parte della classe AddressBook: 
  * @see AddressBook
  */
