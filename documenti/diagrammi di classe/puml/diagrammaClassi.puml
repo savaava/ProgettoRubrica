@@ -1,4 +1,4 @@
-@startuml DiagrammaDelleClassi
+@startuml Diagramma Classi
 skinparam linetype ortho
 'left to right direction
 
@@ -164,10 +164,12 @@ class ConfirmPopupController {
 }
 
 class ConfigPopupController {
+    - AddressBook addressBook
     - Button verifyButton
     - Button confirmButton
     - TextField textField
     
+    + void initialize()
     - void onVerify()
     - void onConfirm()
 }
@@ -193,8 +195,6 @@ class Database {
 
 
 '****************** INTERFACCE ******************
-interface Initializable
-
 interface Serializable
 
 interface TagManager {
@@ -222,21 +222,17 @@ AddressBook "1" o-- "0..*" Tag
 AddressBook ..|> TagManager
 AddressBook ..|> ContactManager
 
-MainController ..|> Initializable
 MainController "1" o-- "1" AddressBook
 MainController ..> ImagePopupController
 MainController ..> ConfirmPopupController
 
-ImportPopupController ..|> Initializable
 ImportPopupController "1" o-- "1" ContactManager
 
-ExportPopupController ..|> Initializable
 ExportPopupController "1" o-- "1" ContactManager
 
-ManageTagsPopupController ..|> Initializable
 ManageTagsPopupController ..> ConfirmPopupController
 ManageTagsPopupController "1" o-- "1" TagManager
 
-ImagePopupController ..|> Initializable
+ConfigPopupController "1" o-- "1" AddressBook
 
 @enduml

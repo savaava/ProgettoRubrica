@@ -1,4 +1,4 @@
-@startuml DiagrammaDelleClassiEssenziale
+@startuml DiagrammaClassiEssenziale
 skinparam linetype ortho
 'left to right direction
 
@@ -66,11 +66,13 @@ class ImagePopupController {
 }
 
 class ConfirmPopupController {
-    onConfirm()
-    onCancel()
+    + onConfirm()
+    + onCancel()
 }
 
 class ConfigPopupController {
+    - AddressBook addressBook
+
     - void onVerify()
     - void onConfirm()
 }
@@ -124,5 +126,7 @@ ManageTagsPopupController ..> ConfirmPopupController
 ExportPopupController "1" o-- "1" ContactManager
 
 ImportPopupController "1" o-- "1" ContactManager
+
+ConfigPopupController "1" o-- "1" AddressBook
 
 @enduml
