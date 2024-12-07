@@ -9,7 +9,16 @@ import javafx.fxml.FXML;
  * Tale popup consente all'utente di confermare o annullare un'operazione.
  */
 public class ConfirmPopupController {
-    
+    private boolean choice; ///< Scelta dell'utente
+
+    /**
+     * @brief Restituisce la scelta dell'utente.
+     * @return true se l'utente ha confermato l'operazione, false altrimenti
+     */
+    public boolean getChoice() {
+        return choice;
+    }
+
     /**
      * @brief Tale metodo conferma l'operazione.
      * @param[in] event 

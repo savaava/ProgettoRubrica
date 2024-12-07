@@ -122,9 +122,6 @@ class ImportPopupController {
 class ExportPopupController {
     - ContactManager contactManager
     - ChoiceBox<String> exportChoiceBox
-    - RadioButton vCardButton
-    - RadioButton csvButton
-    - ToggleGroup ext
     - Button saveButton
 
     + void initialize()
