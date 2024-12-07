@@ -7,17 +7,37 @@ participant "Database" as sd
 participant "a Database" as d
 
 u -> mc : nel menù file clicca "Config"
-mc -> cpc : showConfigPopup()
+activate mc
+mc -> cpc ** : showConfigPopup()
+deactivate mc
 u -> cpc : inserisce URL del database e clicca "Verifica"
+cpc -> cpc : onVerify()
+activate cpc
 cpc -> sd : verifyDBUrl(String url)
 note right
     Questo metodo è statico.
 end note
+activate cpc
+activate sd
+sd --> cpc : boolean
+deactivate sd
+deactivate cpc
+deactivate cpc
 alt "L'url è valido"
     u -> cpc : clicca "Conferma"
+    cpc -> cpc : onConfirm()
+    activate cpc
     cpc -> ab : setDBUrl(String url)
+    activate ab
+    deactivate ab
     cpc -> ab : saveConfig()
+    activate ab
+    deactivate ab
     cpc -> ab : initDB()
+    activate ab
     ab -> d ** : Database(String url)
+    deactivate ab
+    deactivate cpc
+    destroy cpc
 end
 @enduml
