@@ -3,13 +3,14 @@ package gruppo1.progettorubrica.models;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import org.bson.Document;
 
 /**
  * @brief La classe Contact modella un'entità contatto.
  * 1 o più istanze di Contact possono far parte della classe AddressBook: 
  * @see AddressBook
  */
-public class Contact implements Serializable {
+public class Contact implements Serializable{
     private String name; ///< il nome in formato stringa dell'entità contatto
     private String surname; ///< il cognome in formato stringa dell'entità contatto
     private String[] numbers; ///< gli eventuali numeri di telefono in formato stringa dell'entità contatto
@@ -156,4 +157,5 @@ public class Contact implements Serializable {
 
         return false;
     }
+    
 }
