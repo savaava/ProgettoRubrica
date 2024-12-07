@@ -76,16 +76,14 @@ class Tag {
 }
 
 class Database {
-
+    + void insertContact(Contact c)
+    + void insertTag(Tag tag)
+    + Collection<Contact> getAllContacts()
+    + Collection<Tag> getAllTags()
 } 
 
 '****************** INTERFACCE ******************
 interface Serializable
-
-interface MongoSerializable {
-    +{abstract} void toDocument() 
-    +{abstract} void fromDocument()
-}
 
 interface TagManager {
     +{abstract} void addTag(Tag tag)
@@ -101,8 +99,9 @@ interface ContactManager {
 }
 
 '****************** RELAZIONI ******************
-Contact ..|> MongoSerializable
 Contact ..|> Serializable
+
+Tag ..|> Serializable
 
 AddressBook "1" o-- "0..*" Contact
 AddressBook "1" *-- "0..1" Database
