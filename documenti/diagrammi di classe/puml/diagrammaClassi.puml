@@ -157,6 +157,8 @@ class ImagePopupController {
 }
 
 class ConfirmPopupController {
+    - boolean choice;
+    + boolean getChioce()
     - onConfirm()
     - onCancel()
 }
