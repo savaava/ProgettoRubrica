@@ -1,0 +1,23 @@
+@startuml Aggiunta Database
+actor Utente as u
+participant "a MainController" as mc
+participant "a ConfigPopupController" as cpc
+participant "a AddressBook" as ab
+participant "Database" as sd
+participant "a Database" as d
+
+u -> mc : nel menù file clicca "Config"
+mc -> cpc : showConfigPopup()
+u -> cpc : inserisce URL del database e clicca "Verifica"
+cpc -> sd : verifyDBUrl(String url)
+note right
+    Questo metodo è statico.
+end note
+alt "L'url è valido"
+    u -> cpc : clicca "Conferma"
+    cpc -> ab : setDBUrl(String url)
+    cpc -> ab : saveConfig()
+    cpc -> ab : initDB()
+    ab -> d ** : Database(String url)
+end
+@enduml

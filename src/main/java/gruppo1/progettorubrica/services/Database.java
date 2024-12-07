@@ -21,6 +21,15 @@ public class Database {
     }
 
     /**
+     * @brief Verifica la validità dell'URL del database
+     * @param[in] url URL del database
+     * @return true se l'URL è valido, false altrimenti
+     */
+    public static boolean verifyDBUrl(String url) {
+        return false;
+    }
+
+    /**
      * @brief Aggiunge un contatto al database
      * @param[in] c Contatto da aggiungere
      */
