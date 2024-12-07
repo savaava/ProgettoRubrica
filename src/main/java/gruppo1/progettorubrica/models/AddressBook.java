@@ -77,14 +77,14 @@ public class AddressBook implements TagManager, ContactManager {
      * @brief Valorizza l'attributo dbUrl inserendo il link del database.
      * @param[in] dbUrl Link del database.
      */
-    public void setDbUrl(String dbUrl) {
+    public void setDBUrl(String dbUrl) {
 
     }
 
     /**
      * @return Il link del database.
      */
-    public String getDbUrl() {
+    public String getDBUrl() {
         return dbUrl;
     }
 
@@ -140,7 +140,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @pre È valorizzato il campo dbUrl
      * @post L'attributo db contiene l'istanza del database
      */
-    public void initDb() {
+    public void initDB() {
 
     }
 }
