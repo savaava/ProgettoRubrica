@@ -36,6 +36,22 @@ alt "L'url è valido"
     cpc -> ab : initDB()
     activate ab
     ab -> d ** : Database(String url)
+
+    ab -\\ d : insertManyContacts(...)
+    activate d
+    deactivate d
+
+    ab -\\ d : insertManyTags(...)
+    activate d
+    deactivate d
+
+    ab -> ab : removeOBJ()
+    activate ab
+    deactivate ab
+    note left
+    Rimuove Data.bin
+    end note
+
     deactivate ab
     deactivate cpc
     destroy cpc

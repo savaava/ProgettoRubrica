@@ -82,8 +82,8 @@ class Tag {
 
 class Database {
     + {static} boolean verifyDBUrl(String url)
-    + void insertContact(Contact c)
-    + void insertTag(Tag tag)
+    + void upsertContact(Contact c)
+    + void removeTag(Tag tag)
     + Collection<Contact> getAllContacts()
     + Collection<Tag> getAllTags()
 } 

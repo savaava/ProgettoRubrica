@@ -7,7 +7,15 @@ participant "a Database" as d
 
 u -> ab : aggiunge/modifica/elimina contatto o tag
 
-alt utente non ha specificato il link per DB
+ab -> ab : metodo di modifica rubrica
+note right
+ad esempio
+addContact(...)
+removeTag(...)
+end note
+activate ab
+
+alt non esiste un DB per il salvataggio
 ab -> ab : saveOBJ()
 activate ab
 ab -> ab : Salvataggio lista contatti in Data.bin
@@ -18,10 +26,17 @@ activate ab
 deactivate ab
 deactivate ab
 
-else utente ha specificato il link per DB
-ab -> ab : saveToDB()
+else esiste un DB per il salvataggio
+ab -\\ d : metodo aggiornamento 
 activate ab
-ab -\\ d : metodo per l'operazione effettuata dall'utente
+note right
+ad esempio
+upsertContact(...)
+removeTag(...)
+end note
+activate d
+deactivate d
+deactivate ab
 deactivate ab
 
 end
