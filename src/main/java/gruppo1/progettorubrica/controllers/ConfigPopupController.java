@@ -1,14 +1,21 @@
 package gruppo1.progettorubrica.controllers;
 
+import gruppo1.progettorubrica.models.AddressBook;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * @brief Classe controller per la finestra di configurazione dell'URL del database
  */
-public class ConfigPopupController {
+public class ConfigPopupController implements Initializable {
+    private AddressBook addressBook;
+
     @FXML
     private Button verifyButton; ///< Bottone per verificare la configurazione
 
@@ -17,6 +24,17 @@ public class ConfigPopupController {
 
     @FXML
     private TextField textField; ///< Campo di testo per inserire l'URL del database
+
+    /**
+     * @brief Inizializza il main controller
+     *
+     *  Questo metodo permette l'inizializzazione del controller in fase di apertura.
+     *
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 
     /**
      * @brief Metodo che viene chiamato quando si preme il bottone verifyButton
