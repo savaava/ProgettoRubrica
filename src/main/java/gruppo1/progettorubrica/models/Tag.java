@@ -4,7 +4,7 @@ import java.io.Serializable;
 import org.bson.Document;
 
 /**
- * @brief Tale classe modella un'entità tag.
+ * @brief Modella un'entità tag.
  * 
  * Permette di aggiungere 1 o più tag nella rubrica telefonica.
  * @see AddressBook

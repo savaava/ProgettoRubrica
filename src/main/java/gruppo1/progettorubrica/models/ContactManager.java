@@ -2,6 +2,9 @@ package gruppo1.progettorubrica.models;
 
 import javafx.collections.ObservableList;
 
+/**
+ * @brief Interfaccia per la gestione dei contatti.
+ */
 public interface ContactManager {
 
     /**

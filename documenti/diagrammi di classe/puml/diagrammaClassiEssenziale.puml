@@ -129,4 +129,6 @@ ImportPopupController "1" o-- "1" ContactManager
 
 ConfigPopupController "1" o-- "1" AddressBook
 
+ManageTagsPopupController "1" o-- "1" TagManager
+
 @enduml

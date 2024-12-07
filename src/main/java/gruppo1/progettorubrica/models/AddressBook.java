@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * @brief Tale classe rappresenta una rubrica telefonica, può contenere 0 o più contatti.
+ * @brief Modella una rubrica telefonica, può contenere 0 o più contatti.
  * @see Contact
  */
 public class AddressBook implements TagManager, ContactManager {

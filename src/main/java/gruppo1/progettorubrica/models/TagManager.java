@@ -2,6 +2,9 @@ package gruppo1.progettorubrica.models;
 
 import javafx.collections.ObservableList;
 
+/**
+ * @brief Interfaccia per la gestione dei tag.
+ */
 public interface TagManager {
     /**
      * @brief Aggiunge un tag.
@@ -16,6 +19,11 @@ public interface TagManager {
      */
     Tag removeTag(Tag tag);
 
+    /**
+     * 
+     * @param[in] id
+     * @return Il tag associato al parametro in ingresso id.
+     */
     Tag getTag(int id);
 
     /**

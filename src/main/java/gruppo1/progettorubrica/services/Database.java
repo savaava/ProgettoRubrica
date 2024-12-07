@@ -8,7 +8,7 @@ import org.bson.Document;
 import java.util.Collection;
 
 /**
- * @brief Classe Database
+ * @brief Modella un database per il salvataggio dei dati.
  * 
  * Questa classe si occupa di gestire il database utilizzando il package di MongoDB.
  */
