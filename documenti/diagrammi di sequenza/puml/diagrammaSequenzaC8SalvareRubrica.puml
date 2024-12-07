@@ -1,4 +1,4 @@
-@startuml salvataggio in locale o in DB
+@startuml Salvataggio in locale o in DB
 
 actor Utente as u
 'participant "a MainController" as mc

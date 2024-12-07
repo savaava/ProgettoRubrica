@@ -1,4 +1,4 @@
-@startuml EliminareModificareContatto
+@startuml Eliminare Modificare Contatto
 
 actor Utente as u
 participant "a MainController" as mc 

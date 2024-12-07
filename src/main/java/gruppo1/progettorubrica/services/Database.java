@@ -30,18 +30,10 @@ public class Database {
     }
 
     /**
-     * @brief Aggiunge un contatto al database
+     * @brief Aggiunge/aggiorna un contatto al database
      * @param[in] c Contatto da aggiungere
      */
-    public void insertContact(Contact c) {
-
-    }
-
-    /**
-     * @brief Aggiorna un contatto nel database
-     * @param[in] c Contatto da aggiornare
-     */
-    public void updateContact(Contact c) {
+    public void upsertContact(Contact c) {
 
     }
 
@@ -54,16 +46,9 @@ public class Database {
     }
 
     /**
-     * @brief Aggiunge un tag al database
+     * @brief Aggiunge/aggiorna un tag al database
      */
-    public void insertTag(Tag tag) {
-
-    }
-
-    /**
-     * @brief Aggiorna un tag nel database
-     */
-    public void updateTag(Tag tag) {
+    public void upsertTag(Tag tag) {
 
     }
 

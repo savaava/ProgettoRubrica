@@ -105,11 +105,18 @@ public class AddressBook implements TagManager, ContactManager {
         return null;
     }
 
+    /**
+     * @brief Elimina il file Data.bin.
+     */
+    public void removeOBJ() {
+
+    }
+
     
     /**
      * @brief Salva la rubrica telefonica sul database.
      */
-    public void saveOnDB() {
+    public void saveToDB() {
 
     }
 
