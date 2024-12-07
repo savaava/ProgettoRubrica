@@ -1,0 +1,58 @@
+@startuml init rubrica
+
+actor Utente as u
+participant "a MainController" as mc
+participant "a AddressBook" as ab
+participant "a Database" as d
+
+u -> mc ** : apre rubrica
+mc -> mc : Inizialize(...)
+activate mc
+mc -> ab ** : getInstance()
+activate mc
+ab -> ab : AddressBook()
+activate ab
+
+ab -> ab : loadConfig()
+activate ab
+deactivate ab
+
+alt utente non ha specificato il link per DB
+ab -> ab : loadOBJ()
+activate ab
+deactivate ab
+
+else utente ha specificato il link per DB
+ab -> ab : initDB()
+activate ab
+ab -> d ** : Database(String url)
+
+deactivate ab
+
+ab -> ab : loadFromDB()
+activate ab
+ab -> d : getAllContacts()
+activate d
+activate ab
+d --> ab : restituisce contatti da DB
+deactivate d
+deactivate ab
+
+ab -> d : getAllTags()
+activate ab
+activate d
+d --> ab : restituisce tags da DB
+deactivate ab
+deactivate d
+
+deactivate ab
+
+end
+
+ab --> mc : lista dei contatti e dei tag
+deactivate mc
+deactivate ab
+mc -> u : mostra la lista dei contatti
+deactivate mc
+
+@enduml

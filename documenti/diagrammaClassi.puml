@@ -94,17 +94,17 @@ class MainController {
     - void setImageCircle()
     - void searchFieldBinding()    
     - void onFilterClicked()
-    - void onAddContact(ActionEvent event)
+    - void onAddContact()
     - void onContactClicked(MouseEvent event)
-    - void onSaveContact(ActionEvent event)
-    - void onModifyContact(ActionEvent event)
-    - void onRemoveContact(ActionEvent event)
-    - void onCancel(ActionEvent event)
-    - void showImportPopup(ActionEvent event)
-    - void showExportPopup(ActionEvent event)
-    - void showConfigPopup(ActionEvent event)
-    - void showImagePopup(ActionEvent event)
-    - void showManageTagsPopup(ActionEvent event)
+    - void onSaveContact()
+    - void onModifyContact()
+    - void onRemoveContact()
+    - void onCancel()
+    - void showImportPopup()
+    - void showExportPopup()
+    - void showConfigPopup()
+    - void showImagePopup()
+    - void showManageTagsPopup()
 }
 
 class ImportPopupController {
@@ -112,8 +112,8 @@ class ImportPopupController {
     - Button importButton
 
     + void initialize()
-    - void selectFile(ActionEvent event)
-    - void onImport(ActionEvent event)
+    - void selectFile()
+    - void onImport()
     - boolean checkCSVFormat()
     - boolean checkVCardFormat()
 }
@@ -127,7 +127,7 @@ class ExportPopupController {
     - Button saveButton
 
     + void initialize()
-    - void choosePath(ActionEvent event)
+    - void choosePath()
     - void onExport()
     - void onExportCSV()
     - void onExportVCard()
@@ -141,9 +141,9 @@ class ManageTagsPopupController {
     - Button deleteButton
 
     + void initialize()
-    - void onAdd(ActionEvent event)
-    - void onUpdate(ActionEvent event)
-    - void onDelete(ActionEvent event)
+    - void onAdd()
+    - void onUpdate()
+    - void onDelete()
 }
 
 class ImagePopupController {
@@ -163,8 +163,18 @@ class ConfirmPopupController {
     - onCancel()
 }
 
+class ConfigPopupController {
+    - Button verifyButton
+    - Button confirmButton
+    - TextField textField
+    
+    - void onVerify()
+    - void onConfirm()
+}
+
 class Database {
     + Database(String url)
+    + {static} boolean verifyDBUrl(String url)
     + void insertContact(Contact c)
     + void updateContact(Contact c)
     + void removeContact(Contact c)

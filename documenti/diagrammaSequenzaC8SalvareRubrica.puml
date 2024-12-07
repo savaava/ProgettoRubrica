@@ -1,0 +1,29 @@
+@startuml salvataggio in locale o in DB
+
+actor Utente as u
+'participant "a MainController" as mc
+participant "a AddressBook" as ab
+participant "a Database" as d
+
+u -> ab : aggiunge/modifica/elimina contatto o tag
+
+alt utente non ha specificato il link per DB
+ab -> ab : saveOBJ()
+activate ab
+ab -> ab : Salvataggio lista contatti in Data.bin
+activate ab
+deactivate ab
+ab -> ab : Salvataggio lista tags in Data.bin
+activate ab
+deactivate ab
+deactivate ab
+
+else utente ha specificato il link per DB
+ab -> ab : saveToDB()
+activate ab
+ab -\\ d : metodo per l'operazione effettuata dall'utente
+deactivate ab
+
+end
+
+@enduml
