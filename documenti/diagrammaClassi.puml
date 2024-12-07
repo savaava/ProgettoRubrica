@@ -39,8 +39,7 @@ class Contact {
     + Set<Integer> getAllTagIndexes()
     + Integer removeTagIndex(Integer tagIndex)
     + void addTagIndex(Integer tagIndex)
-    + boolean equals(Object o)
-    
+    + boolean equals(Object o)    
 }
 
 class AddressBook {
@@ -180,48 +179,54 @@ class Database {
 
 
 '****************** INTERFACCE ******************
-interface MongoSerializable {
-    +void toDocument() 
-    +void fromDocument()
-}
+interface Initializable
 
 interface Serializable
 
-interface Initializable
+interface MongoSerializable {
+    +{abstract} void toDocument() 
+    +{abstract} void fromDocument()
+}
 
 interface TagManager {
-    void addTag(Tag tag)
-    Tag removeTag(Tag tag)
-    Tag getTag(int id)
-    ObservableList<Tag> getAllTags()
+    +{abstract} void addTag(Tag tag)
+    +{abstract} Tag removeTag(Tag tag)
+    +{abstract} Tag getTag(int id)
+    +{abstract} ObservableList<Tag> getAllTags()
 }
 
 interface ContactManager {
-    ObservableList<Contact> getAllContacts()
-    addContact(Contact c)
-    removeContact(Contact c)
+    +{abstract} ObservableList<Contact> getAllContacts()
+    +{abstract} addContact(Contact c)
+    +{abstract} removeContact(Contact c)
 }
 
 
 '****************** RELAZIONI ******************
 Contact ..|> MongoSerializable
 Contact ..|> Serializable
+
 AddressBook "1" o-- "0..*" Contact
+AddressBook "1" *-- "0..1" Database
+AddressBook "1" o-- "0..*" Tag
+AddressBook ..|> TagManager
+AddressBook ..|> ContactManager
+
 MainController ..|> Initializable
 MainController "1" o-- "1" AddressBook
 MainController ..> ImagePopupController
-ImportPopupController ..|> Initializable
-ExportPopupController ..|> Initializable
-ManageTagsPopupController ..|> Initializable
-ImagePopupController ..|> Initializable
 MainController ..> ConfirmPopupController
+
+ImportPopupController ..|> Initializable
+ImportPopupController "1" o-- "1" ContactManager
+
+ExportPopupController ..|> Initializable
+ExportPopupController "1" o-- "1" ContactManager
+
+ManageTagsPopupController ..|> Initializable
 ManageTagsPopupController ..> ConfirmPopupController
 ManageTagsPopupController "1" o-- "1" TagManager
-AddressBook ..|> TagManager
-AddressBook ..|> ContactManager
-ExportPopupController "1" o-- "1" ContactManager
-ImportPopupController "1" o-- "1" ContactManager
-AddressBook "1" o-- "1" Database
-AddressBook "1" o-- "0..*" Tag
+
+ImagePopupController ..|> Initializable
 
 @enduml

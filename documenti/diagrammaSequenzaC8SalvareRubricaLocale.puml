@@ -1,0 +1,23 @@
+@startuml salvataggio in locale
+actor Utente as u
+participant "a MainController" as mc
+participant "a AddressBook" as ab
+
+u -> mc ** : apre Rubrica
+mc -> mc : Initialize(...)
+activate mc
+mc -> ab ** : getInstance()
+activate ab
+activate mc
+ab --> mc : lista dei contatti
+deactivate mc
+deactivate ab
+mc --> u : mostra la lista dei contatti
+deactivate mc
+u -> mc : effettua una qualsiasi modifica
+mc -> mc : salvaOBJ()
+activate mc
+mc -> mc : Salvataggio rubrica in Data.bin
+activate mc
+deactivate mc
+@enduml

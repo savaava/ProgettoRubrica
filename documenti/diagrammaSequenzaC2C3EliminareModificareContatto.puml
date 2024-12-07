@@ -10,7 +10,9 @@ mc -> mc : Initialize(...)
 activate mc 
 mc -> ab ** : getInstance()
 activate ab
+activate mc
 ab --> mc : lista dei contatti
+deactivate mc
 deactivate ab
 mc --> u : mostra la lista dei contatti
 deactivate
