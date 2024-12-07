@@ -57,15 +57,15 @@ class AddressBook {
     + void addTag(Tag tag)
     + Tag removeTag(Tag tag)
     + {static} AddressBook getInstance()
-    + void setDbUrl(String dbUrl)
-    + String getDbUrl()
+    + void setDBUrl(String dbUrl)
+    + String getDBUrl()
     + void saveOBJ()
     + AddressBook loadOBJ()
     + void saveToDB()
     + AddressBook loadFromDB()   
     + void loadConfig()
     + void saveConfig()
-    + void initDb() 
+    + void initDB()
 }
 
 class MainController {
@@ -175,6 +175,10 @@ class Database {
     + Collection<Tag> getAllTags()
     + void insertManyContacts(Collection<Contact> contacts)
     + void insertManyTags(Collection<Tag> tags)
+    + Document contactToDocument(Contact c)
+    + Contact documentToContact(Document d)
+    + Document tagToDocument(Tag tag)
+    + Tag documentToTag (Document d)
 } 
 
 
@@ -182,11 +186,6 @@ class Database {
 interface Initializable
 
 interface Serializable
-
-interface MongoSerializable {
-    +{abstract} void toDocument() 
-    +{abstract} void fromDocument()
-}
 
 interface TagManager {
     +{abstract} void addTag(Tag tag)
@@ -203,8 +202,9 @@ interface ContactManager {
 
 
 '****************** RELAZIONI ******************
-Contact ..|> MongoSerializable
 Contact ..|> Serializable
+
+Tag ..|> Serializable
 
 AddressBook "1" o-- "0..*" Contact
 AddressBook "1" *-- "0..1" Database
