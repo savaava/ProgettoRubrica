@@ -7,32 +7,37 @@ participant "ImagePopupController" as ipc
 participant "a Contact" as c
 
 u -> mc ** : Apre rubrica
-activate mc 
 mc -> mc : Initialize(...)
+activate mc 
 mc -> ab ** : getInstance()
 deactivate mc
 
 u -> mc :  clicca "+" o "Aggiungi contatto"
-activate mc 
 mc -> mc : onAddButtonPressed(...)
+activate mc 
 mc --> u : mostra schermata di aggiunta contatto
+deactivate mc
 u -> mc : inserisce i campi del contatto
 
 alt utente clicca sull'immagine
-u -> mc : clicca sull'immagine
+u -> mc : clicca sull'immagine per cambiarla
 activate mc
 mc -> ipc ** : showImagePopup(...)
 deactivate mc
 u -> ipc : sceglie un'immagine
-activate ipc
 ipc -> ipc : carica un'immagine
+activate ipc
 mc -> ipc : getSelectedImage()
 destroy ipc
 end
 
 u -> mc : clicca "Salva"
 mc -> mc : onSaveContact(...)
+activate mc 
 mc -> c ** : crea il contatto
 mc -> ab : addContact(Contact c)
+activate ab
+deactivate ab
+deactivate mc 
 
 @enduml
