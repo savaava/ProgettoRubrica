@@ -1,5 +1,6 @@
 package gruppo1.progettorubrica.services;
 
+import com.mongodb.client.MongoDatabase;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import org.bson.Document;
@@ -12,6 +13,8 @@ import java.util.Collection;
  * Questa classe si occupa di gestire il database utilizzando il package di MongoDB.
  */
 public class Database {
+    private MongoDatabase mongoDb; ///< Oggetto database di tipo MongoDatabase
+
     /**
      * @brief Costruttore della classe Database
      * @param[in] uri URL del database
