@@ -7,7 +7,7 @@ participant "ImagePopupController" as ipc
 participant "a Contact" as c
 
 u -> mc ** : Apre rubrica
-mc -> mc : Initialize(...)
+mc -> mc : initialize(...)
 activate mc 
 mc -> ab ** : getInstance()
 deactivate mc

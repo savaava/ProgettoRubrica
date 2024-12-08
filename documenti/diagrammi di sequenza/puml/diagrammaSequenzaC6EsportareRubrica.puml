@@ -4,14 +4,14 @@ participant "a MainController" as MC
 participant "an ExportPopupController" as EPC
 
 Utente -> MC ** : apre Rubrica
-MC -> MC : Initialize(...)
+MC -> MC : initialize(...)
 activate MC
 deactivate MC
 Utente -> MC : clicca "Esporta"
 activate MC
 MC -> EPC ** : showExportPopup(...)
 deactivate MC
-EPC -> EPC : Initialize(...)
+EPC -> EPC : initialize(...)
 activate EPC
 deactivate EPC
 EPC -> EPC : choosePath(...)
@@ -21,7 +21,7 @@ deactivate EPC
 EPC -> EPC : genera file .csv o .vCard
 activate EPC
 deactivate EPC
-Utente -> EPC : Clicca sul pulsante "Esporta"
+Utente -> EPC : clicca sul pulsante "Esporta"
 EPC -> EPC : onExport(...)
 activate EPC
 alt utente ha scelto .csv

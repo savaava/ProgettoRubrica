@@ -6,7 +6,7 @@ participant "a AddressBook" as ab
 participant "Database" as sd
 participant "a Database" as d
 
-u -> mc : nel menù file clicca "Config"
+u -> mc : nel menù file clicca "Configurazione"
 activate mc
 mc -> cpc ** : showConfigPopup()
 deactivate mc

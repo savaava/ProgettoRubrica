@@ -6,7 +6,7 @@ participant "a AddressBook" as ab
 participant "a Database" as d
 
 u -> mc ** : apre rubrica
-mc -> mc : Inizialize(...)
+mc -> mc : initialize(...)
 activate mc
 mc -> ab ** : getInstance()
 activate mc
