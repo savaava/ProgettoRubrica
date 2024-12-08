@@ -59,7 +59,8 @@ public class MainController implements Initializable {
     /**
      * @brief Inizializza il main controller
      *
-     *  Questo metodo permette l'inizializzazione del controller in fase di apertura.
+     *  Questo metodo permette l'inizializzazione del controller in fase di apertura 
+     *  tramite il metodo getInstance {@link AddressBook#getInstance()}.
      *
      */
     @Override
@@ -137,9 +138,12 @@ public class MainController implements Initializable {
     /**
      * @brief Cancella contatto
      *
-     * Tramite questo metodo, cliccando il pulsante "Elimina" dalla visione dettagliata del contatto scelto, possiamo eliminarlo.
+     * Vedi anche ConfirmPopupController
+     * Tramite questo metodo, cliccando il pulsante "Elimina" dalla visione dettagliata del contatto scelto, si può eliminare.
+     * Prima di eliminarlo tramite il ConfirmPopupController viene richiesta la conferma dell'operazione
      *
      * @param[in] event
+     * @see ConfirmPopupController
      */
     @FXML
     private void onDeleteContact(ActionEvent event) {

@@ -28,7 +28,7 @@ public class ManageTagsPopupController implements Initializable {
     /**
      * @brief Inizializza il main controller
      *
-     *  Questo metodo permette l'inizializzazione del controller in fase di apertura.
+     *  Questo metodo permette l'inizializzazione del controller in fase di apertura tramite il metodo getInstance {@link AddressBook#getInstance()}.
      *
      */
     @Override
