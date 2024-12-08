@@ -28,7 +28,8 @@ public class ExportPopupController implements Initializable {
     /**
      * @brief Inizializzazione controller.
      *
-     *  Tramite questo metodo carichiamo su questo controller l'istanza della rubrica in esame.
+     *  Tramite questo metodo carichiamo su questo controller l'istanza della rubrica in esame 
+     *  utilizzando il metodo getInstance {@link AddressBook#getInstance()}.
      * 
      * @param[in] location
      * @param[in] resources 

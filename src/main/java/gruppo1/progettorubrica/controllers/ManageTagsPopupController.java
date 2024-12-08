@@ -28,7 +28,7 @@ public class ManageTagsPopupController implements Initializable {
     /**
      * @brief Inizializza il main controller
      *
-     *  Questo metodo permette l'inizializzazione del controller in fase di apertura.
+     *  Questo metodo permette l'inizializzazione del controller in fase di apertura tramite il metodo getInstance {@link AddressBook#getInstance()}.
      *
      */
     @Override
@@ -55,8 +55,13 @@ public class ManageTagsPopupController implements Initializable {
     }
 
     /**
-     * @brief Elimina un tag alla lista osservabile "tags" in AddressBook
+     * @brief Elimina un tag alla lista osservabile "tags" in AddressBook 
+     * 
+     * Vedi anche ConfirmPopupController
+     * 
+     * Prima di eliminare tramite il ConfirmPopupController viene richiesta la conferma dell'operazione.
      * @see AddressBook
+     * @see ConfirmPopupController
      */
     @FXML
     private void onDelete(ActionEvent event) {
