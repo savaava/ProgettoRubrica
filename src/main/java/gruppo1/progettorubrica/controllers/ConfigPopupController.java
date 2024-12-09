@@ -6,12 +6,9 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,11 +37,14 @@ public class ConfigPopupController implements Initializable {
      *  Questo metodo permette l'inizializzazione del controller in fase di apertura.
      *
      * @pre Nessuna
-     * @post - Viene effettuato il binding per verificare che la stringa presente nel textField
+     * @post - Viene ottenuta l'istanza singleton della rubrica
+     *       - Viene effettuato il binding per verificare che la stringa presente nel textField
      *       convalidi l'espressione regex del link al database.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.addressBook = AddressBook.getInstance();
+
         BooleanBinding buttonBinding = new BooleanBinding() {
             {
                 super.bind(textField.textProperty());
@@ -95,6 +95,11 @@ public class ConfigPopupController implements Initializable {
      */
     @FXML
     private void onConfirm(ActionEvent event) {
-        
+        //Imposta l'url del database nell'attributo corrispondente di addressBook
+        addressBook.setDBUrl(textField.getText());
+        //Viene effettuato il salvataggio della configurazione
+        addressBook.saveConfig();
+        //Inizializza il database
+        addressBook.initDB();
     }
 }

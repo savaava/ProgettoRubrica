@@ -1,43 +1,42 @@
 package gruppo1.progettorubrica.models;
 
 import java.io.Serializable;
-import org.bson.Document;
 
 /**
- * @brief Modella un'entità tag.
+ * @brief Modella un'entità tag
  * 
- * Permette di aggiungere 1 o più tag nella rubrica telefonica.
+ * Permette di aggiungere 1 o più tag nella rubrica telefonica
  * @see AddressBook
  */
 public class Tag implements Serializable{
-    private final int id; ///< Identificativo univoco dell'entità tag.
-    private String descrizione; ///< Descrizione dell'entità tag in formato stringa.
-    private static int index = 1; ///< Indice utilizzato per calcolare l'identificativo univoco dell'entità tag.
+    private final int id; ///< Identificativo univoco dell'entità tag
+    private String description; ///< Descrizione dell'entità tag in formato stringa
+    private static int index = 1; ///< Indice utilizzato per calcolare l'identificativo univoco dell'entità tag
 
     /**
-     * @brief Costruttore per creare un'istanza della classe tag.
-     * 
-     * @param[in] descrizione 
+     * @brief Costruttore per creare un'istanza della classe tag
+     *
+     * @param[in] description
      */
-    public Tag(String descrizione) {
-        this.descrizione = descrizione;
+    public Tag(String description) {
+        this.description = description;
         this.id = index++;
     }
 
     /**
-     * @brief Costruttore per creare un'istanza della classe tag.
+     * @brief Costruttore per creare un'istanza della classe tag
      *
-     * @param[in] descrizione
+     * @param[in] description
      * @param[in] id
      */
-    public Tag(String descrizione, int id) {
-        this.descrizione = descrizione;
+    public Tag(String description, int id) {
+        this.description = description;
         this.id = id;
     }
 
     /**
      * 
-     * @return L'identificativo univoco associato ad un oggetto di Tag.
+     * @return L'identificativo univoco associato ad un oggetto di Tag
      */
     public int getId() {
         return id;
@@ -45,22 +44,22 @@ public class Tag implements Serializable{
 
     /**
      * 
-     * @return La descrizione associata ad un oggetto di Tag.
+     * @return La descrizione associata ad un oggetto di Tag
      */
-    public String getDescrizione() {
-        return descrizione;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * @brief Assegna il parametro in ingresso all'attributo descrizione dell'istanza di Tag.
-     * @param[in] descrizione 
+     * @brief Assegna il parametro in ingresso all'attributo descrizione dell'istanza di Tag
+     * @param[in] description
      */
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
-     * @brief Assegna il parametro in ingresso all'attributo statico index dell'istanza di Tag.
+     * @brief Assegna il parametro in ingresso all'attributo statico index dell'istanza di Tag
      * @param[in] index 
      */
     public static void setIndex(int index) {
@@ -68,9 +67,9 @@ public class Tag implements Serializable{
     }
 
     /**
-     * @brief Controlla se l'istanza corrente e l'oggetto in ingresso sono uguali.
-     * @param[in] o Oggetto da confrontare.
-     * @return True se sono uguali, altrimenti false.
+     * @brief Controlla se l'istanza corrente e l'oggetto in ingresso sono uguali
+     * @param[in] o
+     * @return True se sono uguali, altrimenti false
      */
     @Override
     public boolean equals(Object o) {
@@ -78,7 +77,7 @@ public class Tag implements Serializable{
         if(this == o) return true;
         if(this.getClass() != o.getClass()) return false;
         Tag tag = (Tag) o;
-        return this.id == tag.id || this.descrizione.equals(tag.descrizione);
+        return this.id == tag.id || this.description.equals(tag.description);
     }
     
 }

@@ -142,6 +142,28 @@ public class Database {
         mongoDb.getCollection("tags").insertMany(documents);
     }
 
+    /**
+     * @brief Rimuove tutti i contatti dal database
+     * 
+     * Questo metodo elimina tutti i contatti presenti nel database.
+     * @pre Nessuna
+     * @post Nessun contatto presente nel database
+     */
+    public void deleteAllContacts() {
+        mongoDb.getCollection("contacts").drop();
+    }
+
+    /**
+     * @brief Rimuove tutti i tag dal database
+     * 
+     * Questo metodo elimina tutti i tag presenti nel database.
+     * @pre Nessuna
+     * @post Nessun tag presente nel database
+     */
+    public void deleteAllTags() {
+        mongoDb.getCollection("tags").drop();
+    }
+
     //METODI DI CONVERSIONE
 
     /**
@@ -161,7 +183,7 @@ public class Database {
         } else {
             doc.put("image", "");
         }
-        doc.put("tagIndexes", c.getAllTagIndexes());
+        doc.put("tagIndexes", new ArrayList<>(c.getAllTagIndexes()));
 
         return doc;
     }
@@ -194,7 +216,7 @@ public class Database {
         Document doc = new Document();
 
         doc.put("id",tag.getId());
-        doc.put("descrizione", tag.getDescrizione());
+        doc.put("description", tag.getDescription());
 
         return doc;
     }
@@ -205,6 +227,6 @@ public class Database {
      * @return Tag con i dati del documento
      */
     public Tag documentToTag(Document d) {
-        return new Tag(d.getString("descrizione"),d.getInteger("id"));
+        return new Tag(d.getString("description"),d.getInteger("id"));
     }
 }

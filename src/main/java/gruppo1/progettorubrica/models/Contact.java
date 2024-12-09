@@ -154,9 +154,10 @@ public class Contact implements Serializable{
 
         Contact contact = (Contact) o;
 
-        //CONTINUARE
+        if(!name.equals(contact.name)) return false;
+        if(!surname.equals(contact.surname)) return false;
 
-        return false;
+        return true;
     }
 
     @Override
