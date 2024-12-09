@@ -17,12 +17,12 @@ public interface TagManager {
      * @param[in] tag Tag da rimuovere.
      * @return Il tag rimosso.
      */
-    Tag removeTag(Tag tag);
+    void removeTag(Tag tag);
 
     /**
      * 
      * @param[in] id
-     * @return Il tag associato al parametro in ingresso id.
+     * @return Il tag associato al parametro in ingresso id, null se non lo trova
      */
     Tag getTag(int id);
 

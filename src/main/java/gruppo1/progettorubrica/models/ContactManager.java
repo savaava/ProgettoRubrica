@@ -25,5 +25,5 @@ public interface ContactManager {
      * @param[in] c Contatto da rimuovere.
      * @return Contatto rimosso.
      */
-    Contact removeContact(Contact c);
+    void removeContact(Contact c);
 }
