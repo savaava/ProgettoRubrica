@@ -6,10 +6,24 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import gruppo1.progettorubrica.models.ContactManager;
 import gruppo1.progettorubrica.models.AddressBook;
-import gruppo1.progettorubrica.models.ContactManager;
+import gruppo1.progettorubrica.models.Contact;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Scanner;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 /**
  * @brief Controller che visualizza il popup per l'import di una rubrica.
@@ -18,6 +32,8 @@ import java.util.ResourceBundle;
  */
 public class ImportPopupController implements Initializable {
     private ContactManager contactManager;  ///< Istanza dell'interfaccia con i metodi utilizzabili dal controller.
+    
+    private File file; 
 
     @FXML
     private Button importButton;   ///< Riferimento al pulsante per importare la rubrica da file.
@@ -30,6 +46,9 @@ public class ImportPopupController implements Initializable {
      * 
      * @param[in] location
      * @param[in] resources 
+     * 
+     * @pre Nessuna
+     * @post Il controller ha un'istanza di AddresssBook
      */
     
     @Override
@@ -46,7 +65,14 @@ public class ImportPopupController implements Initializable {
      */
     @FXML
     private void selectFile(ActionEvent event) {
-
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Seleziona file di import");
+        fc.getExtensionFilters().addAll(
+                new ExtensionFilter("CSV", ".csv"),
+                new ExtensionFilter("VCard", ".vcf")
+        );
+        this.file = fc.showOpenDialog(new Stage());
+        if(this.file == null) return;
     }
 
     /**
@@ -58,16 +84,90 @@ public class ImportPopupController implements Initializable {
     
     @FXML
     private void onImport(ActionEvent event) {
-
+        try(Scanner s = new Scanner(new BufferedReader(new FileReader(file)))){
+            String nome = null;
+            String cognome = null;
+            byte[] fileContent = null;
+            if(this.checkCSVFormat()){
+                s.useDelimiter("[,\n]");
+                s.useLocale(Locale.ITALY);
+                if(s.nextLine() == null) return;
+                while(s.hasNext()){
+                    nome = s.next();
+                    cognome = s.next();
+                    String num1 = s.next();
+                    String num2 = s.next();
+                    String num3 = s.next();
+                    String em1 = s.next();
+                    String em2 = s.next();
+                    String em3 = s.next();
+                    String pp = s.next();
+                    fileContent = Base64.getDecoder().decode(pp); 
+                    Contact c = new Contact(nome,cognome);
+                    String[] n = {num1, num2, num3};
+                    c.setNumbers(n);
+                    String[] em = {em1, em2, em3};
+                    c.setEmails(em);
+                    nome = null;
+                    cognome = null;
+                    fileContent = null;
+                }
+            }
+            if(this.checkVCardFormat()){
+                s.useDelimiter("[;\n]");
+                s.useLocale(Locale.ITALY);
+                List<String> n = new ArrayList<String>();
+                List<String> em = new ArrayList<String>();
+                if(s.nextLine() == null) return;
+                while (s.hasNextLine()) {
+                    String line = s.nextLine();
+                    if (line.startsWith("N:")) {
+                    // Nomi e cognomi
+                        String[] nameParts = line.substring(2).split(";");
+                        cognome = nameParts[0];
+                        nome = nameParts[1];
+                    } else if (line.startsWith("TEL;")) {
+                    // Numero di telefono
+                        if(n.size() < 3) 
+                            n.add(line.substring(line.indexOf(":") + 1));
+                    } else if (line.startsWith("EMAIL;")) {
+                        if(n.size() < 3) 
+                            em.add(line.substring(line.indexOf(":") + 1));
+                    } else if (line.startsWith("PHOTO;")) {
+                        // Immagine profilo
+                        fileContent = Base64.getDecoder().decode(line.substring(line.indexOf(":") + 1));
+                    } else if (line.startsWith("END:VCARD")) {
+                    // Inizia un nuovo contatto
+                        Contact c = new Contact(nome,cognome);
+                        c.setNumbers(n.toArray(new String[0]));
+                        c.setEmails(em.toArray(new String[0]));
+                        c.setProfilePicture(fileContent);
+                        // Resetta le variabili per il prossimo contatto
+                        nome = null;
+                        cognome = null;
+                        fileContent = null;
+                        n.clear();
+                        em.clear();
+                    }
+                }
+            }
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
     }
 
     /**
      * @brief Controllo formato .csv.
      *
      *  Tramite questo metodo il controller verifica che il file fornito sia di formato .csv.
-     * 
      */
-    private boolean checkCSVFormat() {
+    private boolean checkCSVFormat() throws IOException {
+        try(BufferedReader br = new BufferedReader(new FileReader(this.file))){
+            String firstLine = br.readLine();
+            if(firstLine != null && firstLine.contains(",")) return true;
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
         return false;
     }
 
@@ -78,6 +178,12 @@ public class ImportPopupController implements Initializable {
      * 
      */
     private boolean checkVCardFormat() {
+        try(BufferedReader br = new BufferedReader(new FileReader(this.file))){
+            String firstLine = br.readLine();
+            if(firstLine != null && firstLine.contains("BEGIN:VCARD") ) return true;
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
         return false;
     }
 }
