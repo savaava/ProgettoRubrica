@@ -15,7 +15,8 @@ public class Tag implements Serializable{
 
     /**
      * @brief Costruttore per creare un'istanza della classe tag
-     *
+     * @pre description != null
+     * @post description != null
      * @param[in] description
      */
     public Tag(String description) {
@@ -25,7 +26,8 @@ public class Tag implements Serializable{
 
     /**
      * @brief Costruttore per creare un'istanza della classe tag
-     *
+     * @pre id > 0, description != null
+     * @post id > 0, description != null
      * @param[in] description
      * @param[in] id
      */
@@ -35,7 +37,8 @@ public class Tag implements Serializable{
     }
 
     /**
-     * 
+     * @pre Nessuna
+     * @post Nessuna
      * @return L'identificativo univoco associato ad un oggetto di Tag
      */
     public int getId() {
@@ -43,7 +46,8 @@ public class Tag implements Serializable{
     }
 
     /**
-     * 
+     * @pre Nessuna
+     * @post Nessuna
      * @return La descrizione associata ad un oggetto di Tag
      */
     public String getDescription() {
@@ -53,6 +57,8 @@ public class Tag implements Serializable{
     /**
      * @brief Assegna il parametro in ingresso all'attributo descrizione dell'istanza di Tag
      * @param[in] description
+     * @pre description != null
+     * @post description != null
      */
     public void setDescription(String description) {
         this.description = description;
@@ -61,6 +67,8 @@ public class Tag implements Serializable{
     /**
      * @brief Assegna il parametro in ingresso all'attributo statico index dell'istanza di Tag
      * @param[in] index 
+     * @pre index > 0
+     * @post index > 0
      */
     public static void setIndex(int index) {
         Tag.index = index;
@@ -69,6 +77,8 @@ public class Tag implements Serializable{
     /**
      * @brief Controlla se l'istanza corrente e l'oggetto in ingresso sono uguali
      * @param[in] o
+     * @pre Nessuna
+     * @post Nessuna
      * @return True se sono uguali, altrimenti false
      */
     @Override

@@ -16,6 +16,12 @@ public class DatabaseTest {
     private static final String url = "mongodb+srv://rubricaContatti:tqHPmDYFftuxXE3g@mongisacluster.o8crvzq.mongodb.net/?retryWrites=true&w=majority&appName=MongisaCluster";
 
     @Test
+    public void constructor_validUrl() {
+        database = new Database(url);
+        assertNotNull(database);
+    }
+
+    @Test
     public void verifyDBUrl_validUrl() {
         String validUrl = url;
         assertTrue(Database.verifyDBUrl(validUrl));
