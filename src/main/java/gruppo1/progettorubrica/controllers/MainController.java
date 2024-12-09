@@ -1,6 +1,9 @@
 package gruppo1.progettorubrica.controllers;
 
 import javafx.collections.transformation.FilteredList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import gruppo1.progettorubrica.models.AddressBook;
@@ -12,7 +15,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -215,8 +221,15 @@ public class MainController implements Initializable {
      * @param[in] event
      */
     @FXML
-    private void showConfigPopup(ActionEvent event) {
+    private void showConfigPopup(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/views/Config_popup.fxml"));
+        Scene scene = new Scene(root);
 
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setResizable(false);
+        popup.setScene(scene);
+        popup.showAndWait();
     }
 
     /**

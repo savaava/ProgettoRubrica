@@ -25,6 +25,17 @@ public class Tag implements Serializable{
     }
 
     /**
+     * @brief Costruttore per creare un'istanza della classe tag.
+     *
+     * @param[in] descrizione
+     * @param[in] id
+     */
+    public Tag(String descrizione, int id) {
+        this.descrizione = descrizione;
+        this.id = id;
+    }
+
+    /**
      * 
      * @return L'identificativo univoco associato ad un oggetto di Tag.
      */

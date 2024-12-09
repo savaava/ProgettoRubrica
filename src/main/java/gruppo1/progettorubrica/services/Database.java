@@ -1,11 +1,12 @@
 package gruppo1.progettorubrica.services;
 
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import org.bson.Document;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * @brief Modella un database per il salvataggio dei dati.
@@ -20,7 +21,8 @@ public class Database {
      * @param[in] uri URL del database
      */
     public Database(String url) {
-
+        MongoClient mongoClient = MongoClients.create(url);
+        this.mongoDb = mongoClient.getDatabase("addressBook");
     }
 
     /**
@@ -29,15 +31,29 @@ public class Database {
      * @return true se l'URL è valido, false altrimenti
      */
     public static boolean verifyDBUrl(String url) {
-        return false;
+        if(url == null || url.isEmpty()) return false;
+
+        try(MongoClient mongoClient = MongoClients.create(url)) {
+            MongoDatabase db = mongoClient.getDatabase("addressBook");
+            MongoCollection<Document> contactsColl = db.getCollection("contacts");
+
+            //Inserimento elemento di test
+            contactsColl.insertOne(Document.parse("{\"test\":\"test\"}"));
+
+            //Rimozione elemento di test
+            contactsColl.deleteOne(Filters.eq("test", "test"));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
      * @brief Aggiunge/aggiorna un contatto al database
      * @param[in] c Contatto da aggiungere
      */
-    public void upsertContact(Contact c) {
-
+    public void insertContact(Contact c) {
+        mongoDb.getCollection("contacts").insertOne(this.contactToDocument(c));
     }
 
     /**
@@ -45,21 +61,21 @@ public class Database {
      * @param[in] c Contatto da rimuovere
      */
     public void removeContact(Contact c) {
-
+        mongoDb.getCollection("contacts").deleteOne(this.contactToDocument(c));
     }
 
     /**
      * @brief Aggiunge/aggiorna un tag al database
      */
-    public void upsertTag(Tag tag) {
-
+    public void insertTag(Tag tag) {
+        mongoDb.getCollection("tags").insertOne(this.tagToDocument(tag));
     }
 
     /**
      * @brief Rimuove un tag dal database
      */
     public void removeTag(Tag tag) {
-
+        mongoDb.getCollection("tags").deleteOne(this.tagToDocument(tag));
     }
 
     /**
@@ -67,7 +83,17 @@ public class Database {
      * @return Collezione di Contact con i contatti del database
      */
     public Collection<Contact> getAllContacts() {
-        return null;
+        FindIterable<Document> contactsDocument = mongoDb.getCollection("contacts").find();
+        List<Contact> contacts = new ArrayList<>();
+
+        if(contactsDocument.first() == null) return Collections.emptyList();
+
+        //Iteriamo i documenti per aggiungerli alla lista una volta convertiti in contatti
+        contactsDocument.forEach(doc -> {
+            contacts.add(this.documentToContact(doc));
+        });
+
+        return contacts;
     }
 
     /**
@@ -75,7 +101,17 @@ public class Database {
      * @return Collezione di String con i tag del database
      */
     public Collection<Tag> getAllTags() {
-        return null;
+        FindIterable<Document> tagsDocument = mongoDb.getCollection("tags").find();
+        List<Tag> tags = new ArrayList<>();
+
+        if(tagsDocument.first() == null) return Collections.emptyList();
+
+        //Iteriamo i documenti per aggiungerli alla lista una volta convertiti in tag
+        tagsDocument.forEach(doc -> {
+            tags.add(this.documentToTag(doc));
+        });
+
+        return tags;
     }
 
     /**
@@ -83,7 +119,13 @@ public class Database {
      * @param[in] contacts Collezione di contatti da inserire
      */
     public void insertManyContacts(Collection<Contact> contacts) {
+        List<Document> documents = new ArrayList<>();
 
+        contacts.forEach(c -> {
+            documents.add(this.contactToDocument(c));
+        });
+
+        mongoDb.getCollection("contacts").insertMany(documents);
     }
 
     /**
@@ -91,7 +133,13 @@ public class Database {
      * @param[in] tags Collezione di tag da inserire
      */
     public void insertManyTags(Collection<Tag> tags) {
+        List<Document> documents = new ArrayList<>();
 
+        tags.forEach(t -> {
+            documents.add(this.tagToDocument(t));
+        });
+
+        mongoDb.getCollection("tags").insertMany(documents);
     }
 
     //METODI DI CONVERSIONE
@@ -102,7 +150,20 @@ public class Database {
      * @return Document con i dati del contatto
      */
     public Document contactToDocument(Contact c) {
-        return null;
+        Document doc = new Document();
+
+        doc.put("name",c.getName());
+        doc.put("surname", c.getSurname());
+        doc.put("numbers", Arrays.asList(c.getNumbers()));
+        doc.put("emails", Arrays.asList(c.getEmails()));
+        if(c.getProfilePicture() != null) {
+            doc.put("image", Base64.getEncoder().encodeToString(c.getProfilePicture()));
+        } else {
+            doc.put("image", "");
+        }
+        doc.put("tagIndexes", c.getAllTagIndexes());
+
+        return doc;
     }
 
     /**
@@ -111,7 +172,17 @@ public class Database {
      * @return Contatto con i dati del documento
      */
     public Contact documentToContact(Document d) {
-        return null;
+        Contact c = new Contact(d.getString("name"),d.getString("surname"));
+
+        c.setNumbers(d.getList("numbers", String.class).toArray(new String[0]));
+        c.setEmails(d.getList("emails", String.class).toArray(new String[0]));
+        c.setProfilePicture(Base64.getDecoder().decode(d.getString("image")));
+
+        for(int tagIndex : d.getList("tagIndexes", Integer.class).toArray(new Integer[0])) {
+            c.addTagIndex(tagIndex);
+        }
+
+        return c;
     }
 
     /**
@@ -120,7 +191,12 @@ public class Database {
      * @return Document con i dati del tag
      */
     public Document tagToDocument(Tag tag) {
-        return null;
+        Document doc = new Document();
+
+        doc.put("id",tag.getId());
+        doc.put("descrizione", tag.getDescrizione());
+
+        return doc;
     }
 
     /**
@@ -129,6 +205,6 @@ public class Database {
      * @return Tag con i dati del documento
      */
     public Tag documentToTag(Document d) {
-        return null;
+        return new Tag(d.getString("descrizione"),d.getInteger("id"));
     }
 }

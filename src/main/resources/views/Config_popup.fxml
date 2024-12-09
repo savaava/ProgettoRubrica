@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -9,19 +14,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.ConfigPopupController">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.ConfigPopupController">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="vBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label text="Inserisci link database">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="textField">
+            <TextField fx:id="textField" promptText="mongodb+srv://&lt;username&gt;:&lt;password&gt;@&lt;link&gt;">
                <VBox.margin>
                   <Insets left="30.0" right="30.0" />
                </VBox.margin>
+               <font>
+                  <Font size="10.0" />
+               </font>
             </TextField>
             <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
                <children>
@@ -40,6 +48,11 @@
                   <Insets top="10.0" />
                </padding>
             </HBox>
+            <Label fx:id="resultLabel" disable="true" layoutX="78.0" layoutY="59.0" text="Risultato">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </VBox>
    </children>
