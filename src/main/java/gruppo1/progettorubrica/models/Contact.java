@@ -136,7 +136,7 @@ public class Contact implements Serializable{
      * @param[in] indice del tag da aggiungere
      */
     public void addTagIndex(Integer tagIndex) {
-
+        tagIndexes.add(tagIndex);
     }
     
     /**
@@ -154,9 +154,53 @@ public class Contact implements Serializable{
 
         Contact contact = (Contact) o;
 
-        //CONTINUARE
+        if(!name.equals(contact.name)) return false;
+        if(!surname.equals(contact.surname)) return false;
 
-        return false;
+        return true;
     }
-    
+
+    @Override
+    public String toString() {
+        // Costruisce una stringa con tutte le informazioni rilevanti del contatto
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Contact: ");
+        sb.append("Name: ").append(name).append(", ");
+        sb.append("Surname: ").append(surname).append(", ");
+
+        sb.append("Numbers: ");
+        if (numbers != null && numbers.length > 0) {
+            sb.append(String.join(", ", numbers));
+        } else {
+            sb.append("N/A");
+        }
+        sb.append(", ");
+
+        sb.append("Emails: ");
+        if (emails != null && emails.length > 0) {
+            sb.append(String.join(", ", emails));
+        } else {
+            sb.append("N/A");
+        }
+        sb.append(", ");
+
+        sb.append("Tags: ");
+        if (tagIndexes != null && !tagIndexes.isEmpty()) {
+            sb.append(tagIndexes.toString());
+        } else {
+            sb.append("N/A");
+        }
+
+        sb.append(", ");
+
+        sb.append("Profile Picture: ");
+        if (profilePicture.length != 0) {
+            sb.append("Available");
+        } else {
+            sb.append("Not Available");
+        }
+
+        return sb.toString();
+    }
 }
