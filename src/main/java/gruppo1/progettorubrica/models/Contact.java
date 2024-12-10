@@ -1,7 +1,10 @@
 package gruppo1.progettorubrica.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.bson.Document;
 
@@ -17,11 +20,13 @@ public class Contact implements Serializable{
     private String[] numbers; ///< gli eventuali numeri di telefono in formato stringa dell'entità contatto
     private String[] emails; ///< le eventuali emails in formato stringa dell'entità contatto
     private byte[] profilePicture; ///< l'immagine in formato vettore di byte associata all'entità contatto
-    private Set<Integer> tagIndexes; ///< gli eventuali, contenuti nella collezione, in formato stringa associati all'entità contatto
+    private Set<Integer> tagIndexes; ///< gli eventuali tag, contenuti nella collezione, in formato stringa associati all'entità contatto
 
     /**
      * @brief Costruttore per creare un'istanza Contact con solo nome e cognome valorizzati. 
      * Gli altri attributi non vengono valorizzati
+     * @pre Fornire 2 stringhe corrispondenti al nome e cognome.
+     * @post Creazione di un contatto.
      * @param[in] name
      * @param[in] surname
      */
@@ -35,7 +40,8 @@ public class Contact implements Serializable{
     }
 
     /**
-     * 
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere il nome associato all'istanza di Contact
      * @return il nome dell'istanza Contact
      */
     public String getName() {
@@ -43,7 +49,9 @@ public class Contact implements Serializable{
     }
 
     /**
-     * @brief imposta il parametro in ingresso come il nome dell'istanza Contact
+     * @brief Imposta il parametro in ingresso come il nome dell'istanza Contact
+     * @pre Avere un'istanza della classe Contact. Fornire una stringa in ingresso
+     * @post Valorizzare il campo name dell'istanza di Contact.
      * @param[in] name 
      */
     public void setName(String name) {
@@ -51,7 +59,8 @@ public class Contact implements Serializable{
     }
 
     /**
-     * 
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere il cognome associato all'istanza di Contact
      * @return il cognome dell'istanza Contact
      */
     public String getSurname() {
@@ -59,7 +68,9 @@ public class Contact implements Serializable{
     }
 
     /**
-     * @brief imposta il parametro in ingresso come il cognome dell'istanza Contact
+     * @brief Imposta il parametro in ingresso come il cognome dell'istanza Contact
+     * @pre Avere un'istanza della classe Contact. Fornire una stringa in ingresso
+     * @post Valorizzare il campo surname dell'istanza di Contact.
      * @param[in] surname 
      */
     public void setSurname(String surname) {
@@ -67,7 +78,8 @@ public class Contact implements Serializable{
     }
 
     /**
-     * 
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere l'array di numeri di telefono associato all'istanza di Contact
      * @return la stringa di numeri di telefono dell'istanza Contact
      */
     public String[] getNumbers() {
@@ -75,7 +87,9 @@ public class Contact implements Serializable{
     }
 
     /**
-     * @brief imposta il vettore in ingresso come i numeri di telefono dell'istanza Contact
+     * @brief Imposta il vettore in ingresso come numeri di telefono dell'istanza Contact
+     * @pre Avere un'istanza della classe Contact. Fornire un array di stringhe in ingresso
+     * @post Valorizzare il campo numbers dell'istanza di Contact.
      * @param[in] numbers 
      */
     public void setNumbers(String[] numbers) {
@@ -83,15 +97,18 @@ public class Contact implements Serializable{
     }
 
     /**
-     * 
-     * @return le stringhe di emails dell'istanza Contact
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere l'array di emails associato all'istanza di Contact 
+     * @return Le stringhe di emails dell'istanza Contact
      */
     public String[] getEmails() {
         return emails;
     }
 
     /**
-     * @brief imposta il vettore in ingresso come le emails dell'istanza Contact
+     * @brief Imposta il vettore in ingresso come le emails dell'istanza Contact
+     * @pre Avere un'istanza della classe Contact. Fornire un array di stringhe in ingresso
+     * @post Valorizzare il campo emails dell'istanza di Contact.
      * @param[in] emails 
      */
     public void setEmails(String[] emails) {
@@ -99,8 +116,9 @@ public class Contact implements Serializable{
     }
 
     /**
-     * 
-     * @return il vettore di byte che rappresentano l'immagine dell'istanza Contact
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere l'array di byte che rappresenta l'immagine profilo dell'istanza di Contact
+     * @return Il vettore di byte che rappresentano l'immagine dell'istanza Contact
      */
     public byte[] getProfilePicture() {
         return profilePicture;
@@ -108,6 +126,8 @@ public class Contact implements Serializable{
 
     /**
      * @brief imposta il vettore di byte come l'immagine dell'istanza del contatto
+     * @pre Avere un'istanza della classe Contact. Fornire un array di byte in ingresso
+     * @post Imposta il vettore in ingresso come profilePicture dell'istanza di Contact 
      * @param[in] profilePicture 
      */
     public void setProfilePicture(byte[] profilePicture) {
@@ -115,8 +135,9 @@ public class Contact implements Serializable{
     }
 
     /**
-     * 
-     * @return la collezione di tag associati al contatto 
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere la collezione di indici assegnati ai tag dell'istanza di Contact
+     * @return La collezione di indici dei tag associati al contatto 
      */
     public Set<Integer> getAllTagIndexes() {
         return tagIndexes;
@@ -124,24 +145,30 @@ public class Contact implements Serializable{
 
     /**
      * @brief rimuove l'indice del tag passato come parametro
-     * @param[in] indice del tag da rimuovere
-     * @return il tag rimosso
+     * @pre Avere un'istanza di Contact e aver inserito almeno 1 tag. Passare in ingresso l'indice del tag da rimuovere.
+     * @post Aver rimosso il tag se presente
+     * @param[in] Indice del tag da rimuovere
+     * @return true se il tag è presente e quindi viene rimosso, altrimenti false
      */
-    public Integer removeTagIndex(Integer tagIndex) {
-        return null;
+    public boolean removeTagIndex(Integer tagIndex) {
+        return tagIndexes.remove(tagIndex);
     }
 
     /**
-     * @brief aggiunge l'indice del tag passato come parametro
-     * @param[in] indice del tag da aggiungere
+     * @brief Aggiunge l'indice del tag passato come parametro
+     * @pre Avere un'istanza di Contact. Passare in ingresso un intero.
+     * @post Aggiungere l'intero nella collezione tagIndexes
+     * @param[in] Indice del tag da aggiungere
      */
     public void addTagIndex(Integer tagIndex) {
-        return;
+        tagIndexes.add(tagIndex);
     }
     
     /**
      * @brief controlla se l'istanza Contact su cui si chiama tale metodo è uguale
      * al parametro in ingresso o, secondo i criteri di uguaglianza scelti
+     * @pre Avere un'istanza di Contact. Passare in ingresso un oggetto di Object.
+     * @post Controllare se l'istanza corrente di Contact è uguale all'oggetto passato in ingresso.
      * @param[in] o
      * @return true se l'istanza Contact è uguale ad o,
      *         false se l'istanza Contact è diversa da o
@@ -150,13 +177,22 @@ public class Contact implements Serializable{
     public boolean equals(Object o) {
         if(o == null) return false;
         if (this == o) return true;
-        if (getClass() != o.getClass()) return false;
+        if (!(o instanceof Contact)) return false;
 
         Contact contact = (Contact) o;
 
-        //CONTINUARE
-
-        return false;
+        //confronto i numeri di cellulare
+        Set<String> numbersSet1=new HashSet<>(Arrays.asList(this.numbers));
+        Set<String> numbersSet2=new HashSet<>(Arrays.asList(contact.numbers));
+        if(!(numbersSet1.equals(numbersSet2))) return false;
+        
+        //confronto le emails
+        Set<String> emailsSet1=new HashSet<>(Arrays.asList(this.emails));
+        Set<String> emailsSet2=new HashSet<>(Arrays.asList(contact.emails));
+        if(!(emailsSet1.equals(emailsSet2))) return false;
+        
+        //confronto nome e cognome
+        return this.name.equals(contact.name) && this.surname.equals(contact.surname);
     }
     
 }
