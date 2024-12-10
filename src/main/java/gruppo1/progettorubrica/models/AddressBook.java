@@ -17,7 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * @brief Modella una rubrica telefonica, può contenere 0 o più contatti.
+ * @brief Modella una rubrica telefonica che può contenere 0 o più contatti.
  * @see Contact
  * @see Tag
  * @see Database
@@ -61,9 +61,11 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     /**
-     * @brief Controlla se è stata creata l'istanza di AddressBook, altrimenti la crea.
+     * @brief Fornisce l'unica istanza di AddressBook, controllando se è stata creata, altrimenti la crea.
      * @pre nessuna
-     * @post il client ottiene l'istanza dell'unica rubrica, se esisteva già ritorna l'istanza stessa, se non 
+     * @post Il client ottiene l'istanza dell'unica rubrica,
+     * se esisteva già ritorna l'istanza già esistente,
+     * se non esisteva ancora viene creata.
      * @return L'istanza creata o quella già esistente.
      */
     public static AddressBook getInstance() {
@@ -82,13 +84,15 @@ public class AddressBook implements TagManager, ContactManager {
     
     @Override
     public void addContact(Contact c) {
-        contacts.add(c);
+        if(c!=null)
+            contacts.add(c);
     }
 
     
     @Override
     public void removeContact(Contact c) {
-        contacts.remove(c);
+        if(c!=null)
+            contacts.remove(c);
     }
 
     @Override
@@ -98,6 +102,9 @@ public class AddressBook implements TagManager, ContactManager {
 
     @Override
     public Tag getTag(int id) {
+        if(id <= 0) 
+            return null;
+        
         for(Tag t : tags){
             if(t.getId() == id)
                 return t;
@@ -107,12 +114,14 @@ public class AddressBook implements TagManager, ContactManager {
 
     @Override
     public void addTag(Tag tag) {
-        tags.add(tag);
+        if(tag != null)
+            tags.add(tag);
     }
 
     @Override
     public void removeTag(Tag tag) {
-        tags.remove(tag);
+        if(tag != null)
+            tags.remove(tag);
     }
 
     /**
@@ -137,9 +146,9 @@ public class AddressBook implements TagManager, ContactManager {
     
     /**
      * @brief Salva la rubrica telefonica nel file Data.bin in locale. 
-     * @pre ci possono essere 0 o più contatti e tags e può non esistere il file Data.bin
-     * @post carica i contatti e i tag presenti dal file Data.bin se non lancia exception
-     * @@throws  IOException se il file non esiste o se non si riesce a fare la lettura.
+     * @pre nessuna (ci possono essere 0 o più contatti e tags e può non esistere il file Data.bin).
+     * @post Salva i contatti e i tag dell'AddressBook sul file di salvataggio Data.bin.
+     * @throws IOException se il file non esiste o se non si riesce a fare la lettura.
      */
     public void saveOBJ() {
         System.out.println("Scrittura fiel Data.bin ...");
@@ -159,10 +168,10 @@ public class AddressBook implements TagManager, ContactManager {
    
     /**
      * @brief Carica la rubrica telefonica dal file Data.bin, aggiunge i contatti di quest'ultima nella rubrica corrente.
-     * @throws  IOException se non trova il file Data.bin o se non riesce a caricare il contenuto
-     * @throws  ClassNotFoundException se non riesce a convertire il contenuto del file in una lista di Contact o Tag
      * @pre nessuna
-     * @post carica i contatti e i tag presenti dal file Data.bin se non lancia exception
+     * @post Carica i contatti e i tag dal file Data.bin nell'AddressBook.
+     * @throws  IOException se non trova il file Data.bin o se non riesce a caricare il contenuto.
+     * @throws  ClassNotFoundException se non riesce a convertire il contenuto del file in una lista di Contact o Tag.
      */
     public void loadOBJ() {
         System.out.println("Lettura file Data.bin ...");
@@ -182,8 +191,8 @@ public class AddressBook implements TagManager, ContactManager {
 
     /**
      * @brief Elimina il file Data.bin.
-     * @pre può essere presente o meno il file Data.bin. 
-     * @post il file di salvataggio dati Data.bin viene eliminato.
+     * @pre nessuna (può essere presente o meno il file Data.bin). 
+     * @post il file di salvataggio dati Data.bin viene eliminato, se presente.
      */
     public void removeOBJ() {
         new File("Data.bin").delete();
@@ -201,11 +210,11 @@ public class AddressBook implements TagManager, ContactManager {
     }
     
     /**
-     * @brief trasferisce tutti contatti e tag del file Data.bin sul DB
-     * @param[in] filename è il percorso del file Data.bin
-     * @pre esiste il DB ed è funzionante
-     * @pre esiste il file Data.bin con contatti e tags
-     * @post tutti i contatti e tags del file Data.bin vengono inseriti nel DB
+     * @brief trasferisce tutti contatti e tag del file Data.bin sul DB.
+     * @param[in] filename è il percorso del file Data.bin.
+     * @pre esiste il DB ed è funzionante.
+     * @pre esiste il file Data.bin con contatti e tags.
+     * @post tutti i contatti e tags del file Data.bin vengono inseriti nel DB.
      */
     public void dataToDB(){
         System.out.println("Trasferimento Data.bin sul DB ...");
@@ -234,9 +243,10 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     /**
-     * @brief Carica la configurazione da Config.bin, se presente
-     * @pre 
-     * @throws IOException se non lo trova o se non riesce a leggere il file
+     * @brief Carica la configurazione da Config.bin, se presente.
+     * @pre nessuna
+     * @post Preleva dal file Config.bin l'informazione del link del DB scelto dall'utente.
+     * @throws IOException se non lo trova o se non riesce a leggere il file Config.bin.
      */
     public void loadConfig() {
         System.out.println("Lettura del file Config.bin ...");
@@ -250,7 +260,10 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     /**
-     * @brief Salva la configurazione su Config.bin
+     * @brief Salva la configurazione su Config.bin.
+     * @pre È valorizzato il campo dbUrl, può già esistere un file Config.bin.
+     * @post Crea il file Config.bin che conserva l'informazione del link del DB,
+     * se già esiste allora lo sovrascrive.
      */
     public void saveConfig() {
         System.out.println("Salvataggio del file Config.bin ...");
@@ -266,7 +279,7 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     /**
-     * @brief Inizializza il database
+     * @brief Inizializza il database dell'AddressBook
      * @pre È valorizzato il campo dbUrl ed è valido
      * @post L'attributo db contiene l'istanza del database
      */

@@ -9,21 +9,25 @@ public interface ContactManager {
 
     /**
      * @brief Ottiene la lista osservabile di tutti i contatti.
-     * @return Lista osservabile
+     * @pre nessuna (ci possono essere 0 o più contatti).
+     * @post Il client ottiene la lista completa degli utenti dell'AddressBook
+     * @return Lista osservabile dei contatti.
      */
     ObservableList<Contact> getAllContacts();
 
     /**
      * @brief Aggiunge un contatto alla rubrica telefonica.
-     *
      * @param[in] c Contatto da aggiungere.
+     * @pre nessuna (il parametro c può essere null).
+     * @post Aggiorna la lista dei contatti dell'AddressBook inserendovi il nuovo contatto c
      */
     void addContact(Contact c);
 
     /**
      * @brief Rimuove la prima occorrenza del contatto.
      * @param[in] c Contatto da rimuovere.
-     * @return Contatto rimosso.
+     * @pre nessuna (il parametro c può essere null o non presente nella lista dei contatti).
+     * @post Aggiorna la lista dei contatti dell'AddressBook rimuovendo il contatto c, se presente.
      */
     void removeContact(Contact c);
 }
