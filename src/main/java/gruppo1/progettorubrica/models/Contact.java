@@ -136,7 +136,7 @@ public class Contact implements Serializable{
      * @param[in] indice del tag da aggiungere
      */
     public void addTagIndex(Integer tagIndex) {
-
+        return;
     }
     
     /**
