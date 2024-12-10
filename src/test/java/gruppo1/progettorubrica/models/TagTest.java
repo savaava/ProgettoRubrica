@@ -7,40 +7,40 @@ import static org.junit.Assert.*;
 public class TagTest {
 
     @Test
-    public void constructor1() {
+    public void testConstructor1() {
         Tag tag = new Tag("tag");
         assertNotNull(tag);
         assertTrue(tag.getId() > 0);
     }
 
     @Test
-    public void constructor2() {
+    public void testConstructor2() {
         Tag tag = new Tag("tag", 10);
         assertNotNull(tag);
         assertEquals(10, tag.getId());
     }
 
     @Test
-    public void getId() {
+    public void testGetId() {
         Tag tag = new Tag("tag", 10);
         assertEquals(10, tag.getId());
     }
 
     @Test
-    public void getDescription() {
+    public void testGetDescription() {
         Tag tag = new Tag("tag");
         assertEquals("tag", tag.getDescription());
     }
 
     @Test
-    public void setDescription() {
+    public void testSetDescription() {
         Tag tag = new Tag("tag");
         tag.setDescription("new tag");
         assertEquals("new tag", tag.getDescription());
     }
 
     @Test
-    public void setIndex() {
+    public void testSetIndex() {
         Tag.setIndex(11);
         Tag tag = new Tag("tag");
         assertEquals(11, tag.getId());

@@ -16,37 +16,37 @@ public class DatabaseTest {
     private static final String url = "mongodb+srv://rubricaContatti:tqHPmDYFftuxXE3g@mongisacluster.o8crvzq.mongodb.net/?retryWrites=true&w=majority&appName=MongisaCluster";
 
     @Test
-    public void constructor_validUrl() {
+    public void testConstructor_validUrl() {
         database = new Database(url);
         assertNotNull(database);
     }
 
     @Test
-    public void verifyDBUrl_validUrl() {
+    public void testVerifyDBUrl_validUrl() {
         String validUrl = url;
         assertTrue(Database.verifyDBUrl(validUrl));
     }
 
     @Test
-    public void verifyDBUrl_invalidUrl() {
+    public void testVerifyDBUrl_invalidUrl() {
         String invalidUrl = "aaaaaaaaaaaa";
         assertFalse(Database.verifyDBUrl(invalidUrl));
     }
 
     @Test
-    public void verifyDBUrl_nullUrl() {
+    public void testVerifyDBUrl_nullUrl() {
         String nullUrl = null;
         assertFalse(Database.verifyDBUrl(nullUrl));
     }
 
     @Test
-    public void verifyDBUrl_emptyUrl() {
+    public void testVerifyDBUrl_emptyUrl() {
         String emptyUrl = "";
         assertFalse(Database.verifyDBUrl(emptyUrl));
     }
     
     @Test
-    public void insertContact() {
+    public void testInsertContact() {
         database = new Database(url);
 
         String name = "Mario";
@@ -72,7 +72,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void removeContact() {
+    public void testRemoveContact() {
         database = new Database(url);
 
         String name = "Mario";
@@ -87,7 +87,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void insertTag() {
+    public void testInsertTag() {
         database = new Database(url);
 
         String description = "FamigliaTest";
@@ -102,7 +102,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void removeTag() {
+    public void testRemoveTag() {
         database = new Database(url);
 
         String description = "FamigliaTest";
@@ -117,7 +117,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void getAllContacts() {
+    public void testGetAllContacts() {
         database = new Database(url);
         //Salvo lo stato iniziale del database
         Collection<Contact> savedContacts = database.getAllContacts();
@@ -145,7 +145,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void getAllTags() {
+    public void testGetAllTags() {
         database = new Database(url);
         //Salvo lo stato iniziale del database
         Collection<Tag> savedTags = database.getAllTags();
@@ -172,7 +172,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void insertManyContacts() {
+    public void testInsertManyContacts() {
         database = new Database(url);
 
         List<Contact> contacts = new ArrayList<>();
@@ -199,7 +199,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void insertManyTags() {
+    public void testInsertManyTags() {
         database = new Database(url);
 
         List<Tag> tags = new ArrayList<>();
@@ -226,7 +226,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void contactToDocument() {
+    public void testContactToDocument() {
         database = new Database(url);
 
         String name = "Mario";
@@ -255,7 +255,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void documentToContact() {
+    public void testDocumentToContact() {
         database = new Database(url);
         Document doc = new Document();
 
@@ -285,7 +285,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void tagToDocument() {
+    public void testTagToDocument() {
         database = new Database(url);
 
         String description = "Famiglia";
@@ -300,7 +300,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void documentToTag() {
+    public void testDocumentToTag() {
         database = new Database(url);
         Document doc = new Document();
 
