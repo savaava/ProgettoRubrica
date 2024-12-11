@@ -117,22 +117,6 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onAddContact(ActionEvent event) {
-        this.contactDetailsPane.setDisable(false);
-        this.editButton.setDisable(true);
-        this.deleteButton.setDisable(true);
-        
-        TextField email2=new TextField();
-        GridPane.setColumnIndex(email2, 1);
-        GridPane.setRowIndex(email2, 1);
-        email2.setDisable(true);
-        
-        TextField email3=new TextField();
-        GridPane.setColumnIndex(email3, 1);
-        GridPane.setRowIndex(email3, 2);
-        email3.setDisable(true);
-        
-        this.numbersPane.getChildren().addAll(email2, email3);
-        
         
         
         
@@ -190,8 +174,6 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onSaveContact(ActionEvent event) {
-        //in fase di aggiunta contatto:
-        Contact c=new Contact(this.nameField.getText(), this.surnameField.getText());
         
     }
 
@@ -267,12 +249,6 @@ public class MainController implements Initializable {
         
         //Successivamente bisogna usare i metodi getSelectedImage() e getImageIndex()
         
-        Stage imagePopup=new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("ImagePopupController.fxml"));
-        Scene imageScene=new Scene(root);
-        
-        imagePopup.setScene(imageScene);
-        imagePopup.show();
         
         
     }
