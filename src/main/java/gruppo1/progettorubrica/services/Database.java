@@ -2,6 +2,7 @@ package gruppo1.progettorubrica.services;
 
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
+import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import org.bson.Document;
@@ -19,6 +20,8 @@ public class Database {
     /**
      * @brief Costruttore della classe Database
      * @param[in] uri URL del database
+     * @pre L'url è valido, verificato tramite il metodo statico {@link Database#verifyDBUrl(String)}
+     * @post Viene istanziata un oggetto della classe Database
      */
     public Database(String url) {
         MongoClient mongoClient = MongoClients.create(url);
@@ -28,6 +31,8 @@ public class Database {
     /**
      * @brief Verifica la validità dell'URL del database
      * @param[in] url URL del database
+     * @pre Nessuna
+     * @post Il client ottiene informazioni sulla validità dell'URL
      * @return true se l'URL è valido, false altrimenti
      */
     public static boolean verifyDBUrl(String url) {
@@ -51,35 +56,51 @@ public class Database {
     /**
      * @brief Aggiunge/aggiorna un contatto al database
      * @param[in] c Contatto da aggiungere
+     * @pre Nessuna
+     * @post il contatto è inserito nel database
      */
     public void insertContact(Contact c) {
+        if(c == null) return;
         mongoDb.getCollection("contacts").insertOne(this.contactToDocument(c));
     }
 
     /**
      * @brief Rimuove un contatto dal database
      * @param[in] c Contatto da rimuovere
+     * @pre Nessuna
+     * @post Viene rimosso il contatto dal database
      */
     public void removeContact(Contact c) {
+        if(c == null) return;
         mongoDb.getCollection("contacts").deleteOne(this.contactToDocument(c));
     }
 
     /**
-     * @brief Aggiunge/aggiorna un tag al database
+     * @brief Aggiunge un tag al database
+     * @param[in] tag
+     * @pre Nessuna
+     * @post Viene aggiunto il tag al database
      */
     public void insertTag(Tag tag) {
+        if(tag == null) return;
         mongoDb.getCollection("tags").insertOne(this.tagToDocument(tag));
     }
 
     /**
      * @brief Rimuove un tag dal database
+     * @param[in] tag
+     * @pre Nessuna
+     * @post Viene rimosso il tag dal database
      */
     public void removeTag(Tag tag) {
+        if(tag == null) return;
         mongoDb.getCollection("tags").deleteOne(this.tagToDocument(tag));
     }
 
     /**
      * @brief Restituisce tutti i contatti presenti nel database
+     * @pre Nessuna
+     * @post Viene restituita la collezione dei contatti presenti nel database
      * @return Collezione di Contact con i contatti del database
      */
     public Collection<Contact> getAllContacts() {
@@ -98,6 +119,8 @@ public class Database {
 
     /**
      * @brief Restituisce tutti i tag presenti nel database
+     * @pre Nessuna
+     * @post Viene restituita la collezione dei tag presenti nel database
      * @return Collezione di String con i tag del database
      */
     public Collection<Tag> getAllTags() {
@@ -117,8 +140,12 @@ public class Database {
     /**
      * @brief Inserisce una collezione di contatti nel database
      * @param[in] contacts Collezione di contatti da inserire
+     * @pre Nessuna
+     * @post La collezione viene inserita sul database
      */
     public void insertManyContacts(Collection<Contact> contacts) {
+        if(contacts == null || contacts.isEmpty()) return;
+
         List<Document> documents = new ArrayList<>();
 
         contacts.forEach(c -> {
@@ -131,8 +158,12 @@ public class Database {
     /**
      * @brief Inserisce una collezione di tag nel database
      * @param[in] tags Collezione di tag da inserire
+     * @pre Nessuna
+     * @post Viene inserita la collezione di tag nel database
      */
     public void insertManyTags(Collection<Tag> tags) {
+        if(tags == null || tags.isEmpty()) return;
+
         List<Document> documents = new ArrayList<>();
 
         tags.forEach(t -> {
@@ -169,6 +200,8 @@ public class Database {
     /**
      * @brief Converte il contatto in un documento
      * @param[in] c Contatto da convertire
+     * @pre Nessuna
+     * @post Viene restituito il documento del contatto
      * @return Document con i dati del contatto
      */
     public Document contactToDocument(Contact c) {
@@ -191,9 +224,12 @@ public class Database {
     /**
      * @brief Converte il documento in un contatto
      * @param[in] d Document da convertire
+     * @pre Nessuna
+     * @post Viene restituito l'oggetto contatto
      * @return Contatto con i dati del documento
      */
     public Contact documentToContact(Document d) {
+        if(d == null) return null;
         Contact c = new Contact(d.getString("name"),d.getString("surname"));
 
         c.setNumbers(d.getList("numbers", String.class).toArray(new String[0]));
@@ -210,9 +246,12 @@ public class Database {
     /**
      * @brief Converte il tag in un documento
      * @param[in] tag Tag da convertire
+     * @pre Nessuna
+     * @post Viene restituito il documento del tag
      * @return Document con i dati del tag
      */
     public Document tagToDocument(Tag tag) {
+        if(tag == null) return null;
         Document doc = new Document();
 
         doc.put("id",tag.getId());
@@ -224,9 +263,12 @@ public class Database {
     /**
      * @brief Converte il documento in un tag
      * @param[in] d Document da convertire
+     * @pre Nessuna
+     * @post Viene restituito l'oggetto tag
      * @return Tag con i dati del documento
      */
     public Tag documentToTag(Document d) {
+        if(d == null) return null;
         return new Tag(d.getString("description"),d.getInteger("id"));
     }
 }
