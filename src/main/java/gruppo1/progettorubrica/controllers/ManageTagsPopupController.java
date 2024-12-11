@@ -30,7 +30,7 @@ public class ManageTagsPopupController implements Initializable {
     private Button addButton, updateButton, deleteButton; ///< Riferimento ai bottoni di aggiunta, modifica ed eliminazione
     
     @FXML
-    private TextField tagField;
+    private TextField nameField;
     
 
     /**
@@ -52,10 +52,9 @@ public class ManageTagsPopupController implements Initializable {
      */
     @FXML
     private void onAdd(ActionEvent event) {
-        String tag=tagField.getText(); //prelevo il tag scritto dall'utente
-        
-        Tag t=new Tag(tag);
-        tagManager.addTag(t); 
+        String name = nameField.getText();   //prelevo il tag scritto dall'utente
+        Tag tag = new Tag(name);
+        this.tagManager.addTag(tag); 
     }
 
     /**
