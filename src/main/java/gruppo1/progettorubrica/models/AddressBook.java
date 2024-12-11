@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -203,7 +204,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @throws IOException se il file non esiste o se non si riesce a fare la lettura.
      */
     public void saveOBJ() {
-        System.out.println("Scrittura file Data.bin ...");
+        System.out.print("Scrittura file Data.bin... ");
         
         /* FORMATO fiel Data.bin:
         listacontatti listatags
@@ -211,7 +212,7 @@ public class AddressBook implements TagManager, ContactManager {
         try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
             oos.writeObject(new ArrayList<>(contacts));
             oos.writeObject(new ArrayList<>(tags));
-            System.out.println("Scrittura file Data.bin completata con successo");
+            System.out.println("completata con successo");
         }catch(IOException ex){
             System.out.print("ECCEZIONE in scrittura serializzata del file Data.bin -> ");
             ex.printStackTrace();
@@ -227,14 +228,14 @@ public class AddressBook implements TagManager, ContactManager {
      * @throws  ClassNotFoundException se non riesce a convertire il contenuto del file in una lista di Contact o Tag.
      */
     public void loadOBJ() {
-        System.out.println("Lettura file Data.bin ...");
+        System.out.print("Lettura file Data.bin... ");
         
         try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
             try {
                 contacts.setAll((Collection<Contact>)ois.readObject());
                 tags.setAll((Collection<Tag>)ois.readObject());
             } catch (ClassNotFoundException ex) {ex.printStackTrace();}
-            System.out.println("Lettura file Data.bin completata con successo");
+            System.out.println("completata con successo");
         }catch(IOException ex){
             System.out.println("ECCEZIONE in lettura serializzata del file Data.bin -> ");
             ex.printStackTrace();
@@ -276,14 +277,19 @@ public class AddressBook implements TagManager, ContactManager {
      * @post tutti i contatti e tags del file Data.bin vengono inseriti nel DB.
      */
     public void dataToDB(){
-        System.out.println("Trasferimento Data.bin sul DB ...");
+        System.out.print("Trasferimento Data.bin sul DB... ");
         
         try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
             try {
-                db.insertManyContacts((Collection<Contact>)ois.readObject());
-                db.insertManyTags((Collection<Tag>)ois.readObject());
+                List<Contact> contattiData = new ArrayList<>((Collection<Contact>)ois.readObject());
+                if(! contattiData.isEmpty())
+                    db.insertManyContacts(contattiData);
+                
+                List<Tag> tagsData = new ArrayList<>((Collection<Tag>)ois.readObject());
+                if(! tagsData.isEmpty())
+                    db.insertManyTags(tagsData);
             } catch (ClassNotFoundException ex) {ex.printStackTrace();}
-            System.out.println("Trasferimento file Data.bin sul DB completato con successo");
+            System.out.println("completato con successo");
         }catch(IOException ex){
             System.out.println("ECCEZIONE in lettura serializzata del file Data.bin -> ");
             ex.printStackTrace();
@@ -307,11 +313,11 @@ public class AddressBook implements TagManager, ContactManager {
      * @throws IOException se non lo trova o se non riesce a leggere il file Config.bin.
      */
     public void loadConfig() {
-        System.out.println("Lettura del file Config.bin ...");
+        System.out.print("Lettura del file Config.bin... ");
         
         try(DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream("Config.bin")))){
             dbUrl = dis.readUTF();
-            System.out.println("Lettura file Config.bin completata con successo");
+            System.out.println("con successo");
         }catch(IOException ex){
             System.out.print("ECCEZIONE in lettura del file Config.bin -> ");
             ex.printStackTrace();
@@ -325,13 +331,13 @@ public class AddressBook implements TagManager, ContactManager {
      * se già esiste allora lo sovrascrive.
      */
     public void saveConfig() {
-        System.out.println("Salvataggio file Config.bin ...");
+        System.out.print("Scrittua file Config.bin... ");
         
         /* SCHEMA DI SALVATAGGIO: una sola stringa nell'unica riga
         path_file_Config.bin */
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
             dos.writeUTF(dbUrl);
-            System.out.println("Scrittura file Config.bin completata con successo");
+            System.out.println("completata con successo");
         }catch(IOException ex){
             System.out.print("ECCEZIONE in scrittura del file Config.bin -> ");
             ex.printStackTrace();
