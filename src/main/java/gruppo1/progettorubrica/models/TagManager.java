@@ -1,5 +1,6 @@
 package gruppo1.progettorubrica.models;
 
+import java.util.Collection;
 import javafx.collections.ObservableList;
 
 /**
@@ -15,6 +16,14 @@ public interface TagManager {
      */
     void addTag(Tag tag);
 
+    /**
+     * @brief Aggiunge 1 o più tags dalla collezione alla rubrica telefonica.
+     * @param[in] c Collezione di tags da aggiungere.
+     * @pre nessuna (il parametro c può essere null).
+     * @post Aggiorna la lista dei tags dell'AddressBook inserendovi gli eventuali tags da c.
+     */
+    void addManyTags(Collection<Tag> c);
+    
     /**
      * @brief Rimuove un tag.
      * @param[in] tag Tag da rimuovere.

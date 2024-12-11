@@ -1,5 +1,6 @@
 package gruppo1.progettorubrica.models;
 
+import java.util.Collection;
 import javafx.collections.ObservableList;
 
 /**
@@ -19,9 +20,17 @@ public interface ContactManager {
      * @brief Aggiunge un contatto alla rubrica telefonica.
      * @param[in] c Contatto da aggiungere.
      * @pre nessuna (il parametro c può essere null).
-     * @post Aggiorna la lista dei contatti dell'AddressBook inserendovi il nuovo contatto c
+     * @post Aggiorna la lista dei contatti dell'AddressBook inserendovi l'eventuale nuovo contatto c
      */
     void addContact(Contact c);
+    
+    /**
+     * @brief Aggiunge 1 o più contatti dalla collezione alla rubrica telefonica.
+     * @param[in] c Collezione di contatti da aggiungere.
+     * @pre nessuna (il parametro c può essere null).
+     * @post Aggiorna la lista dei contatti dell'AddressBook inserendovi gli eventuali contatti da c.
+     */
+    void addManyContacts(Collection<Contact> c);
 
     /**
      * @brief Rimuove la prima occorrenza del contatto.

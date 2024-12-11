@@ -67,8 +67,8 @@ public class DatabaseTest {
         database.insertContact(c);
         Collection<Contact> result = database.getAllContacts();
 
-        assertTrue(result.contains(c));
         database.removeContact(c);
+        assertTrue(result.contains(c));
     }
 
     @Test
@@ -97,8 +97,8 @@ public class DatabaseTest {
         database.insertTag(t);
         Collection<Tag> result = database.getAllTags();
 
-        assertTrue(result.contains(t));
         database.removeTag(t);
+        assertTrue(result.contains(t));
     }
 
     @Test
@@ -133,15 +133,15 @@ public class DatabaseTest {
 
         Collection<Contact> result = database.getAllContacts();
 
-        assertTrue(result.contains(c1));
-        assertTrue(result.contains(c2));
-        assertTrue(result.contains(c3));
-
         //Ripristino lo stato iniziale del database
         database.deleteAllContacts();
         
         if(!savedContacts.isEmpty())
             database.insertManyContacts(savedContacts);
+        
+        assertTrue(result.contains(c1));
+        assertTrue(result.contains(c2));
+        assertTrue(result.contains(c3));
     }
 
     @Test
@@ -159,16 +159,16 @@ public class DatabaseTest {
         database.insertTag(t2);
         database.insertTag(t3);
 
-        Collection<Tag> result = database.getAllTags();
-
-        assertTrue(result.contains(t1));
-        assertTrue(result.contains(t2));
-        assertTrue(result.contains(t3));
+        Collection<Tag> result = database.getAllTags();        
 
         //Ripristino lo stato iniziale del database
         database.deleteAllTags();
         if(!savedTags.isEmpty())
             database.insertManyTags(savedTags);
+        
+        assertTrue(result.contains(t1));
+        assertTrue(result.contains(t2));
+        assertTrue(result.contains(t3));
     }
 
     @Test
