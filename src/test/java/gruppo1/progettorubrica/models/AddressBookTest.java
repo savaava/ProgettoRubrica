@@ -23,8 +23,9 @@ import static org.junit.Assert.*;
 
 public class AddressBookTest {
     private AddressBook a;
-    private static final String url = 
-        "mongodb+srv://rubricaContatti:tqHPmDYFftuxXE3g@mongisacluster.o8crvzq.mongodb.net/?retryWrites=true&w=majority&appName=MongisaCluster";
+    private static final String url = "mongodb+srv://rubricaContatti:tqHPmDYFftuxXE3g@mongisacluster.o8crvzq.mongodb.net/?retryWrites=true&w=majority&appName=MongisaCluster";
+    private static final String pathData = "Data.bin";
+    private static final String pathConfig = "Config.bin";
     
     @Before
     public void setUp() throws Exception {
@@ -32,8 +33,8 @@ public class AddressBookTest {
         System.out.print("\n---Prossimo metodo da testare:  ");
         /* per testare la classe singleton devo resettare l'istanza statica di AddressBook a null */
         Field instanceField = AddressBook.class.getDeclaredField("instance");
-        instanceField.setAccessible(true); // Rendi il campo accessibile
-        instanceField.set(null, null); // Imposta il campo statico (null) a null per resettarlo
+        instanceField.setAccessible(true); /* Rendo il campo accessibile */
+        instanceField.set(null, null); /* Imposta il campo statico (null) a null per resettarlo */
     }
     @After
     public void tearDown(){
@@ -117,7 +118,7 @@ public class AddressBookTest {
         a = AddressBook.getInstance();
         
         assertTrue(a.getAllContacts().isEmpty() && a.getAllTags().isEmpty());
-        assertNull(a.getDBUrl());
+        assertEquals("", a.getDBUrl());
         assertNull(a.getDB());
     }
     
@@ -135,7 +136,7 @@ public class AddressBookTest {
         List<Contact> contactsProva = getListaContattiCasuali(2);   
         List<Tag> tagsProva = getListaTagCasuali(3);
         
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(contactsProva);
             oos.writeObject(tagsProva);
         }catch(IOException ex){ex.printStackTrace();}
@@ -144,7 +145,7 @@ public class AddressBookTest {
         
         assertTrue(a.getAllTags().containsAll(tagsProva));
         assertTrue(a.getAllContacts().containsAll(contactsProva));
-        assertNull(a.getDBUrl());
+        assertEquals("", a.getDBUrl());
         assertNull(a.getDB());
     }
     
@@ -161,7 +162,7 @@ public class AddressBookTest {
     public void testGetInstance3() {
         System.out.println("getInstance3");
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -210,7 +211,7 @@ public class AddressBookTest {
     public void testGetInstance4() {
         System.out.println("getInstance4");
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
 
@@ -230,7 +231,7 @@ public class AddressBookTest {
         database.insertManyContacts(contactsProvaDb);
         database.insertManyTags(tagsProvaDb);
         
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(contactsProvaData);
             oos.writeObject(tagsProvaData);
         }catch(IOException ex){ex.printStackTrace();}
@@ -245,13 +246,11 @@ public class AddressBookTest {
         if(!savedTags.isEmpty())
             database.insertManyTags(savedTags);
         
-        assertEquals(contactsProvaData.size()+contactsProvaDb.size(), a.getAllContacts().size());
-        assertEquals(tagsProvaData.size()+tagsProvaDb.size(), a.getAllTags().size());
-        assertTrue(a.getAllContacts().containsAll(contactsProvaDb));
-        assertTrue(a.getAllContacts().containsAll(contactsProvaData));        
-        assertTrue(a.getAllTags().containsAll(tagsProvaDb));
-        assertTrue(a.getAllTags().containsAll(tagsProvaData));
-        assertEquals(a.getDBUrl(), url);
+        assertEquals(contactsProvaData.size(), a.getAllContacts().size());
+        assertEquals(tagsProvaData.size(), a.getAllTags().size());
+        assertEquals(a.getAllContacts(), contactsProvaData);
+        assertEquals(a.getAllTags(), tagsProvaData);
+        assertEquals(url, a.getDBUrl());
         assertNotNull(a.getDB());
     }
 
@@ -287,7 +286,7 @@ public class AddressBookTest {
         }
         
         List<Contact> contattiLetti = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 contattiLetti = new ArrayList<>((Collection<Contact>)ois.readObject());
             } catch (ClassNotFoundException ex) {ex.printStackTrace();}
@@ -309,7 +308,7 @@ public class AddressBookTest {
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -332,8 +331,8 @@ public class AddressBookTest {
             database.insertManyContacts(savedContacts);
         
         assertEquals(contattiLetti, a.getAllContacts());
-        assertFalse(new File("Data.bin").exists());
-        assertTrue(new File("Config.bin").exists());
+        assertFalse(new File(pathData).exists());
+        assertTrue(new File(pathConfig).exists());
     }
     
     /**
@@ -343,12 +342,12 @@ public class AddressBookTest {
      * Quindi non esiste il file Data.bin e non si deve creare.
      */
     //@Test
-    public void testAddManyContacts() {
-        System.out.println("addManyContacts");
+    public void testAddManyContacts1() {
+        System.out.println("addManyContacts1");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -369,7 +368,58 @@ public class AddressBookTest {
             database.insertManyContacts(savedContacts);
         
         assertEquals(contattiLetti, a.getAllContacts());
-        assertFalse(new File("Data.bin").exists());
+        assertFalse(new File(pathData).exists());
+    }
+    
+    /**
+     * UTC 1. (MOLTO ONEROSO)
+     * 
+     * L'utente possiede un DB funzionante e sta inserendo i suoi contatti e tag
+     * Ma il DB diventa improvvisamente irraggiungibile (cambio l'url con uno non valido) e l'utente continua ad aggiungere però su Data.bin
+     * Poi il DB torna a funzionare (cambio l'url con quello valido) durante la stessa sessione, e in fase di aggiunta si carica sul DB.
+     */
+    //@Test
+    public void testAddManyContacts2() throws Exception {
+        System.out.println("addManyContacts2");
+        
+        List<Contact> contactsProva = getListaContattiCasuali(2);
+        
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
+            dos.writeUTF(url);
+        }catch(IOException ex){ex.printStackTrace();}
+        
+        Database database = new Database(url);
+        
+        /* salvo lo stato iniziale del DB */
+        Collection<Contact> savedContacts = database.getAllContacts();
+        database.deleteAllContacts();
+        
+        a = AddressBook.getInstance();
+        a.addManyContacts(contactsProva);
+        
+        /* improvvisamente non funziona più il DB */
+        Field urlField = AddressBook.class.getDeclaredField("dbUrl");
+        urlField.setAccessible(true);
+        urlField.set(a, "urlNonValido.it");
+        
+        contactsProva = getListaContattiCasuali(2); 
+        a.addManyContacts(contactsProva); /* si crea il file Data.bin, in cui verranno salvati i successivi contatti e tag */
+        
+        /* improvvisamente il DB torna a funzionare */
+        urlField.set(a, url);
+        contactsProva = getListaContattiCasuali(2); 
+        a.addManyContacts(contactsProva);
+        
+        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
+        
+        /* ripristino lo stato iniziale del DB */
+        database.deleteAllContacts();
+        if(!savedContacts.isEmpty())
+            database.insertManyContacts(savedContacts);
+        
+        assertTrue(new File(pathConfig).exists());
+        assertFalse(new File(pathData).exists());
+        assertEquals(contattiLetti, a.getAllContacts());
     }
     
     /**
@@ -377,13 +427,13 @@ public class AddressBookTest {
      * 
      * Il contatto si rimuove dal file Data.bin e non dal DB perchè non esiste.
      */
-    //@Test
+    @Test
     public void testRemoveContact1() {
         System.out.println("removeContact1");
         
         Contact cVett[] = {getContattoCasuale(), getContattoCasuale()};
         
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(new ArrayList<>(Arrays.asList(cVett)));
             oos.writeObject(new ArrayList<Tag>());
         }catch(IOException ex){ex.printStackTrace();}
@@ -392,7 +442,7 @@ public class AddressBookTest {
         a.removeContact(cVett[0]);
         
         List<Contact> contattiLetti = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 contattiLetti = new ArrayList<>((Collection<Contact>)ois.readObject());
             } catch (ClassNotFoundException ex) {ex.printStackTrace();}
@@ -416,7 +466,7 @@ public class AddressBookTest {
         Contact cVett[] = {getContattoCasuale(), getContattoCasuale()};       
         Tag tagVett[] = {getTagCasuale(), getTagCasuale(), getTagCasuale()};
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -447,6 +497,66 @@ public class AddressBookTest {
         assertTrue(a.getAllContacts().contains(cVett[1]));
         assertEquals(tagVett.length, a.getAllTags().size());
         assertEquals(contattiLetti, a.getAllContacts());
+    }
+    
+    /**
+     * UTC 1.9 (MOLTO ONEROSO)
+     * 
+     * L'utente possiede un DB funzionante e sta inserendo i suoi contatti e tag.
+     * Tuttavia rimuove un contatto quando non funziona più, pertanto si genera Data.bin
+     * Continuando ad usare l'applicazione il DB torna a funzionare e
+     * l'oracolo stabilisce che Data.bin non esiste più e il database contiene le stesse info dell'AddressBook
+     */
+    //@Test
+    public void testRemoveContact3() throws Exception{
+        System.out.println("removeContact3");
+        
+        List<Contact> contactsProva = getListaContattiCasuali(2);
+        List<Tag> tagsProva = getListaTagCasuali(2);
+        
+        Database database = new Database(url);
+        
+        /* salvo lo stato iniziale del DB */
+        Collection<Contact> savedContacts = database.getAllContacts();
+        Collection<Tag> savedTags = database.getAllTags();
+        database.deleteAllContacts();
+        database.deleteAllTags();
+        
+        a = AddressBook.getInstance();
+        a.addManyContacts(contactsProva);
+        a.setDBUrl(url);
+        a.addManyTags(tagsProva);
+        
+        /* improvvisamente non funziona più il DB */
+        Field urlField = AddressBook.class.getDeclaredField("dbUrl");
+        urlField.setAccessible(true);
+        urlField.set(a, "urlNonValido.it");
+        
+        contactsProva = getListaContattiCasuali(2);
+        a.addManyContacts(contactsProva);
+        a.removeContact(contactsProva.get(0));
+        
+        /* improvvisamente il DB torna a funzionare */
+        urlField.set(a, url);
+        contactsProva = getListaContattiCasuali(2); 
+        a.addManyContacts(contactsProva);
+        
+        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
+        List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
+        
+        /* ripristino lo stato iniziale del DB */
+        database.deleteAllContacts();
+        database.deleteAllTags();        
+        if(!savedContacts.isEmpty())
+            database.insertManyContacts(savedContacts);
+        if(!savedTags.isEmpty())
+            database.insertManyTags(savedTags);
+        
+        assertTrue(new File(pathConfig).exists());
+        assertFalse(new File(pathData).exists());
+        assertEquals(5, a.getAllContacts().size());
+        assertEquals(contattiLetti, a.getAllContacts());
+        assertEquals(tagsLetti, a.getAllTags());
     }
     
     /**
@@ -520,7 +630,7 @@ public class AddressBookTest {
         }
         
         List<Tag> tagLetti = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 ois.readObject();
                 tagLetti = new ArrayList<>((Collection<Tag>)ois.readObject());
@@ -542,7 +652,7 @@ public class AddressBookTest {
         
         List<Tag> tagsProva = getListaTagCasuali(3);
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -566,7 +676,7 @@ public class AddressBookTest {
         
         assertEquals(tagsProva, a.getAllTags());    
         assertEquals(tagLetti, a.getAllTags());
-        assertFalse(new File("Data.bin").exists());
+        assertFalse(new File(pathData).exists());
     }
     
     /**
@@ -580,7 +690,7 @@ public class AddressBookTest {
         
         List<Tag> tagsProva = getListaTagCasuali(3);
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -602,7 +712,7 @@ public class AddressBookTest {
         
         assertEquals(tagsProva, a.getAllTags());    
         assertEquals(tagLetti, a.getAllTags());
-        assertFalse(new File("Data.bin").exists());
+        assertFalse(new File(pathData).exists());
     }
     
     /**
@@ -622,7 +732,7 @@ public class AddressBookTest {
         a.removeTag(tagVett[1]);
         
         List<Tag> tagLetti = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 ois.readObject();
                 tagLetti = new ArrayList<>((Collection<Tag>)ois.readObject());
@@ -646,7 +756,7 @@ public class AddressBookTest {
         
         Tag tagVett[] = {getTagCasuale(), getTagCasuale()};
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -670,7 +780,7 @@ public class AddressBookTest {
         assertEquals(1, a.getAllTags().size());
         assertTrue(a.getAllTags().contains(tagVett[0]));
         assertEquals(tagLetti, a.getAllTags());
-        assertFalse(new File("Data.bin").exists());
+        assertFalse(new File(pathData).exists());
         
     }
 
@@ -692,8 +802,8 @@ public class AddressBookTest {
         List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
         List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
         
-        assertTrue(new File("Config.bin").exists());
-        assertFalse(new File("Data.bin").exists());
+        assertTrue(new File(pathConfig).exists());
+        assertFalse(new File(pathData).exists());
         assertEquals(url, a.getDBUrl());
         assertNotNull(a.getDB());
         assertEquals(contattiLetti, a.getAllContacts());
@@ -732,8 +842,8 @@ public class AddressBookTest {
         if(!savedTags.isEmpty())
             database.insertManyTags(savedTags);
         
-        assertTrue(new File("Config.bin").exists());
-        assertFalse(new File("Data.bin").exists());
+        assertTrue(new File(pathConfig).exists());
+        assertFalse(new File(pathData).exists());
         assertEquals(url, a.getDBUrl());
         assertNotNull(a.getDB());
         assertEquals(contattiLetti, a.getAllContacts());
@@ -774,8 +884,8 @@ public class AddressBookTest {
         if(!savedContacts.isEmpty())
             database.insertManyContacts(savedContacts);
         
-        assertTrue(new File("Config.bin").exists());
-        assertFalse(new File("Data.bin").exists());
+        assertTrue(new File(pathConfig).exists());
+        assertFalse(new File(pathData).exists());
         assertEquals(a.getDBUrl(), url);
         assertNotNull(a.getDB());
         assertEquals(contattiLetti, a.getAllContacts());
@@ -825,12 +935,56 @@ public class AddressBookTest {
         if(!savedTags.isEmpty())
             database.insertManyTags(savedTags);
         
-        assertTrue(new File("Config.bin").exists());
-        assertFalse(new File("Data.bin").exists());
+        assertTrue(new File(pathConfig).exists());
+        assertFalse(new File(pathData).exists());
         assertEquals(a.getDBUrl(), url);
         assertNotNull(a.getDB());
         assertEquals(contattiLetti, a.getAllContacts());
         assertEquals(tagsLetti, a.getAllTags());
+    }
+    
+    /**
+     * UTC 1. (ONEROSO)
+     * 
+     * L'utente possiede un DB funzionante e sta inserendo i suoi contatti e tag
+     * Ma l'utente inserisce un DBurl non valido durante la sessione, e continua ad aggiungere però il salvataggio avviene ora su Data.bin
+     * Poi l'utente inserisce l'url valido e in fase di aggiunta si carica sul DB.
+     */
+    //@Test
+    public void testSetDBUrl5() {
+        System.out.println("setDBUrl5");
+        
+        List<Contact> contactsProva = getListaContattiCasuali(2);
+        
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
+            dos.writeUTF(url);
+        }catch(IOException ex){ex.printStackTrace();}
+        
+        Database database = new Database(url);
+        
+        /* salvo lo stato iniziale del DB */
+        Collection<Contact> savedContacts = database.getAllContacts();
+        database.deleteAllContacts();
+        
+        a = AddressBook.getInstance();
+        a.addManyContacts(contactsProva);
+        
+        a.setDBUrl("urlNonValido.it"); /* l'utente aggiorna il file Config.bin */        
+        contactsProva = getListaContattiCasuali(2); 
+        a.addManyContacts(contactsProva); /* si crea il file Data.bin, in cui verranno salvati i successivi contatti e tag */
+        
+        a.setDBUrl(url); /* ora si trasferisce Data.bin sul DB vuoto e si elimina Data.bin */
+        
+        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
+        
+        /* ripristino lo stato iniziale del DB */
+        database.deleteAllContacts();
+        if(!savedContacts.isEmpty())
+            database.insertManyContacts(savedContacts);
+        
+        assertEquals(contattiLetti, a.getAllContacts());
+        assertFalse(new File(pathData).exists());
+        assertTrue(new File(pathConfig).exists());
     }
 
     /**
@@ -842,7 +996,7 @@ public class AddressBookTest {
     public void testGetDBUrl1() {
         System.out.println("getDBUrl1");
         
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF("urlCasuale.it");
         }catch(IOException ex){ex.printStackTrace();}
         
@@ -864,7 +1018,7 @@ public class AddressBookTest {
         a.setDBUrl("urlCasuale.it");
         
         assertEquals("urlCasuale.it", a.getDBUrl());
-        assertTrue(new File("Config.bin").exists());
+        assertTrue(new File(pathConfig).exists());
     }
 
     /**
@@ -887,7 +1041,7 @@ public class AddressBookTest {
         
         List<Contact> c = null;
         List<Tag> t = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 c = new ArrayList<>((Collection<Contact>)ois.readObject());
                 t = new ArrayList<>((Collection<Tag>)ois.readObject());
@@ -916,7 +1070,7 @@ public class AddressBookTest {
         
         List<Contact> c = null;
         List<Tag> t = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 c = new ArrayList<>((Collection<Contact>)ois.readObject());
                 t = new ArrayList<>((Collection<Tag>)ois.readObject());
@@ -945,7 +1099,7 @@ public class AddressBookTest {
         
         List<Contact> c = null;
         List<Tag> t = null;
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 c = new ArrayList<>((Collection<Contact>)ois.readObject());
                 t = new ArrayList<>((Collection<Tag>)ois.readObject());
@@ -969,8 +1123,9 @@ public class AddressBookTest {
         List<Tag> tagsProva = getListaTagCasuali(2);
         
         a = AddressBook.getInstance();
+        a.addManyContacts(getListaContattiCasuali(10));
         
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(contactsProva);
             oos.writeObject(tagsProva);
         }catch(IOException ex){ex.printStackTrace();}
@@ -993,8 +1148,9 @@ public class AddressBookTest {
         List<Contact> contactsProva = getListaContattiCasuali(2);
         
         a = AddressBook.getInstance();
+        a.addManyContacts(getListaContattiCasuali(10));
         
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(contactsProva);
             /* Data.bin ha sempre 2 oggetti scritti al suo interno */
             oos.writeObject(new ArrayList<Tag>());
@@ -1019,8 +1175,9 @@ public class AddressBookTest {
         List<Tag> tagsProva = new ArrayList<>(Arrays.asList(tagVett));
         
         a = AddressBook.getInstance();
+        a.addManyContacts(getListaContattiCasuali(10));
         
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             /* Data.bin ha sempre 2 oggetti scritti al suo interno */
             oos.writeObject(new ArrayList<Contact>());
             oos.writeObject(tagsProva);
@@ -1034,66 +1191,48 @@ public class AddressBookTest {
     }
 
     /**
-     * UTC 1.
+     * UTC 1. (LEGGERO)
      */
-    //@Test
+    @Test
     public void testRemoveOBJ() {
         System.out.println("removeOBJ");
-        fail("The test case is a prototype.");
+        
+        a = AddressBook.getInstance();
+        
+        /* qui si crea Data.bin */
+        a.addContact(getContattoCasuale());
+        
+        a.removeOBJ();
+        
+        assertFalse(new File(pathData).exists());
     }
 
     /**
-     * UTC 1.
+     * UTC 1. (ONEROSO)
      */
     //@Test
     public void testSaveToDB() {
         System.out.println("saveToDB");
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * UTC 1.
-     */
-    //@Test
-    public void testDataToDB() {
-        System.out.println("dataToDB");
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * UTC 1.
-     */
-    //@Test
-    public void testLoadFromDB() {
-        System.out.println("loadFromDB");
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * UTC 1.
-     */
-    //@Test
-    public void testLoadConfig() {
-        System.out.println("loadConfig");
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * UTC 1.
-     */
-    //@Test
-    public void testSaveConfig() {
-        System.out.println("saveConfig");
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * UTC 1.
-     */
-    //@Test
-    public void testInitDB() {
-        System.out.println("initDB");
-        fail("The test case is a prototype.");
-    }
-    
+        
+        Database database = new Database(url);
+        
+        /* salvo lo stato iniziale del DB */
+        Collection<Contact> savedContacts = database.getAllContacts();
+        database.deleteAllContacts();
+        
+        a = AddressBook.getInstance();
+        a.setDBUrl(url);        
+        a.addManyContacts(getListaContattiCasuali(2));
+        a.saveToDB();
+        
+        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
+        
+        /* ripristino lo stato iniziale del DB */
+        database.deleteAllContacts();
+        database.deleteAllTags();
+        if(!savedContacts.isEmpty())
+            database.insertManyContacts(savedContacts);
+        
+        assertEquals(a.getAllContacts(), contattiLetti);
+    } 
 }

@@ -31,8 +31,10 @@ public class AddressBook implements TagManager, ContactManager {
     private static AddressBook instance; ///< Unica istanza di AddressBook.
     private final ObservableList<Contact> contacts; ///< Lista dei contatti inseriti in rubrica.
     private final ObservableList<Tag> tags; ///< Insieme dei tag inseriti.
-    private String dbUrl; ///< Link del database.
+    private String dbUrl = ""; ///< Link del database.
     private Database db;
+    private static final String pathData = "Data.bin";
+    private static final String pathConfig = "Config.bin";
 
     /**
      * @brief Costruttore privato che crea un'istanza della classe AddressBook.
@@ -47,14 +49,14 @@ public class AddressBook implements TagManager, ContactManager {
         this.contacts = FXCollections.observableArrayList();
         this.tags = FXCollections.observableArrayList();
         
-        if(new File("Config.bin").exists())
+        if(new File(pathConfig).exists())
             loadConfig(); /* ci fornisce l'informazione per cui è presente o meno il DB */
         
         if(Database.verifyDBUrl(dbUrl)) {
             /* esiste sia un database valido che un file Data.bin con i contatti, oppure */
             /* esiste un database valido funzionante quindi lo associamo ad AddressBook */
             initDB();
-        }else if(new File("Data.bin").exists()){
+        }else if(new File(pathData).exists()){
             loadOBJ();
         }
     }
@@ -86,6 +88,12 @@ public class AddressBook implements TagManager, ContactManager {
         if(c != null){
             contacts.add(c);
             if(Database.verifyDBUrl(dbUrl)){
+                if(new File(pathData).exists()){
+                    db.deleteAllContacts();
+                    db.deleteAllTags();
+                    dataToDB();
+                    removeOBJ();
+                }
                 db.insertContact(c);
             }else{
                 saveOBJ();
@@ -98,7 +106,13 @@ public class AddressBook implements TagManager, ContactManager {
         if(c != null){
             contacts.addAll(c);
             if(Database.verifyDBUrl(dbUrl)){
-                db.insertManyContacts(c);
+                if(new File(pathData).exists()){
+                    db.deleteAllContacts();
+                    db.deleteAllTags();
+                    dataToDB();
+                    removeOBJ();
+                }
+                db.insertManyContacts(c);                
             }else{
                 saveOBJ();
             }
@@ -110,6 +124,12 @@ public class AddressBook implements TagManager, ContactManager {
         if(c != null){
             contacts.remove(c);
             if(Database.verifyDBUrl(dbUrl)){
+                if(new File(pathData).exists()){
+                    db.deleteAllContacts();
+                    db.deleteAllTags();
+                    dataToDB();
+                    removeOBJ();
+                }
                 db.removeContact(c);
             }else{
                 saveOBJ();
@@ -139,6 +159,12 @@ public class AddressBook implements TagManager, ContactManager {
         if(tag != null){
             tags.add(tag);
             if(Database.verifyDBUrl(dbUrl)){
+                if(new File(pathData).exists()){
+                    db.deleteAllContacts();
+                    db.deleteAllTags();
+                    dataToDB();
+                    removeOBJ();
+                }
                 db.insertTag(tag);
             }else{
                 saveOBJ();
@@ -151,6 +177,12 @@ public class AddressBook implements TagManager, ContactManager {
         if(c != null){
             tags.addAll(c);
             if(Database.verifyDBUrl(dbUrl)){
+                if(new File(pathData).exists()){
+                    db.deleteAllContacts();
+                    db.deleteAllTags();
+                    dataToDB();
+                    removeOBJ();
+                }
                 db.insertManyTags(c);
             }else{
                 saveOBJ();
@@ -163,6 +195,12 @@ public class AddressBook implements TagManager, ContactManager {
         if(tag != null){
             tags.remove(tag);
             if(Database.verifyDBUrl(dbUrl)){
+                if(new File(pathData).exists()){
+                    db.deleteAllContacts();
+                    db.deleteAllTags();
+                    dataToDB();
+                    removeOBJ();
+                }
                 db.removeTag(tag);
             }else{
                 saveOBJ();
@@ -179,6 +217,9 @@ public class AddressBook implements TagManager, ContactManager {
      * @post Istanzia il database se il link è valido.
      */
     public void setDBUrl(String dbUrl) {
+        if(this.dbUrl.equals(dbUrl))
+            return ;
+        
         this.dbUrl = dbUrl;
         
         saveConfig();
@@ -206,10 +247,10 @@ public class AddressBook implements TagManager, ContactManager {
     public void saveOBJ() {
         System.out.print("Scrittura file Data.bin... ");
         
-        /* FORMATO fiel Data.bin:
+        /* FORMATO file Data.bin:
         listacontatti listatags
         */
-        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("Data.bin")))){
+        try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(new ArrayList<>(contacts));
             oos.writeObject(new ArrayList<>(tags));
             System.out.println("completata con successo");
@@ -223,14 +264,14 @@ public class AddressBook implements TagManager, ContactManager {
     /**
      * @brief Carica la rubrica telefonica dal file Data.bin, aggiunge i contatti di quest'ultima nella rubrica corrente.
      * @pre nessuna
-     * @post Carica i contatti e i tag dal file Data.bin nell'AddressBook.
+     * @post le liste dei contatti e dei tags sono valorizzate ai nuovi valori presi dal file Data.bin.
      * @throws  IOException se non trova il file Data.bin o se non riesce a caricare il contenuto.
      * @throws  ClassNotFoundException se non riesce a convertire il contenuto del file in una lista di Contact o Tag.
      */
     public void loadOBJ() {
         System.out.print("Lettura file Data.bin... ");
         
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 contacts.setAll((Collection<Contact>)ois.readObject());
                 tags.setAll((Collection<Tag>)ois.readObject());
@@ -248,7 +289,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @post il file di salvataggio dati Data.bin viene eliminato, se presente.
      */
     public static void removeOBJ() {
-        new File("Data.bin").delete();
+        new File(pathData).delete();
     }
 
     /**
@@ -257,7 +298,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @post il file di configurazione per il db Config.bin viene eliminato, se presente.
      */
     public static void removeConfig() {
-        new File("Config.bin").delete();
+        new File(pathConfig).delete();
     }
     
     /**
@@ -266,6 +307,8 @@ public class AddressBook implements TagManager, ContactManager {
      * @post salva sul database tutti i contatti e tags.
      */
     public void saveToDB() {
+        db.deleteAllContacts();
+        db.deleteAllTags();
         db.insertManyContacts(contacts);
         db.insertManyTags(tags);
     }
@@ -273,13 +316,13 @@ public class AddressBook implements TagManager, ContactManager {
     /**
      * @brief trasferisce tutti contatti e tag del file Data.bin sul DB.
      * @pre esiste il DB ed è funzionante.
-     * @pre esiste il file Data.bin con eventuali contatti e tags.
+     * @pre esiste contemporaneamente il file Data.bin con eventuali contatti e tags.
      * @post tutti i contatti e tags del file Data.bin vengono inseriti nel DB.
      */
     public void dataToDB(){
         System.out.print("Trasferimento Data.bin sul DB... ");
         
-        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream("Data.bin")))){
+        try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 List<Contact> contattiData = new ArrayList<>((Collection<Contact>)ois.readObject());
                 if(! contattiData.isEmpty())
@@ -315,9 +358,9 @@ public class AddressBook implements TagManager, ContactManager {
     public void loadConfig() {
         System.out.print("Lettura del file Config.bin... ");
         
-        try(DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream("Config.bin")))){
+        try(DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(pathConfig)))){
             dbUrl = dis.readUTF();
-            System.out.println("con successo");
+            System.out.println("completata con successo");
         }catch(IOException ex){
             System.out.print("ECCEZIONE in lettura del file Config.bin -> ");
             ex.printStackTrace();
@@ -335,7 +378,7 @@ public class AddressBook implements TagManager, ContactManager {
         
         /* SCHEMA DI SALVATAGGIO: una sola stringa nell'unica riga
         path_file_Config.bin */
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Config.bin")))){
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(dbUrl);
             System.out.println("completata con successo");
         }catch(IOException ex){
@@ -354,7 +397,9 @@ public class AddressBook implements TagManager, ContactManager {
     public void initDB() {
         db = new Database(dbUrl);
         
-        if(new File("Data.bin").exists()){
+        if(new File(pathData).exists()){
+            db.deleteAllContacts();
+            db.deleteAllTags();
             dataToDB();
             loadFromDB();
             removeOBJ();
