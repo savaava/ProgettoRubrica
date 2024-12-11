@@ -34,7 +34,8 @@ public class Converter {
             s.useDelimiter("[,\n]");
             s.useLocale(Locale.ITALY);
             List<Contact> contatti = new ArrayList<>();
-            if (s.nextLine() == null) return Collections.emptyList();
+            if (s.hasNext() == false) return Collections.emptyList();
+            s.nextLine();
             while (s.hasNext()) {
                 String nome = s.next();
                 String cognome = s.next();
