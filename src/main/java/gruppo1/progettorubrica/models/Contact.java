@@ -1,12 +1,9 @@
 package gruppo1.progettorubrica.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import org.bson.Document;
 
 /**
  * @brief Modella un'entità contatto.
@@ -193,6 +190,36 @@ public class Contact implements Serializable{
         
         //confronto nome e cognome
         return this.name.equals(contact.name) && this.surname.equals(contact.surname);
+    }
+    
+    @Override
+    public String toString(){
+        StringBuffer strb=new StringBuffer();
+        strb.append("Name: ").append(this.name).append('\n');
+        strb.append("Surname: ").append(this.surname).append('\n');
+        
+        strb.append("Emails: ");
+        for(String e: this.emails){
+            if(e!=null)
+               strb.append(e).append(" ");
+        }
+        strb.append('\n');
+        
+        strb.append("Numbers: ");
+        for(String n: this.numbers){
+            if(n!=null)
+               strb.append(n).append(" ");
+        }
+        strb.append('\n');
+        
+        strb.append("TagIndexes: ");
+        for(Integer i: this.tagIndexes){
+            if(i!=null)
+                strb.append(i).append(" ");
+        }
+        strb.append('\n');
+        
+        return strb.toString();
     }
     
 }
