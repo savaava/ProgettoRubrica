@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
  * @brief Modella una rubrica telefonica, può contenere
  * 0 o più contatti,
  * 0 o più tags,
- * 0 o 1 database.
+ * 0 o 1 database. 
  * 
  * @see Contact
  * @see Tag
