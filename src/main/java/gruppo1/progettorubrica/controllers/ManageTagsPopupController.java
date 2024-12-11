@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 /**
  * @brief Controller che visualizza il popup dei tag.
@@ -81,5 +82,9 @@ public class ManageTagsPopupController implements Initializable {
     @FXML
     private void onDelete(ActionEvent event) {
         
+    }
+
+    @FXML
+    private void onTagClicked(MouseEvent event) {
     }
 }
