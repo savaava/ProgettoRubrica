@@ -101,14 +101,14 @@ public class ExportPopupController implements Initializable {
         ObservableList<Contact> ol = contactManager.getAllContacts();
         Iterator<Contact> i = ol.iterator();
         try(PrintWriter p =  new PrintWriter(new BufferedWriter(new FileWriter(this.file)))){
-            p.println("Nome,Cognome,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO");
+            p.println("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO,");
             while(i.hasNext()){
                 Contact c = i.next();
                 StringBuffer sb = new StringBuffer();
                 sb.append(c.getName()).append(",").append(c.getSurname()).append(",");
                 for (String t : c.getNumbers()) sb.append(t != null ? t : "").append(",");
                 for (String e : c.getEmails()) sb.append(e != null ? e : "").append(",");
-                sb.append(c.getProfilePicture() != null ? Base64.getEncoder().encodeToString(c.getProfilePicture()) : "").append("\n");
+                sb.append(c.getProfilePicture() != null ? Base64.getEncoder().encodeToString(c.getProfilePicture()) : "").append(",\n");
                 p.println(sb.toString());
             }
             
@@ -132,7 +132,7 @@ public class ExportPopupController implements Initializable {
                 p.println("FN:" + c.getName() + " " + c.getSurname() + "\n");
                 p.println("N: " + c.getSurname() + ";" +c.getName() + ";\n"); 
                 for(String t : c.getNumbers()) p.println("TEL; TYPE:" + t + "\n");
-                for(String e : c.getEmails()) p.println("EMAIL; TYPE: " + e + "\n");
+                for(String e : c.getEmails()) p.println("EMAIL; TYPE:" + e + "\n");
                 p.println(Base64.getEncoder().encodeToString(c.getProfilePicture())+ "\n");
                 p.println("END:VCARD");
             }

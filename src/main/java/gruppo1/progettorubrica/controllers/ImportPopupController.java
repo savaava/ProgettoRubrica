@@ -84,75 +84,76 @@ public class ImportPopupController implements Initializable {
     
     @FXML
     private void onImport(ActionEvent event) {
-        try(Scanner s = new Scanner(new BufferedReader(new FileReader(file)))){
-            String nome = null;
-            String cognome = null;
+        try {
+            if (checkCSVFormat()) {
+                parseCSV();
+            } else if (checkVCardFormat()) {
+                parseVCard();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void parseCSV() throws IOException {
+        try (Scanner s = new Scanner(new BufferedReader(new FileReader(file)))) {
+            s.useDelimiter("[,\n]");
+            s.useLocale(Locale.ITALY);
+            if (s.nextLine() == null) return;
+            while (s.hasNext()) {
+                String nome = s.next();
+                String cognome = s.next();
+                String num1 = s.next();
+                String num2 = s.next();
+                String num3 = s.next();
+                String em1 = s.next();
+                String em2 = s.next();
+                String em3 = s.next();
+                String pp = s.next();
+                byte[] fileContent = Base64.getDecoder().decode(pp);
+                Contact c = new Contact(nome, cognome);
+                c.setNumbers(new String[]{num1, num2, num3});
+                c.setEmails(new String[]{em1, em2, em3});
+                c.setProfilePicture(fileContent);
+                contactManager.addContact(c);
+            }
+        }
+    }
+
+    private void parseVCard() throws IOException {
+        try (Scanner s = new Scanner(new BufferedReader(new FileReader(file)))) {
+            s.useDelimiter("[;\n]");
+            s.useLocale(Locale.ITALY);
+            List<String> n = new ArrayList<>();
+            List<String> em = new ArrayList<>();
+            String nome = null, cognome = null;
             byte[] fileContent = null;
-            if(this.checkCSVFormat()){
-                s.useDelimiter("[,\n]");
-                s.useLocale(Locale.ITALY);
-                if(s.nextLine() == null) return;
-                while(s.hasNext()){
-                    nome = s.next();
-                    cognome = s.next();
-                    String num1 = s.next();
-                    String num2 = s.next();
-                    String num3 = s.next();
-                    String em1 = s.next();
-                    String em2 = s.next();
-                    String em3 = s.next();
-                    String pp = s.next();
-                    fileContent = Base64.getDecoder().decode(pp); 
-                    Contact c = new Contact(nome,cognome);
-                    String[] n = {num1, num2, num3};
-                    c.setNumbers(n);
-                    String[] em = {em1, em2, em3};
-                    c.setEmails(em);
+            if (s.nextLine() == null) return;
+            while (s.hasNextLine()) {
+                String line = s.nextLine();
+                if (line.startsWith("N:")) {
+                    String[] nameParts = line.substring(2).split(";");
+                    cognome = nameParts[0];
+                    nome = nameParts[1];
+                } else if (line.startsWith("TEL;")) {
+                    if (n.size() < 3) n.add(line.substring(line.indexOf(":") + 1));
+                } else if (line.startsWith("EMAIL;")) {
+                    if (em.size() < 3) em.add(line.substring(line.indexOf(":") + 1));
+                } else if (line.startsWith("PHOTO;")) {
+                    fileContent = Base64.getDecoder().decode(line.substring(line.indexOf(":") + 1));
+                } else if (line.startsWith("END:VCARD")) {
+                    Contact c = new Contact(nome, cognome);
+                    c.setNumbers(n.toArray(new String[0]));
+                    c.setEmails(em.toArray(new String[0]));
+                    c.setProfilePicture(fileContent);
+                    contactManager.addContact(c);
                     nome = null;
                     cognome = null;
                     fileContent = null;
+                    n.clear();
+                    em.clear();
                 }
             }
-            if(this.checkVCardFormat()){
-                s.useDelimiter("[;\n]");
-                s.useLocale(Locale.ITALY);
-                List<String> n = new ArrayList<String>();
-                List<String> em = new ArrayList<String>();
-                if(s.nextLine() == null) return;
-                while (s.hasNextLine()) {
-                    String line = s.nextLine();
-                    if (line.startsWith("N:")) {
-                    // Nomi e cognomi
-                        String[] nameParts = line.substring(2).split(";");
-                        cognome = nameParts[0];
-                        nome = nameParts[1];
-                    } else if (line.startsWith("TEL;")) {
-                    // Numero di telefono
-                        if(n.size() < 3) 
-                            n.add(line.substring(line.indexOf(":") + 1));
-                    } else if (line.startsWith("EMAIL;")) {
-                        if(n.size() < 3) 
-                            em.add(line.substring(line.indexOf(":") + 1));
-                    } else if (line.startsWith("PHOTO;")) {
-                        // Immagine profilo
-                        fileContent = Base64.getDecoder().decode(line.substring(line.indexOf(":") + 1));
-                    } else if (line.startsWith("END:VCARD")) {
-                    // Inizia un nuovo contatto
-                        Contact c = new Contact(nome,cognome);
-                        c.setNumbers(n.toArray(new String[0]));
-                        c.setEmails(em.toArray(new String[0]));
-                        c.setProfilePicture(fileContent);
-                        // Resetta le variabili per il prossimo contatto
-                        nome = null;
-                        cognome = null;
-                        fileContent = null;
-                        n.clear();
-                        em.clear();
-                    }
-                }
-            }
-        }catch(IOException ex){
-            ex.printStackTrace();
         }
     }
 
@@ -161,11 +162,12 @@ public class ImportPopupController implements Initializable {
      *
      *  Tramite questo metodo il controller verifica che il file fornito sia di formato .csv.
      */
+    
     private boolean checkCSVFormat() throws IOException {
-        try(BufferedReader br = new BufferedReader(new FileReader(this.file))){
+        try (BufferedReader br = new BufferedReader(new FileReader(this.file))) {
             String firstLine = br.readLine();
-            if(firstLine != null && firstLine.contains(",")) return true;
-        } catch(IOException ex){
+            return firstLine != null && firstLine.contains(",");
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         return false;
@@ -178,10 +180,10 @@ public class ImportPopupController implements Initializable {
      * 
      */
     private boolean checkVCardFormat() {
-        try(BufferedReader br = new BufferedReader(new FileReader(this.file))){
+        try (BufferedReader br = new BufferedReader(new FileReader(this.file))) {
             String firstLine = br.readLine();
-            if(firstLine != null && firstLine.contains("BEGIN:VCARD") ) return true;
-        } catch(IOException ex){
+            return firstLine != null && firstLine.contains("BEGIN:VCARD");
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         return false;
