@@ -16,27 +16,27 @@
          <children>
             <HBox fx:id="defaultImgHBox" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked1" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo1.jpg" />
                      </image></ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked2" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo2.jpg" />
                      </image></ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked3" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo3.jpg" />
                      </image></ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageAdd" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked4" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo4.jpg" />
                      </image></ImageView>
                </children>
             </HBox>
-            <ImageView fx:id="imgAdd" fitHeight="178.0" fitWidth="161.0" layoutX="610.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="178.0" fitWidth="161.0" layoutX="610.0" layoutY="10.0" onMouseClicked="#onImageClicked5" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../AggiungiImmagine5.png" />
+                  <Image url="@../images/AggiungiImmagine5.png" />
                </image></ImageView>
          </children>
          <padding>

@@ -135,5 +135,8 @@ public class ManageTagsPopupController implements Initializable {
     private void onTagClicked(MouseEvent event) {
         this.deleteButton.setDisable(false);
         this.updateButton.setDisable(false);
+        
+        Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
+        this.nameField.setText(tag.getDescrizione());
     }
 }
