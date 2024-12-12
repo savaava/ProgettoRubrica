@@ -132,7 +132,10 @@ public class AddressBook implements TagManager, ContactManager {
                 }
                 db.removeContact(c);
             }else{
-                saveOBJ();
+                if(contacts.isEmpty() && tags.isEmpty())
+                    removeOBJ();
+                else
+                    saveOBJ();
             }
         }
     }
@@ -203,7 +206,10 @@ public class AddressBook implements TagManager, ContactManager {
                 }
                 db.removeTag(tag);
             }else{
-                saveOBJ();
+                if(contacts.isEmpty() && tags.isEmpty())
+                    removeOBJ();
+                else
+                    saveOBJ();
             }
         }
     }
@@ -390,9 +396,12 @@ public class AddressBook implements TagManager, ContactManager {
     /**
      * @brief Inizializza il database dell'AddressBook e prepara la rubrica al salvataggio sul dB e non più in locale.
      * @pre È valorizzato il campo dbUrl ed è valido.
+     * @pre Il DB dovrebbe essere vuoto se esiste anche Data.bin, in caso contrario viene gestito eliminando prima le informazioni del DB.
      * @post L'attributo db contiene l'istanza del database.
      * @post Elimina Data.bin se presente.
-     * @post Salva eventuali contatti e tags dal db.
+     * @post Il DB contiene gli eventuali contatti e tags della rubrica.
+     * @post Se la rubrica è vuota inizialmente (nessun Data.bin) allora la rubrica carica le informazioni dal DB.
+     * @post Se la rubrica non è vuota (esiste Data.bin) allora la rubrica sovrascrive le informazioni sul DB con quelle di Data.bin.
      */
     public void initDB() {
         db = new Database(dbUrl);
