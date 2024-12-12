@@ -88,7 +88,7 @@ public class Converter {
             List<Contact> contatti = new ArrayList<>();
             String nome = null, cognome = null;
             byte[] fileContent = null;
-            if (s.nextLine() == null) return Collections.emptyList();
+            if (s.hasNext() == false) return Collections.emptyList();
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 if (line.startsWith("N:")) {
@@ -96,10 +96,10 @@ public class Converter {
                     cognome = nameParts[0];
                     nome = nameParts[1];
                 } else if (line.startsWith("TEL;")) {
-                    if (n.size() < 3) n.add(line.substring(line.indexOf(":") + 1));
+                    if (n.size() < 2) n.add(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("EMAIL;")) {
-                    if (em.size() < 3) em.add(line.substring(line.indexOf(":") + 1));
-                } else if (line.startsWith("PHOTO;")) {
+                    if (em.size() < 2) em.add(line.substring(line.indexOf(":") + 1));
+                } else if (line.startsWith("PHOTO:")) {
                     fileContent = Base64.getDecoder().decode(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("END:VCARD")) {
                     Contact c = new Contact(nome, cognome);
@@ -176,7 +176,7 @@ public class Converter {
                 sb.append(c.getName()).append(",").append(c.getSurname()).append(",");
                 for (String t : c.getNumbers()) sb.append(t != null ? t : "").append(",");
                 for (String e : c.getEmails()) sb.append(e != null ? e : "").append(",");
-                sb.append(c.getProfilePicture() != null ? Base64.getEncoder().encodeToString(c.getProfilePicture()) : "").append(",\n");
+                sb.append(c.getProfilePicture() != null ? Base64.getEncoder().encodeToString(c.getProfilePicture()) : "").append(",");
                 p.println(sb.toString());
             }
             
@@ -205,7 +205,7 @@ public class Converter {
                 p.println("N: " + c.getSurname() + ";" +c.getName() + ";\n"); 
                 for(String t : c.getNumbers()) p.println("TEL; TYPE:" + t + "\n");
                 for(String e : c.getEmails()) p.println("EMAIL; TYPE:" + e + "\n");
-                p.println(Base64.getEncoder().encodeToString(c.getProfilePicture())+ "\n");
+                p.println("PHOTO: " + Base64.getEncoder().encodeToString(c.getProfilePicture())+ "\n");
                 p.println("END:VCARD");
             }
             
