@@ -29,6 +29,17 @@ import javafx.event.ActionEvent;
  */
 public class Converter {
     
+    /**
+     * @brief Creazione collezione con i contatti da .csv
+     * 
+     * @pre Il file CSV deve essere formattato correttamente e non essere vuoto.
+     * @post I contatti estratti vengono restituiti in una collezione.
+     * 
+     * Questo metodo permette di estrarre da un file .csv i contatti e li salva in una collezione
+     * @param[in] file
+     * @return Una collezione di contatti
+     * @throws IOException 
+     */
     public static Collection<Contact> parseCSV(File file) throws IOException {
         try (Scanner s = new Scanner(new BufferedReader(new FileReader(file)))) {
             s.useDelimiter("[,\n]");
@@ -57,6 +68,17 @@ public class Converter {
         }
     }
 
+    /**
+     * @brief Creazione collezione con i contatti da .vcf
+     * 
+     * @pre Il file VCard deve essere formattato correttamente e non essere vuoto.
+     * @post I contatti estratti vengono restituiti in una collezione.
+     * 
+     * Questo metodo permette di estrarre da un file .vcf i contatti e li salva in una collezione
+     * @param[in] file
+     * @return Una collezione di contatti
+     * @throws IOException 
+     */
     public static Collection<Contact> parseVCard(File file) throws IOException {
         try (Scanner s = new Scanner(new BufferedReader(new FileReader(file)))) {
             s.useDelimiter("[;\n]");
@@ -99,7 +121,13 @@ public class Converter {
     /**
      * @brief Controllo formato .csv.
      *
-     *  Tramite questo metodo il controller verifica che il file fornito sia di formato .csv.
+     * @pre Il file deve essere un file di testo leggibile.
+     * @post Viene restituito un valore booleano che indica se il file è in formato .csv.
+     * 
+     * Questo metodo verifica che il file fornito sia in formato .csv.
+     * @param[in] file Il file da controllare
+     * @return Il risultato del controllo
+     * @throws IOException
      */
     
     public static boolean checkCSVFormat(File file) throws IOException {
@@ -110,10 +138,15 @@ public class Converter {
     }
 
     /**
-     * @brief Controllo formato .VCard.
+     * @brief Controllo formato VCard.
      *
-     *  Tramite questo metodo il controller verifica che il file fornito sia di formato .csv.
+     * @pre Il file deve essere un file di testo leggibile.
+     * @post Viene restituito un valore booleano che indica se il file è in formato VCard.
      * 
+     *  Questo metodo verifica che il file fornito sia in formato VCard.
+     * @param[in] file Il file da controllare
+     * @return Il risultato del controllo
+     * @throws IOException
      */
     public static boolean checkVCardFormat(File file)throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -124,7 +157,14 @@ public class Converter {
     
     /**
      * @brief Esporta la rubrica in un file nel formato .csv.
-     * @param[in] event 
+     * 
+     * @pre Il chiamante deve fornire una collezione di contatti valida e un percorso file valido.
+     * @post I contatti sono scritti in formato CSV nel file specificato.
+     * 
+     * Questo metodo scrive i contatti in un file .csv
+     * @param[in] contacts La collezione di contatti da esportare.
+     * @param[in] file Il percorso del file dove salvare il CSV.
+     * @throws IOException
      */
     public static void onExportCSV(Collection<Contact> contacts, File file) throws IOException{
         Iterator<Contact> i = contacts.iterator();
@@ -144,8 +184,15 @@ public class Converter {
     }
     
     /**
-     * @brief Esporta la rubrica in un file nel formato .vCard.
-     * @param[in] event 
+     * @brief Esporta la rubrica in un file nel formato .vcf.
+     * 
+     * @pre Il chiamante deve fornire una collezione di contatti valida e un percorso file valido.
+     * @post I contatti sono scritti in formato VCard nel file specificato.
+     * 
+     * Questo metodo scrive i contatti in un file .vcf.
+     * @param[in] contacts La collezione di contatti da esportare.
+     * @param[in] file Il percorso del file dove salvare il CSV. 
+     * @throws IOException
      */
     public static void onExportVCard(Collection<Contact> contacts, File file) throws IOException{
         Iterator<Contact> i = contacts.iterator();

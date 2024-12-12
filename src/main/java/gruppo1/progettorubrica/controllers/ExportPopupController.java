@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.ContactManager;
+import gruppo1.progettorubrica.services.Converter;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -73,7 +74,6 @@ public class ExportPopupController implements Initializable {
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Scegliere percorso file");
         this.file = filechooser.showSaveDialog(new Stage());
-        if(this.file == null) return;
     }
 
     /**
@@ -88,58 +88,25 @@ public class ExportPopupController implements Initializable {
     private void onExport(ActionEvent event) {
         String f = this.file.toString();
         String ext = f.substring(f.indexOf(".") + 1);
-        if(ext.equalsIgnoreCase("csv")) this.onExportCSV(null);
-        else if(ext.equalsIgnoreCase("vcf")) this.onExportVCard(null);
-    }
-    
-    
-    /**
-     * @brief Esporta la rubrica in un file nel formato .csv.
-     * @param[in] event 
-     */
-    private void onExportCSV(ActionEvent event) {
-        ObservableList<Contact> ol = contactManager.getAllContacts();
-        Iterator<Contact> i = ol.iterator();
-        try(PrintWriter p =  new PrintWriter(new BufferedWriter(new FileWriter(this.file)))){
-            p.println("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO,");
-            while(i.hasNext()){
-                Contact c = i.next();
-                StringBuffer sb = new StringBuffer();
-                sb.append(c.getName()).append(",").append(c.getSurname()).append(",");
-                for (String t : c.getNumbers()) sb.append(t != null ? t : "").append(",");
-                for (String e : c.getEmails()) sb.append(e != null ? e : "").append(",");
-                sb.append(c.getProfilePicture() != null ? Base64.getEncoder().encodeToString(c.getProfilePicture()) : "").append(",\n");
-                p.println(sb.toString());
+        try{
+            if(ext.equalsIgnoreCase("csv")){
+                ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
+                Converter.onExportCSV(c, this.file);
             }
-            
-        } catch (IOException e) {
-            e.printStackTrace();
+            else if(ext.equalsIgnoreCase("vcf")){
+                ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
+                Converter.onExportCSV(c, this.file);
+            }
+        } catch(IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore IO");
+            alert.setContentText("Dettagli: " + ex.getMessage());
         }
+        
     }
     
-    /**
-     * @brief Esporta la rubrica in un file nel formato .vCard.
-     * @param[in] event 
-     */
-    private void onExportVCard(ActionEvent event) {
-        ObservableList<Contact> ol = contactManager.getAllContacts();
-        Iterator<Contact> i = ol.iterator();
-        try(PrintWriter p =  new PrintWriter(new BufferedWriter(new FileWriter(this.file)))){
-            while(i.hasNext()){
-                Contact c = i.next();
-                p.println("BEGIN:VCARD\n");
-                p.println("VERSION:3.0\n");
-                p.println("FN:" + c.getName() + " " + c.getSurname() + "\n");
-                p.println("N: " + c.getSurname() + ";" +c.getName() + ";\n"); 
-                for(String t : c.getNumbers()) p.println("TEL; TYPE:" + t + "\n");
-                for(String e : c.getEmails()) p.println("EMAIL; TYPE:" + e + "\n");
-                p.println(Base64.getEncoder().encodeToString(c.getProfilePicture())+ "\n");
-                p.println("END:VCARD");
-            }
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    
+    
     
 }

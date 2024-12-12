@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,11 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * @brief Controller che si occupa della scena iniziale.
@@ -189,7 +195,14 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showImportPopup(ActionEvent event) {
-
+        try{
+            this.openPopup("/views/Import_popup.fxml");
+        } catch (IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore IO");
+            alert.setContentText("Dettagli: " + ex.getMessage());
+        }
     }
 
     /**
@@ -203,7 +216,14 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showExportPopup(ActionEvent event) {
-
+        try{
+            this.openPopup("/views/Export_popup.fxml");
+        } catch (IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore IO");
+            alert.setContentText("Dettagli: " + ex.getMessage());
+        }
     }
 
     /**
@@ -258,5 +278,18 @@ public class MainController implements Initializable {
      */
     private ContextMenu createContextMenu(){
         return null;
+    }
+    
+    private void openPopup(String path) throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+        Parent root = loader.load();
+        
+        Scene scene = new Scene(root);
+        
+        Stage newStage = new Stage();
+        newStage.setScene(scene);
+        
+        newStage.initModality(Modality.WINDOW_MODAL);
+        newStage.show();
     }
 }

@@ -14,10 +14,13 @@ import static org.junit.Assert.*;
 public class ConverterTest {
 
     private File csvFile;
+    
+    private File vcfFile;
 
     @Before
     public void setUp() throws IOException {
         csvFile = File.createTempFile("contacts", ".csv");
+        vcfFile = File.createTempFile("contacts", ".vcf");
         try (FileWriter writer = new FileWriter(csvFile)) {
             writer.write("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO\n");
             writer.write("Luca,Rossi,1234567890,0987654321,1122334455,l.rossi@gmail.com,rossil@outlook.com,lucarossi@alice.it,SGVsbG8gd29ybGQ=\n");
