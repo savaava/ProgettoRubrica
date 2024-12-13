@@ -27,7 +27,10 @@ public class ManageTagsPopupController implements Initializable {
     private TagManager tagManager; ///< Riferimento all'interfaccia TagManager, implementata da AddressBook
 
     @FXML
-    private ListView<Tag> tagsListView; ///< Riferimento alla lista di tag visualizzata nel popup
+    private TextField nameField;   
+    
+    @FXML
+    private ListView<String> tagsListView; ///< Riferimento alla lista di tag
 
     @FXML
     private Button addButton, updateButton, deleteButton; ///< Riferimento ai bottoni di aggiunta, modifica ed eliminazione
@@ -107,7 +110,6 @@ public class ManageTagsPopupController implements Initializable {
         tag.setDescrizione(this.nameField.getText()); //aggiorno il campo descrizione con quanto inserito dall'utente nel TextField
         
         tagManager.addTag(tag); //inserisco il tag aggiornato
-        
     }
 
     /**
