@@ -40,8 +40,8 @@ public class AddressBookTest {
     @After
     public void tearDown(){
         /*  (LEGGERO) */
-        AddressBook.removeConfig();
-        AddressBook.removeOBJ();
+        new File(pathConfig).delete();
+        new File(pathData).delete();
     }
     
     
@@ -68,7 +68,7 @@ public class AddressBookTest {
         }
 
         int numBytes = random.nextInt(10)+1;
-        byte[] profilePicture = new byte[numBytes];
+        Byte[] profilePicture = new Byte[numBytes];
         for (int i=0; i<numBytes; i++) {
             profilePicture[i] = (byte)(random.nextInt(1000)+1);
         }

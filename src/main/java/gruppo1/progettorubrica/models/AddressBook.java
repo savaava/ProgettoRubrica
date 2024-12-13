@@ -294,7 +294,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @pre nessuna (può essere presente o meno il file Data.bin). 
      * @post il file di salvataggio dati Data.bin viene eliminato, se presente.
      */
-    public static void removeOBJ() {
+    public void removeOBJ() {
         new File(pathData).delete();
     }
 
@@ -303,7 +303,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @pre nessuna (può essere presente o meno il file Config.bin). 
      * @post il file di configurazione per il db Config.bin viene eliminato, se presente.
      */
-    public static void removeConfig() {
+    public void removeConfig() {
         new File(pathConfig).delete();
     }
     

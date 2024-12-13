@@ -10,6 +10,7 @@ class Tag {
     - {static} int index
 
     + Tag(String descrizione)
+    + Tag(String description, int id)
     + int getId()
     + String getDescrizione()
     + void setDescrizione(String descrizione)
@@ -37,7 +38,7 @@ class Contact {
     + byte[] getProfilePicture()
     + void setProfilePicture(byte[] profilePicture)
     + Set<Integer> getAllTagIndexes()
-    + Integer removeTagIndex(Integer tagIndex)
+    + void removeTagIndex(Integer tagIndex)
     + void addTagIndex(Integer tagIndex)
     + boolean equals(Object o)    
 }
@@ -48,25 +49,31 @@ class AddressBook {
     - ObservableList<Tag> tags
     - String dbUrl
     - Database db
+    - {static} String pathData
+    - {static} String pathConfig
 
     - AddressBook()
     + ObservableList<Contact> getAllContacts()
     + void addContact(Contact c)
-    + Contact removeContact(Contact c)
+    + void removeContact(Contact c)
     + ObservableList<Tag> getAllTags()
     + void addTag(Tag tag)
-    + Tag removeTag(Tag tag)
+    + void removeTag(Tag tag)
     + {static} AddressBook getInstance()
     + void setDBUrl(String dbUrl)
     + String getDBUrl()
     + void saveOBJ()
-    + AddressBook loadOBJ()
+    + void loadOBJ()
     + void removeOBJ()
+    + void removeConfig()
     + void saveToDB()
-    + AddressBook loadFromDB()   
+    + void dataToDB()
+    + void loadFromDB()   
     + void loadConfig()
     + void saveConfig()
     + void initDB()
+    + Database getDB()
+    + String toString()
 }
 
 class MainController {
@@ -137,6 +144,7 @@ class ManageTagsPopupController {
     - Button addButton
     - Button updateButton
     - Button deleteButton
+    - TextField nameField
 
     + void initialize()
     - void onAdd()
@@ -165,6 +173,7 @@ class ConfirmPopupController {
 
 class ConfigPopupController {
     - AddressBook addressBook
+    - Label resultLabel
     - Button verifyButton
     - Button confirmButton
     - TextField textField
@@ -179,7 +188,7 @@ class Database {
     
     + Database(String url)
     + {static} boolean verifyDBUrl(String url)
-    + void upsert(Contact c)
+    + void insert(Contact c)
     + void removeContact(Contact c)
     + void upsert(Tag tag)
     + void removeTag(Tag tag)
@@ -187,6 +196,8 @@ class Database {
     + Collection<Tag> getAllTags()
     + void insertManyContacts(Collection<Contact> contacts)
     + void insertManyTags(Collection<Tag> tags)
+    + void deleteAllContacts()
+    + void deleteAllTags()
     + Document contactToDocument(Contact c)
     + Contact documentToContact(Document d)
     + Document tagToDocument(Tag tag)
@@ -199,15 +210,15 @@ interface Serializable
 
 interface TagManager {
     +{abstract} void addTag(Tag tag)
-    +{abstract} Tag removeTag(Tag tag)
+    +{abstract} void removeTag(Tag tag)
     +{abstract} Tag getTag(int id)
     +{abstract} ObservableList<Tag> getAllTags()
 }
 
 interface ContactManager {
     +{abstract} ObservableList<Contact> getAllContacts()
-    +{abstract} addContact(Contact c)
-    +{abstract} removeContact(Contact c)
+    +{abstract} void addContact(Contact c)
+    +{abstract} void removeContact(Contact c)
 }
 
 
