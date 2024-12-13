@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
@@ -57,7 +58,7 @@ public class Converter {
                 String em2 = s.next();
                 String em3 = s.next();
                 String pp = s.next();
-                byte[] fileContent = Base64.getDecoder().decode(pp);
+                Byte[] fileContent = stringToByteArray(pp);
                 Contact c = new Contact(nome, cognome);
                 c.setNumbers(new String[]{num1, num2, num3});
                 c.setEmails(new String[]{em1, em2, em3});
@@ -87,7 +88,7 @@ public class Converter {
             List<String> em = new ArrayList<>();
             List<Contact> contatti = new ArrayList<>();
             String nome = null, cognome = null;
-            byte[] fileContent = null;
+            Byte[] fileContent = null;
             if (s.hasNext() == false) return Collections.emptyList();
             while (s.hasNextLine()) {
                 String line = s.nextLine();
@@ -100,7 +101,7 @@ public class Converter {
                 } else if (line.startsWith("EMAIL;")) {
                     if (em.size() < 3) em.add(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("PHOTO:")) {
-                    fileContent = Base64.getDecoder().decode(line.substring(line.indexOf(":") + 1));
+                    fileContent = stringToByteArray(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("END:VCARD")) {
                     Contact c = new Contact(nome, cognome);
                     c.setNumbers(n.toArray(new String[0]));
@@ -175,8 +176,8 @@ public class Converter {
                 StringBuffer sb = new StringBuffer();
                 sb.append(c.getName()).append(",").append(c.getSurname()).append(",");
                 for (String t : c.getNumbers()) sb.append(t != null ? t : "").append(",");
-                for (String e : c.getEmails()) sb.append(e != null ? e : "").append(",");
-                sb.append(c.getProfilePicture() != null ? Base64.getEncoder().encodeToString(c.getProfilePicture()) : "").append(",");
+                for (String e : c.getEmails()) sb.append(e != null ? e : "").append(","); 
+                sb.append(c.getProfilePicture() != null ? byteArrayToString(c.getProfilePicture()) : "").append(",");
                 p.println(sb.toString());
             }
             
@@ -194,21 +195,49 @@ public class Converter {
      * @param[in] file Il percorso del file dove salvare il CSV. 
      * @throws IOException
      */
-    public static void onExportVCard(Collection<Contact> contacts, File file) throws IOException{
-        Iterator<Contact> i = contacts.iterator();
-        try(PrintWriter p =  new PrintWriter(new BufferedWriter(new FileWriter(file)))){
-            while(i.hasNext()){
-                Contact c = i.next();
-                p.println("BEGIN:VCARD\n");
-                p.println("VERSION:3.0\n");
-                p.println("FN:" + c.getName() + " " + c.getSurname() + "\n");
-                p.println("N: " + c.getSurname() + ";" +c.getName() + ";\n"); 
-                for(String t : c.getNumbers()) p.println("TEL; TYPE:" + t + "\n");
-                for(String e : c.getEmails()) p.println("EMAIL; TYPE:" + e + "\n");
-                p.println("PHOTO: " + Base64.getEncoder().encodeToString(c.getProfilePicture())+ "\n");
-                p.println("END:VCARD");
+    public static void onExportVCard(Collection<Contact> contacts, File file) throws IOException {
+    try (PrintWriter p = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
+        for (Contact c : contacts) {
+            p.println("BEGIN:VCARD");
+            p.println("VERSION:3.0");
+            p.println("FN:" + c.getName() + " " + c.getSurname());
+            p.println("N:" + c.getSurname() + ";" + c.getName() + ";");
+            for (String t : c.getNumbers()) {
+                if (t != null && !t.isEmpty()) {
+                    p.println("TEL;TYPE:" + t);
+                }
             }
-            
+            for (String e : c.getEmails()) {
+                if (e != null && !e.isEmpty()) {
+                    p.println("EMAIL;TYPE:" + e);
+                }
+            }
+            if (c.getProfilePicture() != null) {
+                String base64Photo = byteArrayToString(c.getProfilePicture());
+                p.println("PHOTO:" + base64Photo);
+            }
+            p.println("END:VCARD");
         }
+    }
+}
+
+    public static Byte[] stringToByteArray(String originalString) {
+        // Converti la stringa in un array di byte
+        byte[] byteArray = originalString.getBytes(StandardCharsets.UTF_8);
+        // Converti byte[] in Byte[]
+        Byte[] byteObjectArray = new Byte[byteArray.length];
+        for (int i = 0; i < byteArray.length; i++) {
+            byteObjectArray[i] = byteArray[i]; 
+        } return byteObjectArray; 
+    }
+    
+    public static String byteArrayToString(Byte[] byteObjectArray) {
+        // Converti Byte[] in byte[]
+        byte[] byteArray = new byte[byteObjectArray.length];
+        for (int i = 0; i < byteObjectArray.length; i++) {
+            byteArray[i] = byteObjectArray[i];
+        } 
+        // Converti l'array di byte di nuovo nella stringa originale 
+        return new String(byteArray, StandardCharsets.UTF_8);
     }
 }

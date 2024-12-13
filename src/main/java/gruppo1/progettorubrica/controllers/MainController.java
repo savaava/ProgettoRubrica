@@ -3,6 +3,7 @@ package gruppo1.progettorubrica.controllers;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import java.io.ByteArrayInputStream;
+import gruppo1.progettorubrica.models.Tag;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -298,15 +299,8 @@ public class MainController implements Initializable {
      * @see ImportPopupController
      */
     @FXML
-    private void showImportPopup(ActionEvent event) {
-        try{
-            this.openPopup("/views/Import_popup.fxml");
-        } catch (IOException ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore IO");
-            alert.setContentText("Dettagli: " + ex.getMessage());
-        }
+    private void showImportPopup(ActionEvent event) throws IOException{
+        this.showPopup("Import_popup.fxml");
     }
 
     /**
@@ -319,15 +313,8 @@ public class MainController implements Initializable {
      * @see ExportPopupController
      */
     @FXML
-    private void showExportPopup(ActionEvent event) {
-        try{
-            this.openPopup("/views/Export_popup.fxml");
-        } catch (IOException ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore IO");
-            alert.setContentText("Dettagli: " + ex.getMessage());
-        }
+    private void showExportPopup(ActionEvent event) throws IOException {
+        this.showPopup("Export_popup.fxml");
     }
 
     /**
@@ -365,22 +352,29 @@ public class MainController implements Initializable {
      * @return Il menù contestuale
      */
     private ContextMenu createContextMenu(){
-        return null;
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Opzione per ordinare per nome
+        MenuItem sortByNameAsc = new MenuItem("Ordina per Nome (A-Z)");
+        MenuItem sortByNameDesc = new MenuItem("Ordina per Nome (Z-A)");
+
+        // Opzione per ordinare per cognome
+        MenuItem sortByLastNameAsc = new MenuItem("Ordina per Cognome (A-Z)");
+        MenuItem sortByLastNameDesc = new MenuItem("Ordina per Cognome (Z-A)");
+
+        // Aggiungi MenuItem al ContextMenu
+        contextMenu.getItems().addAll(sortByNameAsc, sortByNameDesc, new SeparatorMenuItem(), sortByLastNameAsc, sortByLastNameDesc, new SeparatorMenuItem());
+        
+        for(Tag t : addressBook.getAllTags()){
+            CustomMenuItem tagItem = new CustomMenuItem(new CheckBox(t.getDescription()));
+            tagItem.setHideOnClick(false);
+            tagItem.setId(String.valueOf(t.getId()));
+            contextMenu.getItems().add(tagItem);
+        }
+
+        return contextMenu;
     }
     
-    private void openPopup(String path) throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-        Parent root = loader.load();
-        
-        Scene scene = new Scene(root);
-        
-        Stage newStage = new Stage();
-        newStage.setScene(scene);
-        
-        newStage.initModality(Modality.WINDOW_MODAL);
-        newStage.show();
-    }
-
     //Metodi di utilità
 
     private void showPopup(String path) throws IOException{

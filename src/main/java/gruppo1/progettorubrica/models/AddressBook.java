@@ -33,17 +33,20 @@ public class AddressBook implements TagManager, ContactManager {
     private final ObservableList<Tag> tags; ///< Insieme dei tag inseriti.
     private String dbUrl = ""; ///< Link del database.
     private Database db;
-    private static final String pathData = "Data.bin";
-    private static final String pathConfig = "Config.bin";
+    private final String pathData = "Data.bin";
+    private final String pathConfig = "Config.bin";
 
     /**
-     * @brief Costruttore privato che crea un'istanza della classe AddressBook.
-     * @pre nessuno
-     * @post crea un'istanza di AddressBook in 4 scenari diversi:
-     * 1. esiste un link valido per il database in Config.bin ed esiste anche un file Data.bin;
-     * 2. esiste solo il link valido per il database;
-     * 3. esiste solo il file Data.bin;
-     * 4. non esiste nè il DB, nè il file (è la prima apertura).
+     * @brief Costruttore privato che crea crea l'istanza unica di AddressBook in 4 scenari diversi di inizializzazione:
+     * 1. non esiste nè il DB, nè il file di salvataggio Data.bin (non vi sono contatti o tags da salvare);
+     * 2. esiste solo il file Data.bin e nessun DB (dbUrl non inizializzato o non valido);
+     * 3. esiste solo il dbUrl valido per il database -> il salvataggio non avverrà in locale con Data.bin;
+     * 4. esiste un DB funzionante (dbUrl valido in Config.bin) ed esiste anche un file Data.bin 
+     *    (questa è una situazione che si genera quando nella sessione precedente vi sono stati problemi col DB).
+     * @pre Non esiste già l'istanza dell'AddressBook.
+     * @post crea l'istanza di AddressBook con:
+     * 1. salvataggio in locale se non è stato specificato un DB
+     * 2. salvataggio in remoto sul DB, senza Data.bin, se questo è stato specificato ed è valido (dbUrl valido).
      */
     private AddressBook() {
         this.contacts = FXCollections.observableArrayList();

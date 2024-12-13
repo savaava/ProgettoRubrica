@@ -72,7 +72,7 @@ public class AddressBookTest {
         for (int i=0; i<numBytes; i++) {
             profilePicture[i] = (byte)(random.nextInt(1000)+1);
         }
-
+        
         Contact c = new Contact(name, surname);
         c.setNumbers(numbers);
         c.setEmails(emails);

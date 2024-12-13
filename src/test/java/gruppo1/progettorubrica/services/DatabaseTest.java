@@ -55,13 +55,13 @@ public class DatabaseTest {
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mariorossi@gmail.com","rossimario@gmail.com","mrossi@gmail.com"};
-        byte[] profilePicture = {2,3,5,6,3};
+        Byte[] profilePicture = {2,3,5,6,3};
         Integer[] tags = {32,3,43};
 
         Contact c = new Contact(name,surname);
         c.setNumbers(numbers);
         c.setEmails(emails);
-        //c.setProfilePicture(profilePicture);
+        c.setProfilePicture(profilePicture);
         for(int tag : tags) {
             c.addTagIndex(tag);
         }
@@ -252,7 +252,7 @@ public class DatabaseTest {
         assertEquals(surname, doc.get("surname"));
         assertArrayEquals(doc.getList("numbers", String.class).toArray(new String[0]), numbers);
         assertArrayEquals(doc.getList("emails", String.class).toArray(new String[0]), emails);
-        assertArrayEquals((Byte[])doc.get("image"), profilePicture);
+        assertArrayEquals(Converter.stringToByteArray(doc.getString("image")), profilePicture);
         assertArrayEquals(doc.getList("tagIndexes", Integer.class).toArray(new Integer[0]), tags);
     }
 
@@ -265,7 +265,7 @@ public class DatabaseTest {
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mrossi@gmail.com"};
-        Byte[] profilePicture = {2,3,5,6,3};
+        String profilePicture = "aabbccdd";
         Integer[] tags = {32};
 
         doc.append("name", name);
@@ -282,7 +282,7 @@ public class DatabaseTest {
 
         assertArrayEquals(c.getNumbers(), numbers);
         assertArrayEquals(c.getEmails(), emails);
-        assertArrayEquals(c.getProfilePicture(), profilePicture);
+        assertEquals(profilePicture, Converter.byteArrayToString(c.getProfilePicture()));
         assertTrue(c.getAllTagIndexes().containsAll(Arrays.asList(tags)));
     }
 
