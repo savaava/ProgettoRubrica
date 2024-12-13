@@ -5,6 +5,9 @@
  */
 package gruppo1.progettorubrica.models;
 
+import java.awt.Image;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,221 +16,228 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author solon
- */
+
 public class ContactTest {
+    private Contact c;
     
-    public ContactTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
     
     @Before
     public void setUp() {
+        c=new Contact("pippo", "paperino");
     }
     
-    @After
-    public void tearDown() {
-    }
 
     /**
-     * Test of getName method, of class Contact.
+     * UTC 2.1
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        Contact instance = null;
-        String expResult = "";
-        String result = instance.getName();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals("pippo", c.getName());
     }
 
     /**
-     * Test of setName method, of class Contact.
+     * UTC 2.2
      */
     @Test
     public void testSetName() {
         System.out.println("setName");
-        String name = "";
-        Contact instance = null;
-        instance.setName(name);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        c.setName("pluto");
+        assertEquals("pluto", c.getName());
     }
 
     /**
-     * Test of getSurname method, of class Contact.
+     * UTC 2.3
      */
     @Test
     public void testGetSurname() {
         System.out.println("getSurname");
-        Contact instance = null;
-        String expResult = "";
-        String result = instance.getSurname();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals("paperino", c.getSurname());
+        
     }
 
     /**
-     * Test of setSurname method, of class Contact.
+     * UTC 2.4
      */
     @Test
     public void testSetSurname() {
         System.out.println("setSurname");
-        String surname = "";
-        Contact instance = null;
-        instance.setSurname(surname);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        c.setSurname("pluto");
+        assertEquals("pluto", c.getSurname());
     }
 
     /**
-     * Test of getNumbers method, of class Contact.
+     * UTC 2.5
      */
     @Test
-    public void testGetNumbers() {
+    public void testGetNumbers1() {
         System.out.println("getNumbers");
-        Contact instance = null;
-        String[] expResult = null;
-        String[] result = instance.getNumbers();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String numbers1[]=c.getNumbers();
+        assertNull(numbers1[0]);
+        assertNull(numbers1[1]);
+        assertNull(numbers1[2]);
+    }
+    
+    /**
+     * UTC 2.6
+     */
+    @Test
+    public void testGetNumbers2() {
+        System.out.println("getNumbers");
+        
+        String numbers[]=new String[3];
+        numbers[0]="3926533458";
+        numbers[1]="3482356875";
+        numbers[2]="3275647395";
+        c.setNumbers(numbers);
+        
+        String numbers2[]=c.getNumbers();
+        assertEquals(numbers, numbers2);
     }
 
     /**
-     * Test of setNumbers method, of class Contact.
+     * UTC 2.7
      */
     @Test
     public void testSetNumbers() {
         System.out.println("setNumbers");
-        String[] numbers = null;
-        Contact instance = null;
-        instance.setNumbers(numbers);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String numbers[]=new String[3];
+        numbers[0]="3924567896";
+        numbers[1]="3601245678";
+        numbers[2]="3334567899";
+        
+        c.setNumbers(numbers);
+        
+        String numbers2[]=c.getNumbers();
+        assertEquals(numbers, numbers2);
     }
 
     /**
-     * Test of getEmails method, of class Contact.
+     * UTC 2.8
      */
     @Test
     public void testGetEmails() {
         System.out.println("getEmails");
-        Contact instance = null;
-        String[] expResult = null;
-        String[] result = instance.getEmails();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String emails[]=c.getEmails();
+        assertNull(emails[0]);
+        assertNull(emails[1]);
+        assertNull(emails[2]);
     }
 
     /**
-     * Test of setEmails method, of class Contact.
+     * UTC 2.9
      */
     @Test
     public void testSetEmails() {
         System.out.println("setEmails");
-        String[] emails = null;
-        Contact instance = null;
-        instance.setEmails(emails);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String emails[]=new String[3];
+        emails[0]="pluto@gmail.com";
+        emails[1]="paperino@gmail.com";
+        emails[2]="pippo@gmail.com";
+        
+        c.setEmails(emails);
+        
+        String emails1[]=c.getEmails();
+        assertEquals(emails, emails1);
     }
 
     /**
-     * Test of getProfilePicture method, of class Contact.
+     * UTC 2.10
      */
     @Test
     public void testGetProfilePicture() {
         System.out.println("getProfilePicture");
-        Contact instance = null;
-        byte[] expResult = null;
-        byte[] result = instance.getProfilePicture();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
-     * Test of setProfilePicture method, of class Contact.
+     * UTC 2.11
      */
     @Test
     public void testSetProfilePicture() {
         System.out.println("setProfilePicture");
-        byte[] profilePicture = null;
-        Contact instance = null;
-        instance.setProfilePicture(profilePicture);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
-     * Test of getAllTagIndexes method, of class Contact.
+     * UTC 2.12
      */
     @Test
-    public void testGetAllTagIndexes() {
+    public void testGetAllTagIndexes1() {
         System.out.println("getAllTagIndexes");
-        Contact instance = null;
-        Set<Integer> expResult = null;
-        Set<Integer> result = instance.getAllTagIndexes();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        Set<Integer> tags=c.getAllTagIndexes();
+        assertTrue(tags.isEmpty());
     }
-
+    
     /**
-     * Test of removeTagIndex method, of class Contact.
+     * UTC 2.13
      */
     @Test
-    public void testRemoveTagIndex() {
-        System.out.println("removeTagIndex");
-        Integer tagIndex = null;
-        Contact instance = null;
-        boolean expResult = false;
-        boolean result = instance.removeTagIndex(tagIndex);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testGetAllTagIndexes2() {
+        System.out.println("getAllTagIndexes");
+        
+        c.addTagIndex(1);
+        c.addTagIndex(2);
+        Set<Integer> tags2=c.getAllTagIndexes();
+        assertEquals(c.getAllTagIndexes(), tags2);
     }
 
     /**
-     * Test of addTagIndex method, of class Contact.
+     * UTC 2.14
+     */
+    @Test
+    public void testRemoveTagIndex1() {
+        System.out.println("removeTagIndex");
+        
+        c.addTagIndex(2);
+        c.addTagIndex(4);
+        Set<Integer> tags2=c.getAllTagIndexes();
+        
+        assertTrue(c.removeTagIndex(2));
+        assertFalse(c.removeTagIndex(5)); //provo a rimuovere un tag non presente
+        assertFalse(tags2.contains(2));
+    }
+    
+
+    /**
+     * UTC 2.15
      */
     @Test
     public void testAddTagIndex() {
         System.out.println("addTagIndex");
-        Integer tagIndex = null;
-        Contact instance = null;
-        instance.addTagIndex(tagIndex);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        c.addTagIndex(1);
+        c.addTagIndex(2);
+        c.addTagIndex(3);
+        
+        Set<Integer> tags=c.getAllTagIndexes();
+        assertTrue(tags.contains(1));
+        assertTrue(tags.contains(2));
+        assertTrue(tags.contains(3));
+        
     }
 
     /**
-     * Test of equals method, of class Contact.
+     * UTC 2.16
      */
     @Test
     public void testEquals() {
-        System.out.println("equals");
-        Object o = null;
-        Contact instance = null;
-        boolean expResult = false;
-        boolean result = instance.equals(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
+    
+    
+    /*
+    EQUALS
+    GET e SET DI PROFILOPICTURE
+    */
+    
+    
     
 }

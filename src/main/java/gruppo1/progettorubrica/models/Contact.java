@@ -188,6 +188,13 @@ public class Contact implements Serializable{
         Set<String> emailsSet2=new HashSet<>(Arrays.asList(contact.emails));
         if(!(emailsSet1.equals(emailsSet2))) return false;
         
+        if(this.profilePicture!=null && contact.getProfilePicture()!=null){
+            if(!(this.profilePicture.equals(contact.getProfilePicture())))
+                return false;
+        }
+        
+        if(!(this.tagIndexes.equals(contact.getAllTagIndexes()))) return false;
+        
         //confronto nome e cognome
         return this.name.equals(contact.name) && this.surname.equals(contact.surname);
     }

@@ -2,7 +2,7 @@ package gruppo1.progettorubrica.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.ImageView;
+//import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class ImagePopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+        //this.imageIndex=0;
     }
     
 
