@@ -200,15 +200,8 @@ public class MainController implements Initializable {
      * @see ImportPopupController
      */
     @FXML
-    private void showImportPopup(ActionEvent event) {
-        try{
-            this.openPopup("/views/Import_popup.fxml");
-        } catch (IOException ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore IO");
-            alert.setContentText("Dettagli: " + ex.getMessage());
-        }
+    private void showImportPopup(ActionEvent event) throws IOException{
+        this.showPopup("Import_popup.fxml");
     }
 
     /**
@@ -221,15 +214,8 @@ public class MainController implements Initializable {
      * @see ExportPopupController
      */
     @FXML
-    private void showExportPopup(ActionEvent event) {
-        try{
-            this.openPopup("/views/Export_popup.fxml");
-        } catch (IOException ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Errore");
-            alert.setHeaderText("Errore IO");
-            alert.setContentText("Dettagli: " + ex.getMessage());
-        }
+    private void showExportPopup(ActionEvent event) throws IOException {
+        this.showPopup("Export_popup.fxml");
     }
 
     /**
@@ -290,19 +276,6 @@ public class MainController implements Initializable {
         return null;
     }
     
-    private void openPopup(String path) throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-        Parent root = loader.load();
-        
-        Scene scene = new Scene(root);
-        
-        Stage newStage = new Stage();
-        newStage.setScene(scene);
-        
-        newStage.initModality(Modality.WINDOW_MODAL);
-        newStage.show();
-    }
-
     //Metodi di utilità
 
     private void showPopup(String path) throws IOException{

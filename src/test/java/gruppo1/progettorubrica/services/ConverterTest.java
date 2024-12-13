@@ -145,7 +145,18 @@ public class ConverterTest {
     
     ///UTC 3.9
     @Test
-    public void testOnExportCSV() throws IOException {
+    public void testOnExportCSV1() throws IOException {
+        File tempFile = File.createTempFile("contacts", ".csv");
+        tempFile.deleteOnExit();
+        List<Contact> contacts = new ArrayList<>();
+        contacts = this.createContacts(); 
+        Converter.onExportCSV(contacts, tempFile);
+        assertNotNull(tempFile);
+    }
+    
+    ///UTC 3.10
+    @Test
+    public void testOnExportCSV2() throws IOException {
         File tempFile = File.createTempFile("contacts", ".csv");
         tempFile.deleteOnExit();
         List<Contact> contacts = new ArrayList<>();
@@ -158,9 +169,9 @@ public class ConverterTest {
         assertTrue(lines.get(2).contains("Mario,Grigi,1029384756,6655443322,7788990011,m.grigi@gmail.com,grigimar@outlook.com,," + "profilePicture2" + ","));
     }
     
-    ///UTC 3.10
+    ///UTC 3.11
     @Test
-    public void testOnExportVCard() throws IOException {
+    public void testOnExportVCard1() throws IOException {
         File tempFile = Files.createTempFile("contacts", ".vcf").toFile();
         tempFile.deleteOnExit();
 
@@ -170,9 +181,19 @@ public class ConverterTest {
     // Export the contacts to the VCard file
         Converter.onExportVCard(contacts, tempFile);
         
+        assertNotNull(tempFile);
+    }
+    
+    ///UTC 3.12
+    @Test
+    public void testOnExportVCard2() throws IOException {
+        File tempFile = Files.createTempFile("contacts", ".vcf").toFile();
+        tempFile.deleteOnExit();
+        List<Contact> contacts = this.createContacts();
+        Converter.onExportVCard(contacts, tempFile);
         try(Scanner s = new Scanner(new BufferedReader(new FileReader(tempFile)))){
             s.useDelimiter("[\n]");
-            assertNotNull(tempFile);
+            
             while(s.hasNext()){   //uso replaceAll() per eliminare gli spazi superflui
                 assertEquals("BEGIN:VCARD", s.next().replaceAll("\\s+", ""));  //Primo contatto
                 assertEquals("VERSION:3.0", s.next().replaceAll("\\s+", ""));
