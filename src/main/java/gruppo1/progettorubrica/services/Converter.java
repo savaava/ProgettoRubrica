@@ -96,9 +96,9 @@ public class Converter {
                     cognome = nameParts[0];
                     nome = nameParts[1];
                 } else if (line.startsWith("TEL;")) {
-                    if (n.size() < 2) n.add(line.substring(line.indexOf(":") + 1));
+                    if (n.size() < 3) n.add(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("EMAIL;")) {
-                    if (em.size() < 2) em.add(line.substring(line.indexOf(":") + 1));
+                    if (em.size() < 3) em.add(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("PHOTO:")) {
                     fileContent = Base64.getDecoder().decode(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("END:VCARD")) {
