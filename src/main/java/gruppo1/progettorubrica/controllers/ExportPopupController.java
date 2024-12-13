@@ -5,10 +5,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.ContactManager;
+import gruppo1.progettorubrica.services.Converter;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  * @brief Controller che visualizza il popup per l'export della rubrica.
@@ -18,12 +34,15 @@ import java.util.ResourceBundle;
 
 public class ExportPopupController implements Initializable {
     private ContactManager contactManager; ///< Riferimento all'interfaccia ContactManager, implementata da AddressBook.
+    
+    private File file;  ///< Riferimento al percorso di export del file
 
     @FXML
     private ChoiceBox<String> exportChoiceBox; ///< Permette all'utente di scegliere quali contatti esportare.
 
     @FXML
     private Button saveButton; ///<Pulsante per concludere l'esportazione.
+    
 
     /**
      * @brief Inizializzazione controller.
@@ -33,6 +52,9 @@ public class ExportPopupController implements Initializable {
      * 
      * @param[in] location
      * @param[in] resources 
+     * 
+     * @pre Nessuna
+     * @post Il controller ha un'istanza di AddresssBook
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,7 +71,9 @@ public class ExportPopupController implements Initializable {
      */
     @FXML
     private void choosePath(ActionEvent event) {
-
+        FileChooser filechooser = new FileChooser();
+        filechooser.setTitle("Scegliere percorso file");
+        this.file = filechooser.showSaveDialog(new Stage());
     }
 
     /**
@@ -62,24 +86,27 @@ public class ExportPopupController implements Initializable {
      */
     @FXML
     private void onExport(ActionEvent event) {
-
-    }
-    
-    
-    /**
-     * @brief Esporta la rubrica in un file nel formato .csv.
-     * @param[in] event 
-     */
-    private void onExportCSV(ActionEvent event) {
+        String f = this.file.toString();
+        String ext = f.substring(f.indexOf(".") + 1);
+        try{
+            if(ext.equalsIgnoreCase("csv")){
+                ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
+                Converter.onExportCSV(c, this.file);
+            }
+            else if(ext.equalsIgnoreCase("vcf")){
+                ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
+                Converter.onExportCSV(c, this.file);
+            }
+        } catch(IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore IO");
+            alert.setContentText("Dettagli: " + ex.getMessage());
+        }
         
     }
     
-    /**
-     * @brief Esporta la rubrica in un file nel formato .vCard.
-     * @param[in] event 
-     */
-    private void onExportVCard(ActionEvent event) {
-        
-    }
+    
+    
     
 }

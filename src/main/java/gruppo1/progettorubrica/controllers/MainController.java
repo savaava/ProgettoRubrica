@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +22,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * @brief Controller che si occupa della scena iniziale.
@@ -72,6 +80,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.addressBook = AddressBook.getInstance();
+        this.contactDetailsPane.setDisable(true);
     }
 
     /**
@@ -114,7 +123,10 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onAddContact(ActionEvent event) {
-
+        
+        
+        
+        
     }
 
     /**
@@ -126,7 +138,8 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onContactClicked(MouseEvent event) {
-
+        this.contactDetailsPane.setDisable(false);
+        
     }
 
     /**
@@ -167,7 +180,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onSaveContact(ActionEvent event) {
-
+        
     }
 
     /**
@@ -195,7 +208,14 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showImportPopup(ActionEvent event) {
-
+        try{
+            this.openPopup("/views/Import_popup.fxml");
+        } catch (IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore IO");
+            alert.setContentText("Dettagli: " + ex.getMessage());
+        }
     }
 
     /**
@@ -209,7 +229,14 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showExportPopup(ActionEvent event) {
-
+        try{
+            this.openPopup("/views/Export_popup.fxml");
+        } catch (IOException ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Errore IO");
+            alert.setContentText("Dettagli: " + ex.getMessage());
+        }
     }
 
     /**
@@ -244,9 +271,13 @@ public class MainController implements Initializable {
      * @see ImagePopupController
      */
     @FXML
-    private void showImagePopup(ActionEvent event) {
+    private void showImagePopup(ActionEvent event) throws IOException {
         //Bisogna ottenere il controller tramite il metodo getController()
+        
         //Successivamente bisogna usare i metodi getSelectedImage() e getImageIndex()
+        
+        
+        
     }
 
     /**
@@ -271,5 +302,18 @@ public class MainController implements Initializable {
      */
     private ContextMenu createContextMenu(){
         return null;
+    }
+    
+    private void openPopup(String path) throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+        Parent root = loader.load();
+        
+        Scene scene = new Scene(root);
+        
+        Stage newStage = new Stage();
+        newStage.setScene(scene);
+        
+        newStage.initModality(Modality.WINDOW_MODAL);
+        newStage.show();
     }
 }
