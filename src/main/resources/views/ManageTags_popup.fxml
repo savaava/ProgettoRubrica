@@ -14,7 +14,7 @@
             <ListView fx:id="tagsListView" editable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
             <HBox spacing="5.0">
                <children>
-                  <TextField HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="nameField" HBox.hgrow="ALWAYS" />
                   <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAdd" text="Aggiungi" />
                   <Button fx:id="updateButton" layoutX="171.0" layoutY="10.0" mnemonicParsing="false" onAction="#onUpdate" text="Aggiorna" />
                   <Button fx:id="deleteButton" layoutX="226.0" layoutY="10.0" mnemonicParsing="false" onAction="#onDelete" text="Elimina" />
