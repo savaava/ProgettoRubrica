@@ -34,7 +34,7 @@ public class ConverterTest {
     ///UTC 3.1
     @Test
     public void testParseCSV1() throws IOException {
-        this.writeCsv(csvFile);
+        this.writeCsv();
         Collection<Contact> contacts = Converter.parseCSV(csvFile);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
@@ -43,7 +43,7 @@ public class ConverterTest {
     ///UTC 3.2
     @Test
     public void testParseCSV2() throws IOException {
-        this.writeCsv(csvFile);
+        this.writeCsv();
         Collection<Contact> contacts = Converter.parseCSV(csvFile);
         Contact[] contactArray = contacts.toArray(new Contact[0]);
 
@@ -85,7 +85,7 @@ public class ConverterTest {
     ///UTC 3.5
     @Test
     public void testParseVCard_ValidVCard1() throws IOException {
-        this.writeVcf(vcfFile);
+        this.writeVcf();
         Collection<Contact> contacts = Converter.parseVCard(vcfFile);
         assertEquals(2, contacts.size());
     }
@@ -93,7 +93,7 @@ public class ConverterTest {
     ///UTC 3.6
     @Test
     public void testParseVCard_ValidVCard2() throws IOException {
-        this.writeVcf(vcfFile);
+        this.writeVcf();
         Collection<Contact> contacts = Converter.parseVCard(vcfFile);
         Contact[] contactArray = contacts.toArray(new Contact[0]);
         Contact contact1 = contactArray[0];
@@ -154,8 +154,8 @@ public class ConverterTest {
         List<String> lines = Files.readAllLines(tempFile.toPath());
         
         assertTrue(lines.get(0).contains("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO,"));
-        assertTrue(lines.get(1).contains("Luca,Rossi,1234567890,0987654321,1122334455,l.rossi@gmail.com,rossil@outlook.com,lucarossi@alice.it," + stringToByteArray("profilePicture1") + ","));
-        assertTrue(lines.get(2).contains("Mario,Grigi,1029384756,6655443322,7788990011,m.grigi@gmail.com,grigimar@outlook.com,," + stringToByteArray("profilePicture2") + ","));
+        assertTrue(lines.get(1).contains("Luca,Rossi,1234567890,0987654321,1122334455,l.rossi@gmail.com,rossil@outlook.com,lucarossi@alice.it," + "profilePicture1" + ","));
+        assertTrue(lines.get(2).contains("Mario,Grigi,1029384756,6655443322,7788990011,m.grigi@gmail.com,grigimar@outlook.com,," + "profilePicture2" + ","));
     }
     
     ///UTC 3.10
@@ -184,28 +184,25 @@ public class ConverterTest {
                 assertEquals("EMAIL;TYPE:l.rossi@gmail.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:rossil@outlook.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:lucarossi@alice.it", s.next().replaceAll("\\s+", ""));
-                Byte[] expectedProfilePicture1 = stringToByteArray("profilePicture1");
-                System.out.println(expectedProfilePicture1.toString());
-                assertEquals(("PHOTO:" + expectedProfilePicture1.toString()), s.next().replaceAll("\\s+", ""));
+                assertEquals(("PHOTO:" + "profilePicture1"), s.next().replaceAll("\\s+", ""));
                 assertEquals("END:VCARD", s.next().replaceAll("\\s+", ""));
                 assertEquals("BEGIN:VCARD", s.next().replaceAll("\\s+", ""));  //Secondo contatto
                 assertEquals("VERSION:3.0", s.next().replaceAll("\\s+", ""));
                 assertEquals("FN:MarioGrigi", s.next().replaceAll("\\s+", ""));
                 assertEquals("N:Grigi;Mario;", s.next().replaceAll("\\s+", ""));
-                assertEquals("TEL;TYPE:2233445566", s.next().replaceAll("\\s+", ""));
+                assertEquals("TEL;TYPE:1029384756", s.next().replaceAll("\\s+", ""));
                 assertEquals("TEL;TYPE:6655443322", s.next().replaceAll("\\s+", ""));
                 assertEquals("TEL;TYPE:7788990011", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:m.grigi@gmail.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:grigimar@outlook.com", s.next().replaceAll("\\s+", ""));
-                Byte[] expectedProfilePicture2 = stringToByteArray("profilePicture2");
-                assertEquals(("PHOTO: " + expectedProfilePicture2.toString()), s.next().replaceAll("\\s+", ""));
+                assertEquals(("PHOTO:profilePicture2"), s.next().replaceAll("\\s+", ""));
                 assertEquals("END:VCARD", s.next().replaceAll("\\s+", "").replaceAll("\\s+", ""));   
             }
         }
     }
 
     
-    private void writeCsv(File file) throws IOException{
+    private void writeCsv() throws IOException{
         csvFile = File.createTempFile("contacts", ".csv");
         try (FileWriter writer = new FileWriter(csvFile)) {
             writer.write("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO\n");
@@ -214,7 +211,7 @@ public class ConverterTest {
         }  
     }
     
-    private void writeVcf(File file) throws IOException{
+    private void writeVcf() throws IOException{
         vcfFile = File.createTempFile("contacts", ".vcf");
         try (FileWriter writer = new FileWriter(vcfFile)) {
             writer.write("BEGIN:VCARD\n");
@@ -267,15 +264,5 @@ public class ConverterTest {
         for (int i = 0; i < byteArray.length; i++) {
             byteObjectArray[i] = byteArray[i]; 
         } return byteObjectArray; 
-    }
-    
-    public static String byteArrayToString(Byte[] byteObjectArray) {
-        // Converti Byte[] in byte[]
-        byte[] byteArray = new byte[byteObjectArray.length];
-        for (int i = 0; i < byteObjectArray.length; i++) {
-            byteArray[i] = byteObjectArray[i];
-        } 
-        // Converti l'array di byte di nuovo nella stringa originale 
-        return new String(byteArray, StandardCharsets.UTF_8);
     }
 }
