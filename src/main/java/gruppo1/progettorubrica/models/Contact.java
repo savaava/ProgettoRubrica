@@ -1,8 +1,10 @@
 package gruppo1.progettorubrica.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -189,9 +191,11 @@ public class Contact implements Serializable{
         if(!(emailsSet1.equals(emailsSet2))) return false;
         
         //confronto le immagini
-        Set<Byte> imageSet1=new HashSet<>(Arrays.asList(this.profilePicture));
-        Set<Byte> imageSet2=new HashSet<>(Arrays.asList(contact.getProfilePicture()));
-        if(!(imageSet1.equals(imageSet2))) return false;
+        if(this.profilePicture!=null && contact.profilePicture!=null){
+            List<Byte> imageSet1=new ArrayList<>(Arrays.asList(this.profilePicture));
+            List<Byte> imageSet2=new ArrayList<>(Arrays.asList(contact.getProfilePicture()));
+            if(!(imageSet1.equals(imageSet2))) return false;
+        }
         
         if(!(this.tagIndexes.equals(contact.getAllTagIndexes()))) return false;
         
