@@ -228,5 +228,4 @@ public class Contact implements Serializable{
         
         return strb.toString();
     }
-    
 }
