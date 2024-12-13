@@ -267,10 +267,10 @@ public class ContactTest {
         c.setProfilePicture(image1);
         c1.setProfilePicture(image2);
         
-        assertFalse(c.equals(null)); //confronto Contact c con un riferimento null
-        assertTrue(c.equals(c)); //confronto Contact c con se stesso
-        assertFalse(c.equals(s)); //confronto Contact c con un'istanza di una classe diversa da Contact
-        assertTrue(c.equals(c1)); //confronto Contact c e c1 i quali contengono stessi valori
+        assertNotEquals(c, null); //confronto Contact c con un riferimento null
+        assertEquals(c, c); //confronto Contact c con se stesso
+        assertNotEquals(c, s); //confronto Contact c con un'istanza di una classe diversa da Contact
+        assertEquals(c, c1); //confronto Contact c e c1 i quali contengono stessi valori
     }
     
     /**
@@ -283,7 +283,18 @@ public class ContactTest {
         
         Contact c1=new Contact("mario", "rossi");
         
-        assertFalse(c.equals(c1));
+        String numbers1[]=new String[3];
+        numbers1[0]="3926533458";
+        numbers1[1]="3482356875";
+        numbers1[2]="3872476909";
+        c1.setNumbers(numbers1);
+        String numbers2[]=new String[3];
+        numbers2[0]="3926533458";
+        numbers2[1]="3872476909";
+        numbers2[2]="3482356875";
+        c.setNumbers(numbers2);
+        
+        assertNotEquals(c, c1);
     }
     
     /**
@@ -295,6 +306,7 @@ public class ContactTest {
         System.out.println("equals3");
         
         Contact c1=new Contact("pippo", "paperino");
+        
         String numbers1[]=new String[3];
         numbers1[0]="3926533458";
         numbers1[1]="3482356875";
@@ -306,11 +318,120 @@ public class ContactTest {
         numbers2[2]="3435679832";
         c.setNumbers(numbers2);
         
+        assertNotEquals(c,c1);
+    }
+    
+    /**
+     * UTC 2.18
+     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare ma email diverse.
+     */
+    @Test
+    public void testEquals4() {
+        System.out.println("equals4");
+        
+        Contact c1=new Contact("pippo", "paperino");
+        
+        String numbers1[]=new String[3];
+        numbers1[0]="3926533458";
+        numbers1[1]="3482356875";
+        numbers1[2]="3872476909";
+        c1.setNumbers(numbers1);
+        String numbers2[]=new String[3];
+        numbers2[0]="3926533458";
+        numbers2[1]="3872476909";
+        numbers2[2]="3482356875";
+        c.setNumbers(numbers2);
+        
+        String emails1[]=new String[3];
+        emails1[0]="pluto@gmail.com";
+        emails1[1]="paperino@gmail.com";
+        emails1[2]="pippo@gmail.com";
+        c.setEmails(emails1);
+        String emails2[]=new String[3];
+        emails2[0]="mario@gmail.com";
+        emails2[1]="rossi@gmail.com";
+        c1.setEmails(emails2);
+        
         assertFalse(c.equals(c1));
     }
     
+    /**
+     * UTC 2.19
+     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email, immagini profilo ma tag diversi.
+     */
+    @Test
+    public void testEquals5() {
+        System.out.println("equals5");
+        
+        Contact c1=new Contact("pippo", "paperino");
+        
+        String numbers1[]=new String[3];
+        numbers1[0]="3926533458";
+        numbers1[1]="3482356875";
+        c1.setNumbers(numbers1);
+        String numbers2[]=new String[3];
+        numbers2[0]="3482356875";
+        numbers2[1]="3926533458";
+        c.setNumbers(numbers2);
+        
+        String emails1[]=new String[3];
+        emails1[0]="pluto@gmail.com";
+        emails1[1]="paperino@gmail.com";
+        emails1[2]="pippo@gmail.com";
+        c.setEmails(emails1);
+        String emails2[]=new String[3];
+        emails2[0]="pippo@gmail.com";
+        emails2[1]="paperino@gmail.com";
+        emails2[2]="pluto@gmail.com";
+        c1.setEmails(emails2);
+        
+        Byte image1[]={1,2,3};
+        Byte image2[]={1,3,2};
+        c.setProfilePicture(image1);
+        c1.setProfilePicture(image2);
+        
+        c.addTagIndex(1);
+        c1.addTagIndex(2);
+        
+        assertNotEquals(c, c1);
+    }
     
-    
-    
+    /**
+     * UTC 2.20
+     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email ma immagini profilo diverse.
+     */
+    @Test
+    public void testEquals6() {
+        System.out.println("equals6");
+        
+        Contact c1=new Contact("pippo", "paperino");
+        
+        String numbers1[]=new String[3];
+        numbers1[0]="3926533458";
+        numbers1[1]="3482356875";
+        c1.setNumbers(numbers1);
+        String numbers2[]=new String[3];
+        numbers2[0]="3482356875";
+        numbers2[1]="3926533458";
+        c.setNumbers(numbers2);
+        
+        String emails1[]=new String[3];
+        emails1[0]="pluto@gmail.com";
+        emails1[1]="paperino@gmail.com";
+        emails1[2]="pippo@gmail.com";
+        c.setEmails(emails1);
+        String emails2[]=new String[3];
+        emails2[0]="pippo@gmail.com";
+        emails2[1]="paperino@gmail.com";
+        emails2[2]="pluto@gmail.com";
+        c1.setEmails(emails2);
+        
+        Byte image1[]={1,2,3};
+        Byte image2[]={1,3,2};
+        c.setProfilePicture(image1);
+        c1.setProfilePicture(image2);
+        
+        assertNotEquals(c, c1);
+    }
     
 }
