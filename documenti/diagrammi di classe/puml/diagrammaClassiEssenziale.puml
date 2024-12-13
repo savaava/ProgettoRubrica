@@ -9,7 +9,7 @@ class Contact {
     - String surname 
     - String[] numbers
     - String[] emails
-    - byte[] profilePicture
+    - Byte[] profilePicture
     - Set<Integer> tagIndexes  
 }
 
@@ -42,6 +42,13 @@ class MainController {
     - void showConfigPopup()
     - void showImagePopup()
     - void showManageTagsPopup()
+}
+
+class Converter {
+    + {static} Collection<Contact> parseCSV()
+    + {static} Collection<Contact> parseVCard()
+    + {static} void onExportCSV()
+    + {static} void onExportVCard()
 }
 
 class ImportPopupController {
@@ -84,7 +91,7 @@ class Tag {
 
 class Database {
     + {static} boolean verifyDBUrl(String url)
-    + void upsertContact(Contact c)
+    + void insertContact(Contact c)
     + void removeTag(Tag tag)
     + Collection<Contact> getAllContacts()
     + Collection<Tag> getAllTags()
@@ -94,16 +101,9 @@ class Database {
 interface Serializable
 
 interface TagManager {
-    +{abstract} void addTag(Tag tag)
-    +{abstract} Tag removeTag(Tag tag)
-    +{abstract} Tag getTag(int id)
-    +{abstract} ObservableList<Tag> getAllTags()
 }
 
 interface ContactManager {
-    +{abstract} ObservableList<Contact> getAllContacts()
-    +{abstract} addContact(Contact c)
-    +{abstract} removeContact(Contact c)
 }
 
 '****************** RELAZIONI ******************
@@ -121,14 +121,17 @@ MainController "1" o-- "1" AddressBook
 MainController ..> ImagePopupController
 MainController ..> ConfirmPopupController
 
-ManageTagsPopupController ..> ConfirmPopupController
-
-ExportPopupController "1" o-- "1" ContactManager
+Converter ..> Contact
 
 ImportPopupController "1" o-- "1" ContactManager
+ImportPopupController ..> Converter
+
+ExportPopupController "1" o-- "1" ContactManager
+ExportPopupController ..> Converter
+
+ManageTagsPopupController ..> ConfirmPopupController
+ManageTagsPopupController "1" o-- "1" TagManager
 
 ConfigPopupController "1" o-- "1" AddressBook
-
-ManageTagsPopupController "1" o-- "1" TagManager
 
 @enduml
