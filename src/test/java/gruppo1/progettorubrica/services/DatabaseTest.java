@@ -3,13 +3,15 @@ package gruppo1.progettorubrica.services;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import org.bson.Document;
-import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
+@FixMethodOrder(MethodSorters.JVM)
 public class DatabaseTest {
 
     private Database database;
@@ -44,7 +46,7 @@ public class DatabaseTest {
         String emptyUrl = "";
         assertFalse(Database.verifyDBUrl(emptyUrl));
     }
-    
+
     @Test
     public void testInsertContact() {
         database = new Database(url);
@@ -59,7 +61,7 @@ public class DatabaseTest {
         Contact c = new Contact(name,surname);
         c.setNumbers(numbers);
         c.setEmails(emails);
-        c.setProfilePicture(profilePicture);
+        //c.setProfilePicture(profilePicture);
         for(int tag : tags) {
             c.addTagIndex(tag);
         }
@@ -135,10 +137,10 @@ public class DatabaseTest {
 
         //Ripristino lo stato iniziale del database
         database.deleteAllContacts();
-        
+
         if(!savedContacts.isEmpty())
             database.insertManyContacts(savedContacts);
-        
+
         assertTrue(result.contains(c1));
         assertTrue(result.contains(c2));
         assertTrue(result.contains(c3));
@@ -159,13 +161,13 @@ public class DatabaseTest {
         database.insertTag(t2);
         database.insertTag(t3);
 
-        Collection<Tag> result = database.getAllTags();        
+        Collection<Tag> result = database.getAllTags();
 
         //Ripristino lo stato iniziale del database
         database.deleteAllTags();
         if(!savedTags.isEmpty())
             database.insertManyTags(savedTags);
-        
+
         assertTrue(result.contains(t1));
         assertTrue(result.contains(t2));
         assertTrue(result.contains(t3));
@@ -233,7 +235,7 @@ public class DatabaseTest {
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mariorossi@gmail.com"};
-        byte[] profilePicture = {2,3,5,6,3};
+        Byte[] profilePicture = {2,3,5,6,3};
         Integer[] tags = {32,3,43};
 
         Contact c = new Contact(name,surname);
@@ -250,7 +252,7 @@ public class DatabaseTest {
         assertEquals(surname, doc.get("surname"));
         assertArrayEquals(doc.getList("numbers", String.class).toArray(new String[0]), numbers);
         assertArrayEquals(doc.getList("emails", String.class).toArray(new String[0]), emails);
-        assertArrayEquals(Base64.getDecoder().decode(doc.getString("image")), profilePicture);
+        assertArrayEquals((Byte[])doc.get("image"), profilePicture);
         assertArrayEquals(doc.getList("tagIndexes", Integer.class).toArray(new Integer[0]), tags);
     }
 
@@ -263,21 +265,21 @@ public class DatabaseTest {
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mrossi@gmail.com"};
-        byte[] profilePicture = {2,3,5,6,3};
+        Byte[] profilePicture = {2,3,5,6,3};
         Integer[] tags = {32};
 
         doc.append("name", name);
         doc.append("surname", surname);
         doc.append("numbers", Arrays.asList(numbers));
         doc.append("emails", Arrays.asList(emails));
-        doc.append("image", Base64.getEncoder().encodeToString(profilePicture));
+        doc.append("image", profilePicture);
         doc.append("tagIndexes", Arrays.asList(tags));
 
         Contact c = database.documentToContact(doc);
 
         assertEquals(name, c.getName());
         assertEquals(surname, c.getSurname());
-        
+
         assertArrayEquals(c.getNumbers(), numbers);
         assertArrayEquals(c.getEmails(), emails);
         assertArrayEquals(c.getProfilePicture(), profilePicture);

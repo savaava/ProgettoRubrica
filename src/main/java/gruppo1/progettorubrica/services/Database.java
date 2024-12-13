@@ -2,7 +2,6 @@ package gruppo1.progettorubrica.services;
 
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
-import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import org.bson.Document;
@@ -211,11 +210,7 @@ public class Database {
         doc.put("surname", c.getSurname());
         doc.put("numbers", Arrays.asList(c.getNumbers()));
         doc.put("emails", Arrays.asList(c.getEmails()));
-        if(c.getProfilePicture() != null) {
-            doc.put("image", Base64.getEncoder().encodeToString(c.getProfilePicture()));
-        } else {
-            doc.put("image", "");
-        }
+        doc.put("image", c.getProfilePicture());
         doc.put("tagIndexes", new ArrayList<>(c.getAllTagIndexes()));
 
         return doc;
@@ -234,7 +229,7 @@ public class Database {
 
         c.setNumbers(d.getList("numbers", String.class).toArray(new String[0]));
         c.setEmails(d.getList("emails", String.class).toArray(new String[0]));
-        c.setProfilePicture(Base64.getDecoder().decode(d.getString("image")));
+        c.setProfilePicture((Byte[]) d.get("image"));
 
         for(int tagIndex : d.getList("tagIndexes", Integer.class).toArray(new Integer[0])) {
             c.addTagIndex(tagIndex);
