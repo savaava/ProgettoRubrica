@@ -298,7 +298,7 @@ public class ContactTest {
     }
     
     /**
-     * UTC 2.17
+     * UTC 2.18
      * Confronto c con un altro contatto c1 i quali contengono stesso nome e cognome ma numeri di cellulare diversi.
      */
     @Test
@@ -322,7 +322,7 @@ public class ContactTest {
     }
     
     /**
-     * UTC 2.18
+     * UTC 2.19
      * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare ma email diverse.
      */
     @Test
@@ -352,12 +352,13 @@ public class ContactTest {
         emails2[1]="rossi@gmail.com";
         c1.setEmails(emails2);
         
-        assertFalse(c.equals(c1));
+        assertNotEquals(c, c1);
     }
     
+    
     /**
-     * UTC 2.19
-     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email, immagini profilo ma tag diversi.
+     * UTC 2.20
+     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email ma immagini profilo diverse.
      */
     @Test
     public void testEquals5() {
@@ -390,15 +391,12 @@ public class ContactTest {
         c.setProfilePicture(image1);
         c1.setProfilePicture(image2);
         
-        c.addTagIndex(1);
-        c1.addTagIndex(2);
-        
         assertNotEquals(c, c1);
     }
     
     /**
-     * UTC 2.20
-     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email ma immagini profilo diverse.
+     * UTC 2.21
+     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email, immagini profilo ma tag diversi.
      */
     @Test
     public void testEquals6() {
@@ -427,9 +425,12 @@ public class ContactTest {
         c1.setEmails(emails2);
         
         Byte image1[]={1,2,3};
-        Byte image2[]={1,3,2};
+        Byte image2[]={1,2,3};
         c.setProfilePicture(image1);
         c1.setProfilePicture(image2);
+        
+        c.addTagIndex(1);
+        c1.addTagIndex(2);
         
         assertNotEquals(c, c1);
     }

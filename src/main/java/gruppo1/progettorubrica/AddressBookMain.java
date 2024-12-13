@@ -35,7 +35,9 @@ public class AddressBookMain extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/Main.fxml"));
         Parent root = fxmlLoader.load();
 
-        primaryStage.setScene(new Scene(root));
+        
+        
+        primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.show();
     }
 }

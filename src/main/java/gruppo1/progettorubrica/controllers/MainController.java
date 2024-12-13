@@ -2,6 +2,7 @@ package gruppo1.progettorubrica.controllers;
 
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
+import java.io.ByteArrayInputStream;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,8 +21,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 
 /**
  * @brief Controller che si occupa della scena iniziale.
@@ -41,10 +46,16 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField searchField;  ///< campo di ricerca dei contatti
-    private TextField nameField, surnameField, emailField, numberField; ///< campi testuali del contatto nella visione dettagliata {@link MainController#}
+    
+    @FXML
+    private TextField nameField;
+    
+    @FXML
+    private TextField surnameField, emailField, numberField; ///< campi testuali del contatto nella visione dettagliata {@link MainController#}
 
     @FXML
     private ImageView profileImageView; ///< immagine profilo del contatto
+    @FXML
     private ImageView filterImage; ///< immagine del filtro
 
     @FXML
@@ -63,6 +74,8 @@ public class MainController implements Initializable {
 
     private FilteredList<Contact> filteredContacts;  ///< lista filtrata in base a tag e/o alla sottostringa presente in searchField
 
+    
+    
     /**
      * @brief Inizializza il main controller
      *
@@ -73,7 +86,13 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.addressBook = AddressBook.getInstance();
-        this.contactDetailsPane.setDisable(true);
+        this.contactDetailsPane.setVisible(false);
+        this.contactsTable.setItems(addressBook.getAllContacts());
+        nameColumn.setCellValueFactory(new PropertyValueFactory("name"));
+        surnameColumn.setCellValueFactory(new PropertyValueFactory("surname"));
+        
+     
+        
     }
 
     /**
@@ -116,11 +135,56 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onAddContact(ActionEvent event) {
+        this.contactDetailsPane.setVisible(true);
+        deleteButton.setDisable(false);
+        editButton.setDisable(false);
+        
+        TextField numberField2=new TextField();
+        TextField numberField3=new TextField();
+        TextField emailField2=new TextField();
+        TextField emailField3=new TextField();
         
         
+        //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
+        numberField.textProperty().addListener( (observable, oldValue, newValue) -> {
+            if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
+                GridPane.setRowIndex(numberField2, 1);
+                GridPane.setColumnIndex(numberField2, 1);
+                numbersPane.getChildren().add(numberField2);
+            }
+        else if(newValue.isEmpty()) {//cancello il secondo TextField se ha cancellato il contenuto del primo TextField e se il secondo TextField è vuoto
+                if(!numberField2.getText().isEmpty() && numberField.getText().isEmpty()){
+                    numberField.setText(numberField2.getText());
+                    numberField2.setText("");
+                }
+                numbersPane.getChildren().remove(numberField2);
+        }
+        });
+        
+        numberField2.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue==null && newValue!=null)
+                numbersPane.add(numberField3, 1, 2);
+        else if(oldValue!=null && newValue==null && (numberField3.getText()==null))
+                numbersPane.getChildren().remove(numberField3);
+        });
+        
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue==null && newValue!=null)
+                emailsPane.add(emailField2, 1, 1);
+        else if(oldValue!=null && newValue==null && (emailField2.getText()==null))
+                emailsPane.getChildren().remove(emailField2);
+        });
+        
+        emailField2.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue==null && newValue!=null)
+                emailsPane.add(emailField3, 1, 2);
+        else if(oldValue!=null && newValue==null && (emailField3.getText()==null))
+                emailsPane.getChildren().remove(emailField3);
+        });
         
         
     }
+    
 
     /**
      * @brief Vista dettagliata del contatto
@@ -131,9 +195,43 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onContactClicked(MouseEvent event) {
-        this.contactDetailsPane.setDisable(false);
+        this.contactDetailsPane.setVisible(true);
+        
+        nameField.setEditable(false);
+        surnameField.setEditable(false);
+        emailField.setEditable(false);
+        numberField.setDisable(false);
+        
+        saveButton.setDisable(true);
+        editButton.setDisable(true);
+        
+        Contact contactSelected=contactsTable.getSelectionModel().getSelectedItem();
+        
+        nameField.setText(contactSelected.getName());
+        surnameField.setText(contactSelected.getSurname());
+        
+        String emails[]=contactSelected.getEmails();
+        if(emails[0]!=null) emailField.setText(emails[0]);
+        if(emails[1]!=null) emailsPane.add(new TextField(emails[1]), 1, 1);
+        if(emails[2]!=null) emailsPane.add(new TextField(emails[2]), 1, 2);
+        
+        String numbers[]=contactSelected.getNumbers();
+        if(numbers[0]!=null) numberField.setText(numbers[0]);
+        if(numbers[1]!=null) numbersPane.add(new TextField(numbers[1]), 1, 1);
+        if(numbers[2]!=null) numbersPane.add(new TextField(numbers[2]), 1, 2);
+        
+        Byte imageInByte[]=contactSelected.getProfilePicture();
+        byte image[]=new byte[imageInByte.length];
+        for(int i=0; i<imageInByte.length; i++)
+            image[i]=imageInByte[i];
+        profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        
+        for(Integer id: contactSelected.getAllTagIndexes())
+            tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));
         
     }
+    
+    
 
     /**
      * @brief Modifica contatto
@@ -245,26 +343,6 @@ public class MainController implements Initializable {
         showPopup("Config_popup.fxml");
     }
 
-    /**
-     * @brief Ottengo le informazioni sulla foto profilo del contatto
-     *
-     * Guarda anche ImagePopupController
-     *
-     * Questo metodo, una volta ottenuto il controller tramite il metodo getController(), utilizza
-     * i metodi getSelectedImage() e getImageIndex per ottenere le informazioni riguardo l'immagine profilo d'interesse.
-     *
-     * @param[in] event
-     * @see ImagePopupController
-     */
-    @FXML
-    private void showImagePopup(ActionEvent event) throws IOException {
-        //Bisogna ottenere il controller tramite il metodo getController()
-        
-        //Successivamente bisogna usare i metodi getSelectedImage() e getImageIndex()
-        
-        
-        
-    }
 
     /**
      * @brief Mostra il popup di gestione dei tag
@@ -315,4 +393,9 @@ public class MainController implements Initializable {
         popup.setScene(scene);
         popup.showAndWait();
     }
+
+    @FXML
+    private void showImagePopup(MouseEvent event) {
+    }
+    
 }
