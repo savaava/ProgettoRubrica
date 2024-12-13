@@ -16,7 +16,7 @@ public class Contact implements Serializable{
     private String surname; ///< il cognome in formato stringa dell'entità contatto
     private String[] numbers; ///< gli eventuali numeri di telefono in formato stringa dell'entità contatto
     private String[] emails; ///< le eventuali emails in formato stringa dell'entità contatto
-    private byte[] profilePicture; ///< l'immagine in formato vettore di byte associata all'entità contatto
+    private Byte[] profilePicture; ///< l'immagine in formato vettore di byte associata all'entità contatto
     private Set<Integer> tagIndexes; ///< gli eventuali tag, contenuti nella collezione, in formato stringa associati all'entità contatto
 
     /**
@@ -117,7 +117,7 @@ public class Contact implements Serializable{
      * @post Ottenere l'array di byte che rappresenta l'immagine profilo dell'istanza di Contact
      * @return Il vettore di byte che rappresentano l'immagine dell'istanza Contact
      */
-    public byte[] getProfilePicture() {
+    public Byte[] getProfilePicture() {
         return profilePicture;
     }
 
@@ -127,7 +127,7 @@ public class Contact implements Serializable{
      * @post Imposta il vettore in ingresso come profilePicture dell'istanza di Contact 
      * @param[in] profilePicture 
      */
-    public void setProfilePicture(byte[] profilePicture) {
+    public void setProfilePicture(Byte[] profilePicture) {
         this.profilePicture = profilePicture;
     }
 
@@ -180,23 +180,23 @@ public class Contact implements Serializable{
 
         //confronto i numeri di cellulare
         Set<String> numbersSet1=new HashSet<>(Arrays.asList(this.numbers));
-        Set<String> numbersSet2=new HashSet<>(Arrays.asList(contact.numbers));
+        Set<String> numbersSet2=new HashSet<>(Arrays.asList(contact.getNumbers()));
         if(!(numbersSet1.equals(numbersSet2))) return false;
         
         //confronto le emails
         Set<String> emailsSet1=new HashSet<>(Arrays.asList(this.emails));
-        Set<String> emailsSet2=new HashSet<>(Arrays.asList(contact.emails));
+        Set<String> emailsSet2=new HashSet<>(Arrays.asList(contact.getEmails()));
         if(!(emailsSet1.equals(emailsSet2))) return false;
         
-        if(this.profilePicture!=null && contact.getProfilePicture()!=null){
-            if(!(this.profilePicture.equals(contact.getProfilePicture())))
-                return false;
-        }
+        //confronto le immagini
+        Set<Byte> imageSet1=new HashSet<>(Arrays.asList(this.profilePicture));
+        Set<Byte> imageSet2=new HashSet<>(Arrays.asList(contact.getProfilePicture()));
+        if(!(imageSet1.equals(imageSet2))) return false;
         
         if(!(this.tagIndexes.equals(contact.getAllTagIndexes()))) return false;
         
         //confronto nome e cognome
-        return this.name.equals(contact.name) && this.surname.equals(contact.surname);
+        return this.name.equals(contact.getName()) && this.surname.equals(contact.getSurname());
     }
     
     @Override
