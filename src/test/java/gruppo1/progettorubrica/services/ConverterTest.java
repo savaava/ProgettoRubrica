@@ -53,12 +53,12 @@ public class ConverterTest {
         assertEquals("Rossi", contact1.getSurname());
         assertArrayEquals(new String[]{"1234567890", "0987654321", "1122334455"}, contact1.getNumbers());
         assertArrayEquals(new String[]{"l.rossi@gmail.com","rossil@outlook.com","lucarossi@alice.it"}, contact1.getEmails());
-        assertArrayEquals(stringToByteArray("SGVsbG8gd29ybGQ="), contact1.getProfilePicture());
+        assertArrayEquals(Converter.stringToByteArray("SGVsbG8gd29ybGQ="), contact1.getProfilePicture());
         assertEquals("Mario", contact2.getName());
         assertEquals("Grigi", contact2.getSurname());
         assertArrayEquals(new String[]{"2233445566", "6655443322", "7788990011"}, contact2.getNumbers());
         assertArrayEquals(new String[]{"m.grigi@gmail.com","grigimar@outlook.com",""}, contact2.getEmails());
-        assertArrayEquals(stringToByteArray("SGVsbG8gd29ybGQ="), contact2.getProfilePicture());
+        assertArrayEquals(Converter.stringToByteArray("SGVsbG8gd29ybGQ="), contact2.getProfilePicture());
     }
 
     ///UTC 3.3
@@ -107,7 +107,7 @@ public class ConverterTest {
         assertEquals("l.rossi@gmail.com", contact1.getEmails()[0]);
         assertEquals("rossil@outlook.com", contact1.getEmails()[1]);
         assertEquals("lucarossi@alice.it", contact1.getEmails()[2]);
-        Byte[] expectedProfilePicture1 = stringToByteArray("SGVsbG8gd29ybGQ=");
+        Byte[] expectedProfilePicture1 = Converter.stringToByteArray("SGVsbG8gd29ybGQ=");
         assertArrayEquals(expectedProfilePicture1, contact1.getProfilePicture());
         assertEquals("Mario", contact2.getName());
         assertEquals("Grigi", contact2.getSurname());
@@ -116,7 +116,7 @@ public class ConverterTest {
         assertEquals("7788990011", contact2.getNumbers()[2]);
         assertEquals("m.grigi@gmail.com", contact2.getEmails()[0]);
         assertEquals("grigimar@outlook.com", contact2.getEmails()[1]);
-        Byte[] expectedProfilePicture2 = stringToByteArray("SGVsbG8gd29ybGQ=");
+        Byte[] expectedProfilePicture2 = Converter.stringToByteArray("SGVsbG8gd29ybGQ=");
         assertArrayEquals(expectedProfilePicture2, contact2.getProfilePicture());
 }
 
@@ -266,24 +266,15 @@ public class ConverterTest {
         Contact contact1 = new Contact("Luca", "Rossi");
         contact1.setNumbers(new String[]{"1234567890", "0987654321", "1122334455"});
         contact1.setEmails(new String[]{"l.rossi@gmail.com","rossil@outlook.com","lucarossi@alice.it"});
-        contact1.setProfilePicture(stringToByteArray("profilePicture1"));
+        contact1.setProfilePicture(Converter.stringToByteArray("profilePicture1"));
         contacts.add(contact1);
 
         Contact contact2 = new Contact("Mario", "Grigi");
         contact2.setNumbers(new String[]{"1029384756", "6655443322", "7788990011"});
         contact2.setEmails(new String[]{"m.grigi@gmail.com","grigimar@outlook.com",""});
-        contact2.setProfilePicture(stringToByteArray("profilePicture2"));
+        contact2.setProfilePicture(Converter.stringToByteArray("profilePicture2"));
         contacts.add(contact2);
         
         return contacts;
-    }
-    public static Byte[] stringToByteArray(String originalString) {
-        // Converti la stringa in un array di byte
-        byte[] byteArray = originalString.getBytes(StandardCharsets.UTF_8);
-        // Converti byte[] in Byte[]
-        Byte[] byteObjectArray = new Byte[byteArray.length];
-        for (int i = 0; i < byteArray.length; i++) {
-            byteObjectArray[i] = byteArray[i]; 
-        } return byteObjectArray; 
     }
 }
