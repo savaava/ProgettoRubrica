@@ -154,6 +154,7 @@ public class ContactTest {
     @Test
     public void testGetProfilePicture() {
         System.out.println("getProfilePicture");
+        assertNull(c.getProfilePicture());
         
     }
 
@@ -163,6 +164,10 @@ public class ContactTest {
     @Test
     public void testSetProfilePicture() {
         System.out.println("setProfilePicture");
+        byte profilePicture[]={3,4,5};
+        c.setProfilePicture(profilePicture);
+        byte profilePicture1[]=c.getProfilePicture();
+        assertEquals(profilePicture, profilePicture1);
     }
 
     /**
@@ -228,15 +233,48 @@ public class ContactTest {
      * UTC 2.16
      */
     @Test
-    public void testEquals() {
+    public void testEquals1() {
+        System.out.println("equals1");
+        String s="paperino";
+        
+        Contact c1=new Contact("pippo", "paperino");
+        String numbers[]=new String[3];
+        numbers[0]="3926533458";
+        numbers[1]="3482356875";
+        c1.setNumbers(numbers);
+        c.setNumbers(numbers);
+        
+        String emails[]=new String[3];
+        emails[0]="pluto@gmail.com";
+        emails[1]="paperino@gmail.com";
+        emails[2]="pippo@gmail.com";
+        c.setEmails(emails);
+        c1.setEmails(emails);
+        
+        c.addTagIndex(2);
+        c1.addTagIndex(2);
+        
+        byte image[]={1,2,3};
+        c.setProfilePicture(image);
+        c1.setProfilePicture(image);
+        
+        assertFalse(c.equals(null)); //confronto Contact c con un riferimento null
+        assertTrue(c.equals(c)); //confronto Contact c con se stesso
+        assertFalse(c.equals(s)); //confronto Contact c con un'istanza di una classe diversa da Contact
+        assertTrue(c.equals(c1)); //confronto Contact c e c1 i quali contengono stessi valori
+        
+    }
+    
+    /**
+     * UTC 2.17
+     */
+    @Test
+    public void testEquals2() {
+        System.out.println("equals2");
         
     }
     
     
-    /*
-    EQUALS
-    GET e SET DI PROFILOPICTURE
-    */
     
     
     

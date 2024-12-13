@@ -25,12 +25,10 @@ import javafx.util.Callback;
  */
 public class ManageTagsPopupController implements Initializable {
     private TagManager tagManager; ///< Riferimento all'interfaccia TagManager, implementata da AddressBook
-
-    @FXML
-    private TextField nameField;   
+   
     
     @FXML
-    private ListView<String> tagsListView; ///< Riferimento alla lista di tag
+    private ListView<Tag> tagsListView; ///< Riferimento alla lista di tag
 
     @FXML
     private Button addButton, updateButton, deleteButton; ///< Riferimento ai bottoni di aggiunta, modifica ed eliminazione
