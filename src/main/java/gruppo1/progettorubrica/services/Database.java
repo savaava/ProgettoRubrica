@@ -210,7 +210,8 @@ public class Database {
         doc.put("surname", c.getSurname());
         doc.put("numbers", Arrays.asList(c.getNumbers()));
         doc.put("emails", Arrays.asList(c.getEmails()));
-        doc.put("image", c.getProfilePicture());
+        if(c.getProfilePicture() != null)
+            doc.put("image", Converter.byteArrayToString(c.getProfilePicture()));
         doc.put("tagIndexes", new ArrayList<>(c.getAllTagIndexes()));
 
         return doc;
@@ -229,7 +230,8 @@ public class Database {
 
         c.setNumbers(d.getList("numbers", String.class).toArray(new String[0]));
         c.setEmails(d.getList("emails", String.class).toArray(new String[0]));
-        c.setProfilePicture((Byte[]) d.get("image"));
+        if(d.getString("image") != null)
+            c.setProfilePicture(Converter.stringToByteArray(d.getString("image")));
 
         for(int tagIndex : d.getList("tagIndexes", Integer.class).toArray(new Integer[0])) {
             c.addTagIndex(tagIndex);
