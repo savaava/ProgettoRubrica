@@ -1,18 +1,17 @@
 package gruppo1.progettorubrica.controllers;
 
+import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.Contact;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import gruppo1.progettorubrica.models.AddressBook;
-import gruppo1.progettorubrica.models.Contact;
-import java.io.IOException;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -21,14 +20,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 /**
  * @brief Controller che si occupa della scena iniziale.
@@ -249,14 +242,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showConfigPopup(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/views/Config_popup.fxml"));
-        Scene scene = new Scene(root);
-
-        Stage popup = new Stage();
-        popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setResizable(false);
-        popup.setScene(scene);
-        popup.showAndWait();
+        showPopup("Config_popup.fxml");
     }
 
     /**
@@ -315,5 +301,18 @@ public class MainController implements Initializable {
         
         newStage.initModality(Modality.WINDOW_MODAL);
         newStage.show();
+    }
+
+    //Metodi di utilità
+
+    private void showPopup(String path) throws IOException{
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
+        Scene scene = new Scene(root);
+
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setResizable(false);
+        popup.setScene(scene);
+        popup.showAndWait();
     }
 }

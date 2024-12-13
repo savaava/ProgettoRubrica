@@ -7,16 +7,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * @brief Controller che visualizza il popup dei tag.
@@ -65,7 +63,7 @@ public class ManageTagsPopupController implements Initializable {
                             this.setText(null);
                         }
                         else
-                            this.setText(t.getDescrizione());
+                            this.setText(t.getDescription());
                     }
                     
                 };
@@ -105,7 +103,7 @@ public class ManageTagsPopupController implements Initializable {
         
         tagManager.removeTag(tag); 
         
-        tag.setDescrizione(this.nameField.getText()); //aggiorno il campo descrizione con quanto inserito dall'utente nel TextField
+        tag.setDescription(this.nameField.getText()); //aggiorno il campo descrizione con quanto inserito dall'utente nel TextField
         
         tagManager.addTag(tag); //inserisco il tag aggiornato
     }
@@ -137,6 +135,6 @@ public class ManageTagsPopupController implements Initializable {
         this.updateButton.setDisable(false);
         
         Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
-        this.nameField.setText(tag.getDescrizione());
+        this.nameField.setText(tag.getDescription());
     }
 }
