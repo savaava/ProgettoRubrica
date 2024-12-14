@@ -89,7 +89,7 @@ public class ImagePopupController implements Initializable {
     private void onImageClicked5(MouseEvent event) {
         FileChooser fc=new FileChooser();
         fc.setTitle("Seleziona un'immagine");
-        fc.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+        fc.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
         File selectedImage = fc.showOpenDialog(new Popup());
         if(selectedImage!=null){
             this.selectedImage=selectedImage;
