@@ -24,10 +24,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 
@@ -174,7 +172,7 @@ public class MainController implements Initializable {
         
         
         //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
-        numberField.textProperty().addListener( (observable, oldValue, newValue) -> {
+        numberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
                 numbersPane.add(numberField2, 1, 1);
             }
@@ -185,43 +183,43 @@ public class MainController implements Initializable {
                 }
                 
                 numbersPane.getChildren().remove(numberField2);
-        }
+            }
         });
         
         numberField2.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField3))
                 numbersPane.add(numberField3, 1, 2);
-        else if(newValue.isEmpty()){
-            if(!numberField3.getText().isEmpty()){ 
+            else if(newValue.isEmpty()){
+                if(!numberField3.getText().isEmpty()){ 
                     numberField2.setText(numberField3.getText());
                     numberField3.clear();
                 }
             numbersPane.getChildren().remove(numberField3);
-        }
+            }
         });
         
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField2))
                 emailsPane.add(emailField2, 1, 1);
-        else if(newValue.isEmpty()){
-            if(!emailField2.getText().isEmpty()){ 
+            else if(newValue.isEmpty()){
+                if(!emailField2.getText().isEmpty()){ 
                     emailField.setText(emailField2.getText());
                     emailField2.clear();
                 }
                 emailsPane.getChildren().remove(emailField2);
-        }
+            }
         });
         
         emailField2.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField3))
                 emailsPane.add(emailField3, 1, 2);
-        else if(newValue.isEmpty()){
-            if(!emailField3.getText().isEmpty()){ 
+            else if(newValue.isEmpty()){
+                if(!emailField3.getText().isEmpty()){ 
                     emailField2.setText(emailField3.getText());
                     emailField3.clear();;
                 }
                 emailsPane.getChildren().remove(emailField3);
-        }
+            }
         });
         
         
@@ -304,10 +302,10 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
             Parent root = loader.load();
             ConfirmPopupController cpc = loader.getController();
-            showPopup("Confirm_popup.fxml");
+            showPopup("Confirm_popup.fxml", "Conferma eliminazione");
             if (cpc.getChoice()) 
                 addressBook.removeContact(selectedContact); 
-        } 
+        }
     }
 
     /**
@@ -349,7 +347,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showImportPopup(ActionEvent event) throws IOException{
-        this.showPopup("Import_popup.fxml");
+        this.showPopup("Import_popup.fxml", "Importa rubrica");
     }
 
     /**
@@ -363,7 +361,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showExportPopup(ActionEvent event) throws IOException {
-        this.showPopup("Export_popup.fxml");
+        this.showPopup("Export_popup.fxml", "Esporta rubrica");
     }
 
     /**
@@ -376,7 +374,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showConfigPopup(ActionEvent event) throws IOException {
-        showPopup("Config_popup.fxml");
+        showPopup("Config_popup.fxml", "Configurazione database");
     }
 
 
@@ -390,8 +388,8 @@ public class MainController implements Initializable {
      * @see ManageTagsPopupController
      */
     @FXML
-    private void showManageTagsPopup(ActionEvent event) {
-
+    private void showManageTagsPopup(ActionEvent event) throws IOException {
+        showPopup("ManageTags_popup.fxml", "Gestione tag");
     }
 
     /**
@@ -425,13 +423,13 @@ public class MainController implements Initializable {
     }
     
     //Metodi di utilità
-
-    private void showPopup(String path) throws IOException{
+    private void showPopup(String path, String title) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
         Scene scene = new Scene(root);
 
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle(title);
         popup.setResizable(false);
         popup.setScene(scene);
         popup.showAndWait();
