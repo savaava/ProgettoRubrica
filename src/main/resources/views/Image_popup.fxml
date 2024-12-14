@@ -10,38 +10,48 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="100.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.ImagePopupController">
+<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gruppo1.progettorubrica.controllers.ImagePopupController">
    <children>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
             <HBox fx:id="defaultImgHBox" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked1" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo1.jpg" />
-                     </image></ImageView>
+                     </image>
+                  </ImageView>
                   <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked2" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo2.jpg" />
-                     </image></ImageView>
+                     </image>
+                  </ImageView>
                   <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked3" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo3.jpg" />
-                     </image></ImageView>
+                     </image>
+                  </ImageView>
                   <ImageView fitHeight="200.0" fitWidth="200.0" onMouseClicked="#onImageClicked4" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/FotoProfilo4.jpg" />
-                     </image></ImageView>
+                     </image>
+                  </ImageView>
                </children>
             </HBox>
             <ImageView fitHeight="178.0" fitWidth="161.0" layoutX="610.0" layoutY="10.0" onMouseClicked="#onImageClicked5" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/AggiungiImmagine5.png" />
-               </image></ImageView>
+               </image>
+            </ImageView>
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#onRestoreButton" prefHeight="31.0" text="Ripristina">
+         <VBox.margin>
+            <Insets bottom="20.0" />
+         </VBox.margin>
+      </Button>
    </children>
-</AnchorPane>
+</VBox>

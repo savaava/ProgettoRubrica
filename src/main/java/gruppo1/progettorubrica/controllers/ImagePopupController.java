@@ -8,10 +8,14 @@ import javafx.scene.layout.HBox;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 /**
  * @brief Controller che visualizza il popup contenente immagini contatto.
@@ -31,7 +35,7 @@ public class ImagePopupController implements Initializable {
     
     private int imageIndex; ///< Indice dell'immagine scelta dall'utente.
 
-
+    
     /**
      * @brief Carica l'image popup controller.
      * @pre Cliccare sull'immagine profilo di un contatto.
@@ -41,7 +45,7 @@ public class ImagePopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //this.imageIndex=0;
+        this.imageIndex=-1;
     }
     
 
@@ -59,7 +63,7 @@ public class ImagePopupController implements Initializable {
      * @brief Indica se l'utente ha scelto un'immagine tra quelle suggerite o se ne ha caricata una personalizzata.
      * @pre 
      * @post Ritorna l'indice associato all'immagine profilo di un contatto.
-     * @return L'indice (compreso tra 1 e 4) associato all'immagine selezionata, l'indice=5 se l'utente ha caricato un'immagine personalizzata altrimenti 0 se al contatto è associata l'immagine di default.
+     * @return L'indice (compreso tra 1 e 4) associato all'immagine selezionata, l'indice=5 se l'utente ha caricato un'immagine personalizzata, 0 se al contatto è associata l'immagine di default altrimenti -1 se l'utente non effettua alcuna modifica.
      */
     public int getImageIndex() {
         return this.imageIndex;
@@ -68,21 +72,25 @@ public class ImagePopupController implements Initializable {
     @FXML
     private void onImageClicked1(MouseEvent event) {
         this.imageIndex=1;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
     private void onImageClicked2(MouseEvent event) {
         this.imageIndex=2;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
     private void onImageClicked3(MouseEvent event) {
         this.imageIndex=3;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
     private void onImageClicked4(MouseEvent event) {
         this.imageIndex=4;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
@@ -96,7 +104,14 @@ public class ImagePopupController implements Initializable {
             this.imageIndex=5;
         }
         else
-            this.imageIndex=0;
+            this.imageIndex=-1;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+    }
+    
+    @FXML
+    private void onRestoreButton(ActionEvent event) {
+        this.imageIndex=0;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
 }

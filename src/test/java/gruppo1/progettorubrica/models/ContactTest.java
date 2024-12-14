@@ -26,9 +26,28 @@ public class ContactTest {
         c=new Contact("pippo", "paperino");
     }
     
+     /**
+     * UTC 2.1
+     */
+    @Test
+    public void testGetId() {
+        System.out.println("getId");
+        c.setId("pluto");
+        assertEquals("pluto", c.getId());
+    }
+    
+     /**
+     * UTC 2.2
+     */
+    @Test
+    public void testSetId() {
+        System.out.println("setId");
+        c.setId("paperino");
+        assertEquals("paperino", c.getId());
+    }
 
     /**
-     * UTC 2.1
+     * UTC 2.3
      */
     @Test
     public void testGetName() {
@@ -38,7 +57,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.2
+     * UTC 2.4
      */
     @Test
     public void testSetName() {
@@ -49,7 +68,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.3
+     * UTC 2.5
      */
     @Test
     public void testGetSurname() {
@@ -60,7 +79,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.4
+     * UTC 2.6
      */
     @Test
     public void testSetSurname() {
@@ -71,7 +90,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.5
+     * UTC 2.7
      */
     @Test
     public void testGetNumbers1() {
@@ -84,7 +103,7 @@ public class ContactTest {
     }
     
     /**
-     * UTC 2.6
+     * UTC 2.8
      */
     @Test
     public void testGetNumbers2() {
@@ -101,7 +120,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.7
+     * UTC 2.9
      */
     @Test
     public void testSetNumbers() {
@@ -119,7 +138,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.8
+     * UTC 2.10
      */
     @Test
     public void testGetEmails() {
@@ -131,7 +150,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.9
+     * UTC 2.11
      */
     @Test
     public void testSetEmails() {
@@ -149,7 +168,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.10
+     * UTC 2.12
      */
     @Test
     public void testGetProfilePicture() {
@@ -159,7 +178,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.11
+     * UTC 2.13
      */
     @Test
     public void testSetProfilePicture() {
@@ -171,7 +190,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.12
+     * UTC 2.14
      */
     @Test
     public void testGetAllTagIndexes1() {
@@ -182,7 +201,7 @@ public class ContactTest {
     }
     
     /**
-     * UTC 2.13
+     * UTC 2.15
      */
     @Test
     public void testGetAllTagIndexes2() {
@@ -195,7 +214,7 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.14
+     * UTC 2.16
      */
     @Test
     public void testRemoveTagIndex1() {
@@ -212,7 +231,7 @@ public class ContactTest {
     
 
     /**
-     * UTC 2.15
+     * UTC 2.17
      */
     @Test
     public void testAddTagIndex() {
@@ -230,8 +249,8 @@ public class ContactTest {
     }
 
     /**
-     * UTC 2.16
-     * Confronto Contact c con un altro contatto c1 i quali contengono gli stessi valori e inolte i contenuti degli array sono gli stessi ma in ordine diverso.
+     * UTC 2.18
+     * Confronto Contact c con un altro contatto c1 i quali contengono gli stessi valori ma id diverso.
      */
     @Test
     public void testEquals1() {
@@ -270,169 +289,9 @@ public class ContactTest {
         assertNotEquals(c, null); //confronto Contact c con un riferimento null
         assertEquals(c, c); //confronto Contact c con se stesso
         assertNotEquals(c, s); //confronto Contact c con un'istanza di una classe diversa da Contact
-        assertEquals(c, c1); //confronto Contact c e c1 i quali contengono stessi valori
-    }
-    
-    /**
-     * UTC 2.17
-     * Confronto c con un altro contatto c1 i quali contengono nome e cognome diversi.
-     */
-    @Test
-    public void testEquals2() {
-        System.out.println("equals2");
-        
-        Contact c1=new Contact("mario", "rossi");
-        
-        String numbers1[]=new String[3];
-        numbers1[0]="3926533458";
-        numbers1[1]="3482356875";
-        numbers1[2]="3872476909";
-        c1.setNumbers(numbers1);
-        String numbers2[]=new String[3];
-        numbers2[0]="3926533458";
-        numbers2[1]="3872476909";
-        numbers2[2]="3482356875";
-        c.setNumbers(numbers2);
-        
-        assertNotEquals(c, c1);
-    }
-    
-    /**
-     * UTC 2.18
-     * Confronto c con un altro contatto c1 i quali contengono stesso nome e cognome ma numeri di cellulare diversi.
-     */
-    @Test
-    public void testEquals3() {
-        System.out.println("equals3");
-        
-        Contact c1=new Contact("pippo", "paperino");
-        
-        String numbers1[]=new String[3];
-        numbers1[0]="3926533458";
-        numbers1[1]="3482356875";
-        numbers1[2]="3872476909";
-        c1.setNumbers(numbers1);
-        String numbers2[]=new String[3];
-        numbers2[0]="3984562456";
-        numbers2[1]="3545476789";
-        numbers2[2]="3435679832";
-        c.setNumbers(numbers2);
-        
-        assertNotEquals(c,c1);
-    }
-    
-    /**
-     * UTC 2.19
-     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare ma email diverse.
-     */
-    @Test
-    public void testEquals4() {
-        System.out.println("equals4");
-        
-        Contact c1=new Contact("pippo", "paperino");
-        
-        String numbers1[]=new String[3];
-        numbers1[0]="3926533458";
-        numbers1[1]="3482356875";
-        numbers1[2]="3872476909";
-        c1.setNumbers(numbers1);
-        String numbers2[]=new String[3];
-        numbers2[0]="3926533458";
-        numbers2[1]="3872476909";
-        numbers2[2]="3482356875";
-        c.setNumbers(numbers2);
-        
-        String emails1[]=new String[3];
-        emails1[0]="pluto@gmail.com";
-        emails1[1]="paperino@gmail.com";
-        emails1[2]="pippo@gmail.com";
-        c.setEmails(emails1);
-        String emails2[]=new String[3];
-        emails2[0]="mario@gmail.com";
-        emails2[1]="rossi@gmail.com";
-        c1.setEmails(emails2);
-        
-        assertNotEquals(c, c1);
+        assertNotEquals(c, c1); //confronto Contact c e c1 i quali contengono stessi valori
     }
     
     
-    /**
-     * UTC 2.20
-     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email ma immagini profilo diverse.
-     */
-    @Test
-    public void testEquals5() {
-        System.out.println("equals5");
-        
-        Contact c1=new Contact("pippo", "paperino");
-        
-        String numbers1[]=new String[3];
-        numbers1[0]="3926533458";
-        numbers1[1]="3482356875";
-        c1.setNumbers(numbers1);
-        String numbers2[]=new String[3];
-        numbers2[0]="3482356875";
-        numbers2[1]="3926533458";
-        c.setNumbers(numbers2);
-        
-        String emails1[]=new String[3];
-        emails1[0]="pluto@gmail.com";
-        emails1[1]="paperino@gmail.com";
-        emails1[2]="pippo@gmail.com";
-        c.setEmails(emails1);
-        String emails2[]=new String[3];
-        emails2[0]="pippo@gmail.com";
-        emails2[1]="paperino@gmail.com";
-        emails2[2]="pluto@gmail.com";
-        c1.setEmails(emails2);
-        
-        Byte image1[]={1,2,3};
-        Byte image2[]={1,3,2};
-        c.setProfilePicture(image1);
-        c1.setProfilePicture(image2);
-        
-        assertNotEquals(c, c1);
-    }
-    
-    /**
-     * UTC 2.21
-     * Confronto c con un altro contatto c1 i quali contengono stesso nome, cognome, numeri di cellulare, email, immagini profilo ma tag diversi.
-     */
-    @Test
-    public void testEquals6() {
-        System.out.println("equals6");
-        
-        Contact c1=new Contact("pippo", "paperino");
-        
-        String numbers1[]=new String[3];
-        numbers1[0]="3926533458";
-        numbers1[1]="3482356875";
-        c1.setNumbers(numbers1);
-        String numbers2[]=new String[3];
-        numbers2[0]="3482356875";
-        numbers2[1]="3926533458";
-        c.setNumbers(numbers2);
-        
-        String emails1[]=new String[3];
-        emails1[0]="pluto@gmail.com";
-        emails1[1]="paperino@gmail.com";
-        emails1[2]="pippo@gmail.com";
-        c.setEmails(emails1);
-        String emails2[]=new String[3];
-        emails2[0]="pippo@gmail.com";
-        emails2[1]="paperino@gmail.com";
-        emails2[2]="pluto@gmail.com";
-        c1.setEmails(emails2);
-        
-        Byte image1[]={1,2,3};
-        Byte image2[]={1,2,3};
-        c.setProfilePicture(image1);
-        c1.setProfilePicture(image2);
-        
-        c.addTagIndex(1);
-        c1.addTagIndex(2);
-        
-        assertNotEquals(c, c1);
-    }
     
 }
