@@ -24,10 +24,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 
@@ -174,7 +172,7 @@ public class MainController implements Initializable {
         
         
         //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
-        numberField.textProperty().addListener( (observable, oldValue, newValue) -> {
+        numberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
                 numbersPane.add(numberField2, 1, 1);
             }
@@ -185,43 +183,43 @@ public class MainController implements Initializable {
                 }
                 
                 numbersPane.getChildren().remove(numberField2);
-        }
+            }
         });
         
         numberField2.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField3))
                 numbersPane.add(numberField3, 1, 2);
-        else if(newValue.isEmpty()){
-            if(!numberField3.getText().isEmpty()){ 
+            else if(newValue.isEmpty()){
+                if(!numberField3.getText().isEmpty()){ 
                     numberField2.setText(numberField3.getText());
                     numberField3.clear();
                 }
             numbersPane.getChildren().remove(numberField3);
-        }
+            }
         });
         
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField2))
                 emailsPane.add(emailField2, 1, 1);
-        else if(newValue.isEmpty()){
-            if(!emailField2.getText().isEmpty()){ 
+            else if(newValue.isEmpty()){
+                if(!emailField2.getText().isEmpty()){ 
                     emailField.setText(emailField2.getText());
                     emailField2.clear();
                 }
                 emailsPane.getChildren().remove(emailField2);
-        }
+            }
         });
         
         emailField2.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField3))
                 emailsPane.add(emailField3, 1, 2);
-        else if(newValue.isEmpty()){
-            if(!emailField3.getText().isEmpty()){ 
+            else if(newValue.isEmpty()){
+                if(!emailField3.getText().isEmpty()){ 
                     emailField2.setText(emailField3.getText());
                     emailField3.clear();;
                 }
                 emailsPane.getChildren().remove(emailField3);
-        }
+            }
         });
         
         
@@ -307,7 +305,7 @@ public class MainController implements Initializable {
             showPopup("Confirm_popup.fxml");
             if (cpc.getChoice()) 
                 addressBook.removeContact(selectedContact); 
-        } 
+        }
     }
 
     /**
