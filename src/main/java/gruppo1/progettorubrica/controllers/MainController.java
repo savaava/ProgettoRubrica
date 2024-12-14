@@ -78,7 +78,7 @@ public class MainController implements Initializable {
     private AnchorPane contactDetailsPane;   ///< Pane con la visione dettagliata del contatto
 
     @FXML
-    private GridPane numbersPane, emailsPane, tagsPane;  ///< GridPane appartenente a {@link MainController#contactsDetailsPane} che contiene gli eventuali numeri di telefono e/o emails
+    private GridPane numbersPane, emailsPane, tagsPane;  ///< GridPane appartenente a {@link MainController#contactsDetailsPane} che contiene gli eventuali numeri di telefono, emails e tag
     
     @FXML
     private ChoiceBox<String> choiceBoxTag;
@@ -108,13 +108,21 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             this.addressBook = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
 
         //Nasconde la visione dettagliata
         this.contactDetailsPane.setVisible(false);
-        
+
+        this.filteredContacts = new FilteredList<>(addressBook.getAllContacts());
+
         //Riempie la tabella con i contatti
-        this.contactsTable.setItems(addressBook.getAllContacts());
+        this.contactsTable.setItems(filteredContacts);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
@@ -135,6 +143,8 @@ public class MainController implements Initializable {
         choiceBoxTag3 = new ChoiceBox<>();
                
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
+
+        searchFieldBinding();
     }
 
     /**
@@ -164,7 +174,24 @@ public class MainController implements Initializable {
      *  Questo metodo si occupa di svolgere il binding che permette l'aggiornamento della listView in base ai parametri di ricerca.
      */
     private void searchFieldBinding() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            onViewUpdate();
+        });
+    }
 
+    private void onViewUpdate() {
+        filteredContacts.setPredicate(contact -> {
+            boolean matchesText =
+                    searchField.getText().isEmpty() ||
+                    contact.getName().toLowerCase().contains(searchField.getText().toLowerCase()) ||
+                    contact.getSurname().toLowerCase().contains(searchField.getText().toLowerCase());
+
+            FilteredList<MenuItem> selectedTagItems = contextMenu.getItems().filtered(e -> e.getId() != null && ((CheckBox) ((CustomMenuItem) e).getContent()).isSelected());
+
+            boolean matchesTag = selectedTagItems.isEmpty() || selectedTagItems.stream().anyMatch(e -> contact.getAllTagIndexes().contains(Integer.parseInt(e.getId())));
+
+            return matchesText && matchesTag;
+        });
     }
 
     /**
@@ -510,19 +537,26 @@ public class MainController implements Initializable {
      * @see ConfirmPopupController
      */
     @FXML
-    private void onDeleteContact(ActionEvent event) throws IOException {
-        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
-        if (selectedContact != null) {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
-            Parent root = loader.load();
-            ConfirmPopupController cpc = loader.getController();
-            showPopup("Confirm_popup.fxml","Conferma azione");
-            if (cpc.getChoice()){
-                System.out.println("elimi");
-                addressBook.removeContact(selectedContact);
-            }
+private void onDeleteContact(ActionEvent event) throws IOException {
+    Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+    if (selectedContact != null) {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
+        Parent root = loader.load();
+        ConfirmPopupController cpc = loader.getController();
+        Scene scene = new Scene(root, 300, 200);
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle("Conferma");
+        popup.setResizable(false);
+        popup.setScene(scene);
+        popup.showAndWait();
+
+        if (cpc.getChoice()){
+            addressBook.removeContact(selectedContact);
+            this.contactDetailsPane.setVisible(false);
         }
     }
+}
 
     /**
      * @brief Salva contatto
@@ -657,7 +691,12 @@ public class MainController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
 
         for(Tag t : addressBook.getAllTags()){
-            CustomMenuItem tagItem = new CustomMenuItem(new CheckBox(t.getDescription()));
+            CheckBox cb = new CheckBox(t.getDescription());
+            cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+               onViewUpdate();
+            });
+
+            CustomMenuItem tagItem = new CustomMenuItem();
             tagItem.setHideOnClick(false);
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);
