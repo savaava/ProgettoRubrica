@@ -23,12 +23,12 @@ import java.nio.charset.StandardCharsets;
 public class ConverterTest {
 
     private File csvFile;
-    
+
     private File vcfFile;
 
     @Before
     public void setUp() throws IOException {
-        
+
     }
 
     ///UTC 3.1
@@ -39,7 +39,7 @@ public class ConverterTest {
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
     }
-    
+
     ///UTC 3.2
     @Test
     public void testParseCSV2() throws IOException {
@@ -81,7 +81,7 @@ public class ConverterTest {
         assertNotNull(contacts);
         assertTrue(contacts.isEmpty());
     }
-    
+
     ///UTC 3.5
     @Test
     public void testParseVCard_ValidVCard1() throws IOException {
@@ -89,7 +89,7 @@ public class ConverterTest {
         Collection<Contact> contacts = Converter.parseVCard(vcfFile);
         assertEquals(2, contacts.size());
     }
-    
+
     ///UTC 3.6
     @Test
     public void testParseVCard_ValidVCard2() throws IOException {
@@ -98,7 +98,7 @@ public class ConverterTest {
         Contact[] contactArray = contacts.toArray(new Contact[0]);
         Contact contact1 = contactArray[0];
         Contact contact2 = contactArray[1];
-        
+
         assertEquals("Luca", contact1.getName());
         assertEquals("Rossi", contact1.getSurname());
         assertEquals("1234567890", contact1.getNumbers()[0]);
@@ -118,7 +118,7 @@ public class ConverterTest {
         assertEquals("grigimar@outlook.com", contact2.getEmails()[1]);
         Byte[] expectedProfilePicture2 = Converter.stringToByteArray("SGVsbG8gd29ybGQ=");
         assertArrayEquals(expectedProfilePicture2, contact2.getProfilePicture());
-}
+    }
 
     ///UTC 3.7
     @Test
@@ -142,48 +142,45 @@ public class ConverterTest {
         assertTrue(contacts.isEmpty());
 
     }
-    
+
     ///UTC 3.9
     @Test
     public void testOnExportCSV1() throws IOException {
         File tempFile = File.createTempFile("contacts", ".csv");
         tempFile.deleteOnExit();
         List<Contact> contacts = new ArrayList<>();
-        contacts = this.createContacts(); 
+        contacts = this.createContacts();
         Converter.onExportCSV(contacts, tempFile);
         assertNotNull(tempFile);
     }
-    
+
     ///UTC 3.10
     @Test
     public void testOnExportCSV2() throws IOException {
         File tempFile = File.createTempFile("contacts", ".csv");
         tempFile.deleteOnExit();
-        List<Contact> contacts = new ArrayList<>();
-        contacts = this.createContacts(); 
+        List<Contact> contacts = this.createContacts();
         Converter.onExportCSV(contacts, tempFile);
         List<String> lines = Files.readAllLines(tempFile.toPath());
-        
-        assertTrue(lines.get(0).contains("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO,"));
-        assertTrue(lines.get(1).contains("Luca,Rossi,1234567890,0987654321,1122334455,l.rossi@gmail.com,rossil@outlook.com,lucarossi@alice.it," + "profilePicture1" + ","));
-        assertTrue(lines.get(2).contains("Mario,Grigi,1029384756,6655443322,7788990011,m.grigi@gmail.com,grigimar@outlook.com,," + "profilePicture2" + ","));
+        assertTrue(lines.get(0).contains("First Name,Middle Name,Last Name,Phonetic First Name,Phonetic Middle Name,Phonetic Last Name,Name Prefix,Name Suffix,Nickname,File As,Organization Name,Organization Title,Organization Department,Birthday,Notes,Photo,Labels,E-mail 1 - Label,E-mail 1 - Value,E-mail 2 - Label,E-mail 2 - Value,E-mail 3 - Label,E-mail 3 - Value,Phone 1 - Label,Phone 1 - Value,Phone 2 - Label,Phone 2 - Value,Phone 3 - Label,Phone 3 - Value,Custom Field 1 - Label,Custom Field 1 - Value"));
+        assertTrue(lines.get(1).contains("Luca,,Rossi,,,,,,,,,,,,,profilePicture1,,,l.rossi@gmail.com,,rossil@outlook.com,,lucarossi@alice.it,,1234567890,,0987654321,,1122334455,,,"));
+        assertTrue(lines.get(2).contains("Mario,,Grigi,,,,,,,,,,,,,profilePicture2,,,m.grigi@gmail.com,,grigimar@outlook.com,,,,2233445566,,6655443322,,7788990011,,,"));
     }
-    
     ///UTC 3.11
     @Test
     public void testOnExportVCard1() throws IOException {
         File tempFile = Files.createTempFile("contacts", ".vcf").toFile();
         tempFile.deleteOnExit();
 
-    // Create a list of contacts
+        // Create a list of contacts
         List<Contact> contacts = this.createContacts();
 
-    // Export the contacts to the VCard file
+        // Export the contacts to the VCard file
         Converter.onExportVCard(contacts, tempFile);
-        
+
         assertNotNull(tempFile);
     }
-    
+
     ///UTC 3.12
     @Test
     public void testOnExportVCard2() throws IOException {
@@ -193,7 +190,7 @@ public class ConverterTest {
         Converter.onExportVCard(contacts, tempFile);
         try(Scanner s = new Scanner(new BufferedReader(new FileReader(tempFile)))){
             s.useDelimiter("[\n]");
-            
+
             while(s.hasNext()){   //uso replaceAll() per eliminare gli spazi superflui
                 assertEquals("BEGIN:VCARD", s.next().replaceAll("\\s+", ""));  //Primo contatto
                 assertEquals("VERSION:3.0", s.next().replaceAll("\\s+", ""));
@@ -211,27 +208,27 @@ public class ConverterTest {
                 assertEquals("VERSION:3.0", s.next().replaceAll("\\s+", ""));
                 assertEquals("FN:MarioGrigi", s.next().replaceAll("\\s+", ""));
                 assertEquals("N:Grigi;Mario;", s.next().replaceAll("\\s+", ""));
-                assertEquals("TEL;TYPE:1029384756", s.next().replaceAll("\\s+", ""));
+                assertEquals("TEL;TYPE:2233445566", s.next().replaceAll("\\s+", ""));
                 assertEquals("TEL;TYPE:6655443322", s.next().replaceAll("\\s+", ""));
                 assertEquals("TEL;TYPE:7788990011", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:m.grigi@gmail.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:grigimar@outlook.com", s.next().replaceAll("\\s+", ""));
                 assertEquals(("PHOTO:profilePicture2"), s.next().replaceAll("\\s+", ""));
-                assertEquals("END:VCARD", s.next().replaceAll("\\s+", "").replaceAll("\\s+", ""));   
+                assertEquals("END:VCARD", s.next().replaceAll("\\s+", "").replaceAll("\\s+", ""));
             }
         }
     }
 
-    
+
     private void writeCsv() throws IOException{
         csvFile = File.createTempFile("contacts", ".csv");
         try (FileWriter writer = new FileWriter(csvFile)) {
-            writer.write("Name,Surname,TEL1,TEL2,TEL3,EMAIL1,EMAIL2,EMAIL3,PHOTO\n");
-            writer.write("Luca,Rossi,1234567890,0987654321,1122334455,l.rossi@gmail.com,rossil@outlook.com,lucarossi@alice.it,SGVsbG8gd29ybGQ=\n");
-            writer.write("Mario,Grigi,2233445566,6655443322,7788990011,m.grigi@gmail.com,grigimar@outlook.com,,SGVsbG8gd29ybGQ=\n");
-        }  
+            writer.write("First Name,1Middle Name,2Last Name,3Phonetic First Name,4Phonetic Middle Name,5Phonetic Last Name,6Name Prefix,7Name Suffix,8Nickname,9File As,10Organization Name,11Organization Title,12Organization Department,13Birthday,14Notes,15Photo,16Labels,17E-mail 1 - Label,18E-mail 1 - Value,19E-mail 2 - Label,20E-mail 2 - Value,21E-mail 3 - Label,22E-mail 3 - Value,23Phone 1 - Label,24Phone 1 - Value,25Phone 2 - Label,26Phone 2 - Value,27Phone 3 - Label,28Phone 3 - Value,29Custom Field 1 - Label,30Custom Field 1 - Value\n");
+            writer.write("Luca,,Rossi,,,,,,,,,,,,,SGVsbG8gd29ybGQ=,,,l.rossi@gmail.com,,rossil@outlook.com,,lucarossi@alice.it,,1234567890,,0987654321,,1122334455,,,\n");
+            writer.write("Mario,,Grigi,,,,,,,,,,,,,SGVsbG8gd29ybGQ=,,,m.grigi@gmail.com,,grigimar@outlook.com,,,,2233445566,,6655443322,,7788990011,,,\n");
+        }
     }
-    
+
     private void writeVcf() throws IOException{
         vcfFile = File.createTempFile("contacts", ".vcf");
         try (FileWriter writer = new FileWriter(vcfFile)) {
@@ -258,9 +255,9 @@ public class ConverterTest {
             writer.write("EMAIL;TYPE=HOME:grigimar@outlook.com\n");
             writer.write("PHOTO:SGVsbG8gd29ybGQ=\n");
             writer.write("END:VCARD\n");
-        }  
+        }
     }
-    
+
     private List<Contact> createContacts(){
         List<Contact> contacts = new ArrayList<>();
         Contact contact1 = new Contact("Luca", "Rossi");
@@ -270,11 +267,11 @@ public class ConverterTest {
         contacts.add(contact1);
 
         Contact contact2 = new Contact("Mario", "Grigi");
-        contact2.setNumbers(new String[]{"1029384756", "6655443322", "7788990011"});
+        contact2.setNumbers(new String[]{"2233445566", "6655443322", "7788990011"});
         contact2.setEmails(new String[]{"m.grigi@gmail.com","grigimar@outlook.com",""});
         contact2.setProfilePicture(Converter.stringToByteArray("profilePicture2"));
         contacts.add(contact2);
-        
+
         return contacts;
     }
 }
