@@ -101,13 +101,21 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             this.addressBook = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
 
         //Nasconde la visione dettagliata
         this.contactDetailsPane.setVisible(false);
 
+        this.filteredContacts = new FilteredList<>(addressBook.getAllContacts());
+
         //Riempie la tabella con i contatti
-        this.contactsTable.setItems(addressBook.getAllContacts());
+        this.contactsTable.setItems(filteredContacts);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
@@ -130,6 +138,8 @@ public class MainController implements Initializable {
         saveButton.disableProperty().bind(op1.and(op2));
                
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
+
+        searchFieldBinding();
     }
 
     /**
@@ -159,7 +169,24 @@ public class MainController implements Initializable {
      *  Questo metodo si occupa di svolgere il binding che permette l'aggiornamento della listView in base ai parametri di ricerca.
      */
     private void searchFieldBinding() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            onViewUpdate();
+        });
+    }
 
+    private void onViewUpdate() {
+        filteredContacts.setPredicate(contact -> {
+            boolean matchesText =
+                    searchField.getText().isEmpty() ||
+                    contact.getName().toLowerCase().contains(searchField.getText().toLowerCase()) ||
+                    contact.getSurname().toLowerCase().contains(searchField.getText().toLowerCase());
+
+            FilteredList<MenuItem> selectedTagItems = contextMenu.getItems().filtered(e -> e.getId() != null && ((CheckBox) ((CustomMenuItem) e).getContent()).isSelected());
+
+            boolean matchesTag = selectedTagItems.isEmpty() || selectedTagItems.stream().anyMatch(e -> contact.getAllTagIndexes().contains(Integer.parseInt(e.getId())));
+
+            return matchesText && matchesTag;
+        });
     }
 
     /**
@@ -577,7 +604,12 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         ContextMenu contextMenu = new ContextMenu();
 
         for(Tag t : addressBook.getAllTags()){
-            CustomMenuItem tagItem = new CustomMenuItem(new CheckBox(t.getDescription()));
+            CheckBox cb = new CheckBox(t.getDescription());
+            cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+               onViewUpdate();
+            });
+
+            CustomMenuItem tagItem = new CustomMenuItem();
             tagItem.setHideOnClick(false);
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);
