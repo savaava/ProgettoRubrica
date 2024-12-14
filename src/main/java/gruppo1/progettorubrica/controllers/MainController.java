@@ -327,7 +327,7 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
             Parent root = loader.load();
             ConfirmPopupController cpc = loader.getController();
-            showPopup("Confirm_popup.fxml");
+            showPopup("Confirm_popup.fxml","Conferma azione");
             if (cpc.getChoice()){
                 System.out.println("elimi");
                 addressBook.removeContact(selectedContact);
