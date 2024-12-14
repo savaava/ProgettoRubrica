@@ -223,6 +223,11 @@ public class Contact implements Serializable{
         }
         strb.append('\n');
         
+        if(profilePicture != null)
+            strb.append("Image: Available (dim: ").append(profilePicture.length).append("B)\n");
+        else
+            strb.append("Image: Not Available\n");
+        
         strb.append("TagIndexes: ");
         for(Integer i: this.tagIndexes){
             if(i!=null)

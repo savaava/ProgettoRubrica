@@ -1,0 +1,3 @@
+Sotto-cartella finalizzata al salvataggio dei dati in 2 modalità possibili:
+1. attraverso Data.bin;
+2. attraverso DB il cui url è presente in Config.bin.
