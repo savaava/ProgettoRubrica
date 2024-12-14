@@ -146,41 +146,56 @@ public class MainController implements Initializable {
         TextField emailField3=new TextField();
         
         
+        
         //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
         numberField.textProperty().addListener( (observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
-                GridPane.setRowIndex(numberField2, 1);
-                GridPane.setColumnIndex(numberField2, 1);
-                numbersPane.getChildren().add(numberField2);
+                numbersPane.add(numberField2, 1, 1);
             }
-        else if(newValue.isEmpty()) {//cancello il secondo TextField se ha cancellato il contenuto del primo TextField e se il secondo TextField è vuoto
-                if(!numberField2.getText().isEmpty() && numberField.getText().isEmpty()){
+        else if(newValue.isEmpty()) {//se ha cancellato il contenuto del primo TextField devo rimuovere il secondo
+                if(!numberField2.getText().isEmpty()){ //prima di rimuovere il secondo TextField vedo se c'è scritto qualcosa e lo inserisco nel primo e cancello quanto scritto nel secondo
                     numberField.setText(numberField2.getText());
-                    numberField2.setText("");
+                    numberField2.clear();
                 }
+                
                 numbersPane.getChildren().remove(numberField2);
         }
         });
         
         numberField2.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(oldValue==null && newValue!=null)
+            if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField3))
                 numbersPane.add(numberField3, 1, 2);
-        else if(oldValue!=null && newValue==null && (numberField3.getText()==null))
-                numbersPane.getChildren().remove(numberField3);
+        else if(newValue.isEmpty()){
+            if(!numberField3.getText().isEmpty()){ 
+                    numberField2.setText(numberField3.getText());
+                    numberField3.clear();
+                }
+            numbersPane.getChildren().remove(numberField3);
+        }
         });
         
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(oldValue==null && newValue!=null)
+            if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField2))
                 emailsPane.add(emailField2, 1, 1);
-        else if(oldValue!=null && newValue==null && (emailField2.getText()==null))
+        else if(newValue.isEmpty()){
+            if(!emailField2.getText().isEmpty()){ 
+                    emailField.setText(emailField2.getText());
+                    emailField2.clear();
+                }
                 emailsPane.getChildren().remove(emailField2);
+        }
         });
         
         emailField2.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(oldValue==null && newValue!=null)
+            if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField3))
                 emailsPane.add(emailField3, 1, 2);
-        else if(oldValue!=null && newValue==null && (emailField3.getText()==null))
+        else if(newValue.isEmpty()){
+            if(!emailField3.getText().isEmpty()){ 
+                    emailField2.setText(emailField3.getText());
+                    emailField3.clear();;
+                }
                 emailsPane.getChildren().remove(emailField3);
+        }
         });
         
         
