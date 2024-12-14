@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.AfterClass;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -26,10 +28,30 @@ public class AddressBookTest {
     private static final String url = "mongodb+srv://rubricaContatti:tqHPmDYFftuxXE3g@mongisacluster.o8crvzq.mongodb.net/?retryWrites=true&w=majority&appName=MongisaCluster";
     private static final String pathData = "./bin/Data.bin";
     private static final String pathConfig = "./bin/Config.bin";
+    private static final File dataBak = new File("./bin/DataBak.bin");
+    private static final File configBak = new File("./bin/ConfigBak.bin");
+    
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        File originData = new File(pathData);
+        if(originData.exists())
+            originData.renameTo(dataBak);
+        
+        File originConfig = new File(pathConfig);
+        if(originData.exists())
+            originConfig.renameTo(configBak);
+    }
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        if(dataBak.exists())
+            dataBak.renameTo(new File(pathData));
+        
+        if(configBak.exists())
+            configBak.renameTo(new File(pathConfig));
+    }
     
     @Before
     public void setUp() throws Exception {
-        /*  (LEGGERO) */
         System.out.print("\n---Prossimo metodo da testare:  ");
         /* per testare la classe singleton devo resettare l'istanza statica di AddressBook a null */
         Field instanceField = AddressBook.class.getDeclaredField("instance");
@@ -38,10 +60,9 @@ public class AddressBookTest {
         instanceField.setAccessible(false);
     }
     @After
-    public void tearDown(){
-        /*  (LEGGERO) */
-        new File(pathConfig).delete();
+    public void tearDown() {
         new File(pathData).delete();
+        new File(pathConfig).delete();
     }
     
     
