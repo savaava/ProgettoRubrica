@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 
@@ -75,6 +76,7 @@ public class MainController implements Initializable {
 
     private FilteredList<Contact> filteredContacts;  ///< lista filtrata in base a tag e/o alla sottostringa presente in searchField
 
+    private TextField numberField2,numberField3,emailField2,emailField3;
     
     
     /**
@@ -106,6 +108,10 @@ public class MainController implements Initializable {
 
         //Imposta immagine imbuto
         filterImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/filter.png"))));
+        
+        BooleanBinding op1 = nameField.textProperty().isEmpty();
+        BooleanBinding op2 = surnameField.textProperty().isEmpty();
+        saveButton.disableProperty().bind(op1.and(op2));
     }
 
     /**
@@ -160,16 +166,16 @@ public class MainController implements Initializable {
     @FXML
     private void onAddContact(ActionEvent event) {
         this.contactDetailsPane.setVisible(true);
-        deleteButton.setDisable(false);
-        editButton.setDisable(false);
+        deleteButton.setDisable(true);
+        editButton.setDisable(true);
 
         //Imposta immagine profilo di default
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));
         
-        TextField numberField2=new TextField();
-        TextField numberField3=new TextField();
-        TextField emailField2=new TextField();
-        TextField emailField3=new TextField();
+        numberField2=new TextField();
+        numberField3=new TextField();
+        emailField2=new TextField();
+        emailField3=new TextField();
         
         
         
@@ -316,19 +322,44 @@ public class MainController implements Initializable {
      * Guarda anche: onModifyContact()
      * Questo metodo permette, una volta cliccato il pulsante "Salva", di modificare/creare il contatto in visione dettagliata.
      *
+     * @pre c'è almeno un nome o un cognome da salvare
+     * 
      * @param[in] event
      * @see onModifyContact()
      */
     @FXML
-    private void onSaveContact(ActionEvent event) {
+    private void onSaveContact(ActionEvent event) throws IOException {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
-        if (selectedContact == null){
-            /* l'utente aggiunge un contatto */
+        
+        Contact contactToAdd = new Contact(nameField.getText(),surnameField.getText());
+        String num[] = new String[3];
+        if(! numberField3.getText().isEmpty())
+            num[2] = numberField3.getText();
+        if(! numberField2.getText().isEmpty())
+            num[1] = numberField2.getText();
+        if(! numberField.getText().isEmpty())
+            num[0] = numberField.getText();
+        contactToAdd.setNumbers(num);
             
-        }else{
-            /* l'utente ha modificato un contatto */
+        String mail[] = new String[3];
+        if(! emailField3.getText().isEmpty())
+            mail[2] = emailField3.getText();
+        if(! emailField2.getText().isEmpty())
+            mail[1] = emailField2.getText();
+        if(! emailField.getText().isEmpty())
+            mail[0] = emailField.getText();
+        contactToAdd.setEmails(mail);
             
+        //contactToAdd.setProfilePicture();
+            
+        System.out.println("Contatto selezionato:\n "+selectedContact+"\n\nContatto nuovo: \n"+contactToAdd);
+        
+        if (selectedContact != null){
+            /* l'utente ha modificato il contatto */
+            addressBook.removeContact(selectedContact);
         }       
+        
+        //addressBook.addContact(contactToAdd);
     }
 
     /**
@@ -342,7 +373,21 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onCancel(ActionEvent event) {
-
+        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+        if (selectedContact == null){
+            /* se è in fase di aggiunta */
+            nameField.setText("");
+            surnameField.setText("");
+            
+            if(! numberField3.getText().isEmpty()) numberField3.setText("");
+            if(! numberField2.getText().isEmpty()) numberField2.setText("");
+            numberField.setText("");
+            
+            if(! emailField3.getText().isEmpty()) emailField3.setText("");
+            if(! emailField2.getText().isEmpty()) emailField2.setText("");
+            emailField.setText("");
+        }
+        contactDetailsPane.setVisible(false);
     }
 
     /**
@@ -398,7 +443,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showManageTagsPopup(ActionEvent event) throws IOException {
-        showPopup("ManageTags_popup.fxml", "Gestione tag");
+        showPopup("ManageTags_popup.fxml", "Gestione tag",500,500);
     }
 
     /**
@@ -431,10 +476,16 @@ public class MainController implements Initializable {
         return contextMenu;
     }
     
+    @FXML
+    private void showImagePopup(MouseEvent event) throws IOException {
+        showPopup("Image_popup.fxml", "Gestione immagini",1000,200);
+        //profileImageView = getSelectedImage();
+    } 
+    
     //Metodi di utilità
-    private void showPopup(String path, String title) throws IOException {
+    private void showPopup(String path, String title, double d1, double d2) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,d1,d2);
 
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -443,9 +494,7 @@ public class MainController implements Initializable {
         popup.setScene(scene);
         popup.showAndWait();
     }
-
-    @FXML
-    private void showImagePopup(MouseEvent event) {
-    }
-    
+    private void showPopup(String path, String title) throws IOException {
+        showPopup(path, title, 300, 250);
+    }   
 }

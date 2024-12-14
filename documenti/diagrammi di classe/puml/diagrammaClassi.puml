@@ -29,6 +29,7 @@ class Contact {
 
     + Contact(String name, String surname)
     + int getId()
+    + void setId()
     + String getName()
     + void setName(String name)
     + String getSurname()
