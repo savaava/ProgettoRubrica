@@ -16,6 +16,7 @@ import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.input.KeyEvent;
 
 /**
  * @brief Controller che visualizza il popup dei tag.
@@ -75,11 +76,35 @@ public class ManageTagsPopupController implements Initializable {
             
         });
         
-        this.addButton.disableProperty().bind(this.nameField.textProperty().isEmpty()); //addButton è disattivato finquando non si scrive qualcosa nel TextField
         
-        //deleteButton e updateButton sono disabilitati finquando non si clicca su un tag
         this.deleteButton.setDisable(true); 
         this.updateButton.setDisable(true);
+        this.addButton.setDisable(true);
+        
+        
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> { 
+            if(!newValue.isEmpty()){
+                if(tagManager.getAllTags().contains(new Tag(newValue))){
+                    addButton.setDisable(true);
+                    updateButton.setDisable(true);
+                }
+                else{
+                    addButton.setDisable(false);
+                    updateButton.setDisable(true);
+                }
+                
+                if(!tagsListView.getSelectionModel().getSelectedItems().isEmpty() 
+                        && !tagManager.getAllTags().contains(new Tag(nameField.getText()))){
+                    addButton.setDisable(false);
+                    updateButton.setDisable(false);
+                }
+            }else{
+                addButton.setDisable(true);
+                updateButton.setDisable(true);
+                deleteButton.setDisable(true);
+            }
+            
+        });
         
     }
 
@@ -88,10 +113,14 @@ public class ManageTagsPopupController implements Initializable {
      * @see AddressBook
      */
     @FXML
+
     private void onAdd(ActionEvent event) throws IOException {
         String name = nameField.getText();
-        Tag tag = new Tag(name);
-        this.tagManager.addTag(tag);
+        this.tagManager.addTag(new Tag(name));
+        nameField.clear();
+        
+        
+        tagsListView.getSelectionModel().clearSelection();
     }
 
     /**
@@ -99,7 +128,7 @@ public class ManageTagsPopupController implements Initializable {
      * @see AddressBook
      */
     @FXML
-    private void onUpdate(ActionEvent event) throws IOException {
+private void onUpdate(ActionEvent event) throws IOException {
         this.updateButton.setDisable(true);
         
         Tag tag=this.tagsListView.getSelectionModel().getSelectedItem(); //ottengo il tag selezionato dall'utente nella ListView
@@ -109,6 +138,10 @@ public class ManageTagsPopupController implements Initializable {
         tag.setDescription(this.nameField.getText()); //aggiorno il campo descrizione con quanto inserito dall'utente nel TextField
         
         tagManager.addTag(tag); //inserisco il tag aggiornato
+        
+        nameField.clear();
+        
+        tagsListView.getSelectionModel().clearSelection();
     }
 
     /**
@@ -126,6 +159,9 @@ public class ManageTagsPopupController implements Initializable {
         
         Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
         this.tagManager.removeTag(tag);
+        nameField.clear();
+        
+        tagsListView.getSelectionModel().clearSelection();
     }
 
     /**
@@ -134,10 +170,19 @@ public class ManageTagsPopupController implements Initializable {
      */
     @FXML
     private void onTagClicked(MouseEvent event) {
-        this.deleteButton.setDisable(false);
-        this.updateButton.setDisable(false);
-        
         Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
-        this.nameField.setText(tag.getDescription());
+        
+        if(tag!=null){
+            deleteButton.setDisable(false);
+            updateButton.setDisable(true);
+            addButton.setDisable(true);
+            this.nameField.setText(tag.getDescription());
+        }
+        
+        
+        
+        
+        
     }
+
 }

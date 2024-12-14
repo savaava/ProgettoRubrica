@@ -239,6 +239,11 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onContactClicked(MouseEvent event) {
+        Contact selectedContact=contactsTable.getSelectionModel().getSelectedItem();
+        
+        if(selectedContact == null) 
+            return;
+        
         this.contactDetailsPane.setVisible(true);
         
         nameField.setEditable(false);
@@ -249,36 +254,37 @@ public class MainController implements Initializable {
         numberField.setDisable(false);
         numberField2.setDisable(false);
         numberField3.setDisable(false);
+
+        nameField.setEditable(false);
+        surnameField.setEditable(false);
+        emailField.setEditable(false);
+        numberField.setDisable(false);
         
         saveButton.setDisable(true);
-        editButton.setDisable(true);
+        cancelButton.setDisable(true);
         
-        Contact contactSelected=contactsTable.getSelectionModel().getSelectedItem();
+        nameField.setText(selectedContact.getName());
+        surnameField.setText(selectedContact.getSurname());
         
-        nameField.setText(contactSelected.getName());
-        surnameField.setText(contactSelected.getSurname());
-        
-        String emails[]=contactSelected.getEmails();
+        String emails[]=selectedContact.getEmails();
         if(emails[0]!=null) emailField.setText(emails[0]);
         if(emails[1]!=null) emailsPane.add(new TextField(emails[1]), 1, 1);
         if(emails[2]!=null) emailsPane.add(new TextField(emails[2]), 1, 2);
         
-        String numbers[]=contactSelected.getNumbers();
+        String numbers[]=selectedContact.getNumbers();
         if(numbers[0]!=null) numberField.setText(numbers[0]);
         if(numbers[1]!=null) numbersPane.add(new TextField(numbers[1]), 1, 1);
         if(numbers[2]!=null) numbersPane.add(new TextField(numbers[2]), 1, 2);
         
-        Byte imageInByte[]=contactSelected.getProfilePicture();
+        Byte imageInByte[]=selectedContact.getProfilePicture();
         byte image[]=new byte[imageInByte.length];
         for(int i=0; i<imageInByte.length; i++)
             image[i]=imageInByte[i];
         profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
         
-        for(Integer id: contactSelected.getAllTagIndexes())
-            tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));
-        
+        for(Integer id: selectedContact.getAllTagIndexes())
+            tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));       
     }
-    
     
 
     /**
