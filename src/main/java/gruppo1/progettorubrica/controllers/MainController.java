@@ -710,7 +710,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         Parent root = loader.load();
         ImagePopupController ImageController = loader.getController();
                 
-        Scene scene = new Scene(root, 975, 200);
+        Scene scene = new Scene(root, 975, 250);
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Gestione immagini");
@@ -725,9 +725,8 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             return ;
         }
         
-//        if(ImageController.getImageIndex() == 0){
-//            return;
-//        }
+        if(ImageController.getImageIndex() == -1)
+            return;
         
         String pathImage = pathsImages[ImageController.getImageIndex()];
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
