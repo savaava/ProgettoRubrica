@@ -235,39 +235,45 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onContactClicked(MouseEvent event) {
-        this.contactDetailsPane.setVisible(true);
+        Contact selectedContact=contactsTable.getSelectionModel().getSelectedItem();
         
-        nameField.setEditable(false);
-        surnameField.setEditable(false);
-        emailField.setEditable(false);
-        numberField.setDisable(false);
+        if(selectedContact!=null){
+            this.contactDetailsPane.setVisible(true);
         
-        saveButton.setDisable(true);
-        cancelButton.setDisable(true);
+            nameField.setEditable(false);
+            surnameField.setEditable(false);
+            emailField.setEditable(false);
+            numberField.setDisable(false);
         
-        Contact contactSelected=contactsTable.getSelectionModel().getSelectedItem();
+            saveButton.setDisable(true);
+            cancelButton.setDisable(true);
         
-        nameField.setText(contactSelected.getName());
-        surnameField.setText(contactSelected.getSurname());
         
-        String emails[]=contactSelected.getEmails();
-        if(emails[0]!=null) emailField.setText(emails[0]);
-        if(emails[1]!=null) emailsPane.add(new TextField(emails[1]), 1, 1);
-        if(emails[2]!=null) emailsPane.add(new TextField(emails[2]), 1, 2);
         
-        String numbers[]=contactSelected.getNumbers();
-        if(numbers[0]!=null) numberField.setText(numbers[0]);
-        if(numbers[1]!=null) numbersPane.add(new TextField(numbers[1]), 1, 1);
-        if(numbers[2]!=null) numbersPane.add(new TextField(numbers[2]), 1, 2);
+            nameField.setText(selectedContact.getName());
+            surnameField.setText(selectedContact.getSurname());
         
-        Byte imageInByte[]=contactSelected.getProfilePicture();
-        byte image[]=new byte[imageInByte.length];
-        for(int i=0; i<imageInByte.length; i++)
-            image[i]=imageInByte[i];
-        profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+            String emails[]=selectedContact.getEmails();
+            if(emails[0]!=null) emailField.setText(emails[0]);
+            if(emails[1]!=null) emailsPane.add(new TextField(emails[1]), 1, 1);
+            if(emails[2]!=null) emailsPane.add(new TextField(emails[2]), 1, 2);
         
-        for(Integer id: contactSelected.getAllTagIndexes())
-            tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));
+            String numbers[]=selectedContact.getNumbers();
+            if(numbers[0]!=null) numberField.setText(numbers[0]);
+            if(numbers[1]!=null) numbersPane.add(new TextField(numbers[1]), 1, 1);
+            if(numbers[2]!=null) numbersPane.add(new TextField(numbers[2]), 1, 2);
+        
+            Byte imageInByte[]=selectedContact.getProfilePicture();
+            byte image[]=new byte[imageInByte.length];
+            for(int i=0; i<imageInByte.length; i++)
+                image[i]=imageInByte[i];
+            profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        
+            for(Integer id: selectedContact.getAllTagIndexes())
+                tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));
+        
+        }
+        
         
     }
     
