@@ -2,6 +2,7 @@ package gruppo1.progettorubrica.controllers;
 
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.services.Database;
+import java.io.IOException;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,7 +44,9 @@ public class ConfigPopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.addressBook = AddressBook.getInstance();
+        try {
+            this.addressBook = AddressBook.getInstance();
+        } catch (IOException ex) {ex.printStackTrace();}
 
         BooleanBinding buttonBinding = new BooleanBinding() {
             {
@@ -94,7 +97,7 @@ public class ConfigPopupController implements Initializable {
      * confermare l'URL del database inserito nel textField
      */
     @FXML
-    private void onConfirm(ActionEvent event) {
+    private void onConfirm(ActionEvent event) throws IOException {
         //Imposta l'url del database nell'attributo corrispondente di addressBook
         addressBook.setDBUrl(textField.getText());
         //Viene effettuato il salvataggio della configurazione

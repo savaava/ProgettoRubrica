@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
@@ -57,7 +59,9 @@ public class ImportPopupController implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.contactManager = AddressBook.getInstance();
+        try {
+            this.contactManager = AddressBook.getInstance();
+        } catch (IOException ex) {ex.printStackTrace();}
         importButton.setDisable(true);
     }
     

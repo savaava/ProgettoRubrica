@@ -86,7 +86,9 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.addressBook = AddressBook.getInstance();
+        try {
+            this.addressBook = AddressBook.getInstance();
+        } catch (IOException ex) {ex.printStackTrace();}
 
         //Nasconde la visione dettagliata
         this.contactDetailsPane.setVisible(false);
@@ -319,7 +321,14 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onSaveContact(ActionEvent event) {
-        
+        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+        if (selectedContact == null){
+            /* l'utente aggiunge un contatto */
+            
+        }else{
+            /* l'utente ha modificato un contatto */
+            
+        }       
     }
 
     /**

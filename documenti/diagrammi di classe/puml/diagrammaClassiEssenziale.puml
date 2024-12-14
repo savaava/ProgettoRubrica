@@ -11,6 +11,7 @@ class Contact {
     - String[] emails
     - Byte[] profilePicture
     - Set<Integer> tagIndexes  
+    - int id
 }
 
 class AddressBook {

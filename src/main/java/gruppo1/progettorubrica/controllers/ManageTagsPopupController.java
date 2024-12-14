@@ -3,6 +3,7 @@ package gruppo1.progettorubrica.controllers;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Tag;
 import gruppo1.progettorubrica.models.TagManager;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +45,9 @@ public class ManageTagsPopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.tagManager = AddressBook.getInstance();
+        try {
+            this.tagManager = AddressBook.getInstance();
+        } catch (IOException ex) {ex.printStackTrace();}
         
         tagsListView.setItems(tagManager.getAllTags()); //lego la ListView e la lista osservabile dei tag
         
@@ -85,7 +88,7 @@ public class ManageTagsPopupController implements Initializable {
      * @see AddressBook
      */
     @FXML
-    private void onAdd(ActionEvent event) {
+    private void onAdd(ActionEvent event) throws IOException {
         String name = nameField.getText();
         Tag tag = new Tag(name);
         this.tagManager.addTag(tag);
@@ -96,7 +99,7 @@ public class ManageTagsPopupController implements Initializable {
      * @see AddressBook
      */
     @FXML
-    private void onUpdate(ActionEvent event) {
+    private void onUpdate(ActionEvent event) throws IOException {
         this.updateButton.setDisable(true);
         
         Tag tag=this.tagsListView.getSelectionModel().getSelectedItem(); //ottengo il tag selezionato dall'utente nella ListView
@@ -118,7 +121,7 @@ public class ManageTagsPopupController implements Initializable {
      * @see ConfirmPopupController
      */
     @FXML
-    private void onDelete(ActionEvent event) {
+    private void onDelete(ActionEvent event) throws IOException {
         this.deleteButton.setDisable(true);
         
         Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
