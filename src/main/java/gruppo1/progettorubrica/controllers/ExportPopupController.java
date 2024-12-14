@@ -100,7 +100,7 @@ public class ExportPopupController implements Initializable {
             }
             else if(ext.equalsIgnoreCase("vcf")){
                 ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
-                Converter.onExportCSV(c, this.file);
+                Converter.onExportVCard(c, this.file);
             }
             saveButton.setDisable(true);
         } catch(IOException ex){

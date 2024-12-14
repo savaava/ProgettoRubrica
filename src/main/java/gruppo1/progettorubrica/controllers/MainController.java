@@ -417,19 +417,26 @@ public class MainController implements Initializable {
      * @see ConfirmPopupController
      */
     @FXML
-    private void onDeleteContact(ActionEvent event) throws IOException {
-        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
-        if (selectedContact != null) {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
-            Parent root = loader.load();
-            ConfirmPopupController cpc = loader.getController();
-            showPopup("Confirm_popup.fxml","Conferma azione");
-            if (cpc.getChoice()){
-                System.out.println("elimi");
-                addressBook.removeContact(selectedContact);
-            }
+private void onDeleteContact(ActionEvent event) throws IOException {
+    Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+    if (selectedContact != null) {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
+        Parent root = loader.load();
+        ConfirmPopupController cpc = loader.getController();
+        Scene scene = new Scene(root, 300, 200);
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle("Conferma");
+        popup.setResizable(false);
+        popup.setScene(scene);
+        popup.showAndWait();
+
+        if (cpc.getChoice()){
+            addressBook.removeContact(selectedContact);
+            this.contactDetailsPane.setVisible(false);
         }
     }
+}
 
     /**
      * @brief Salva contatto

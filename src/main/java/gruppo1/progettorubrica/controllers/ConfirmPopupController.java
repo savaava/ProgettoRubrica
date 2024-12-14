@@ -2,6 +2,8 @@ package gruppo1.progettorubrica.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 
 /**
  * @brief Controller che visualizza il popup di conferma di un'operazione.
@@ -26,6 +28,7 @@ public class ConfirmPopupController {
     @FXML
     private void onConfirm(ActionEvent event) {
         this.choice = true;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     /**
@@ -35,5 +38,6 @@ public class ConfirmPopupController {
     @FXML
     private void onCancel(ActionEvent event) {
         this.choice = false;
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 }
