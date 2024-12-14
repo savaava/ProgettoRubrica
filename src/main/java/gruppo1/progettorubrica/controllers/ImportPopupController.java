@@ -100,7 +100,8 @@ public class ImportPopupController implements Initializable {
             } else if (Converter.checkVCardFormat(this.file)) {
                 contatti = Converter.parseVCard(this.file);
             }
-            for(Contact c : contatti) contactManager.addContact(c);
+            contactManager.addManyContacts(contatti);
+            System.out.println(contatti);
         } catch (IOException ex) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");

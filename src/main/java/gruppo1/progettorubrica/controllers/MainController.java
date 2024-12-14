@@ -247,7 +247,7 @@ public class MainController implements Initializable {
 
         if(selectedContact == null)
             return;
-
+        System.out.println(selectedContact);
         this.contactDetailsPane.setVisible(true);
         
         nameField.setEditable(false);
