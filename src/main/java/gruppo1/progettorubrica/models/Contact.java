@@ -1,11 +1,9 @@
 package gruppo1.progettorubrica.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @brief Modella un'entità contatto.
@@ -14,6 +12,7 @@ import java.util.Set;
  * @see AddressBook
  */
 public class Contact implements Serializable{
+    private String id; ///< l'identificativo univoco dell'entità contatto
     private String name; ///< il nome in formato stringa dell'entità contatto
     private String surname; ///< il cognome in formato stringa dell'entità contatto
     private String[] numbers; ///< gli eventuali numeri di telefono in formato stringa dell'entità contatto
@@ -30,12 +29,31 @@ public class Contact implements Serializable{
      * @param[in] surname
      */
     public Contact(String name, String surname) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.surname = surname;
         this.numbers = new String[3];
         this.emails = new String[3];
         this.profilePicture = null;
         this.tagIndexes = new HashSet<>();
+    }
+
+    /**
+     * @pre Avere un'istanza della classe Contact
+     * @post Ottenere l'identificativo associato all'istanza di Contact
+     * @return l'identificativo dell'istanza Contact
+     */
+    public String getId() {
+        return id;
+    }
+    
+    /**
+     * @pre Avere un'istanza della classe Contact
+     * @post Impostare l'identificativo dell'istanza di Contact
+     * @param[in] id
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -180,32 +198,13 @@ public class Contact implements Serializable{
 
         Contact contact = (Contact) o;
 
-        //confronto i numeri di cellulare
-        Set<String> numbersSet1=new HashSet<>(Arrays.asList(this.numbers));
-        Set<String> numbersSet2=new HashSet<>(Arrays.asList(contact.getNumbers()));
-        if(!(numbersSet1.equals(numbersSet2))) return false;
-        
-        //confronto le emails
-        Set<String> emailsSet1=new HashSet<>(Arrays.asList(this.emails));
-        Set<String> emailsSet2=new HashSet<>(Arrays.asList(contact.getEmails()));
-        if(!(emailsSet1.equals(emailsSet2))) return false;
-        
-        //confronto le immagini
-        if(this.profilePicture!=null && contact.profilePicture!=null){
-            List<Byte> imageSet1=new ArrayList<>(Arrays.asList(this.profilePicture));
-            List<Byte> imageSet2=new ArrayList<>(Arrays.asList(contact.getProfilePicture()));
-            if(!(imageSet1.equals(imageSet2))) return false;
-        }
-        
-        if(!(this.tagIndexes.equals(contact.getAllTagIndexes()))) return false;
-        
-        //confronto nome e cognome
-        return this.name.equals(contact.getName()) && this.surname.equals(contact.getSurname());
+        return this.id.equals(contact.id);
     }
     
     @Override
     public String toString(){
         StringBuffer strb=new StringBuffer();
+        strb.append("ID: ").append(this.id).append('\n');
         strb.append("Name: ").append(this.name).append('\n');
         strb.append("Surname: ").append(this.surname).append('\n');
         

@@ -206,6 +206,7 @@ public class Database {
     public Document contactToDocument(Contact c) {
         Document doc = new Document();
 
+        doc.put("_id", c.getId());
         doc.put("name",c.getName());
         doc.put("surname", c.getSurname());
         doc.put("numbers", Arrays.asList(c.getNumbers()));
@@ -228,6 +229,7 @@ public class Database {
         if(d == null) return null;
         Contact c = new Contact(d.getString("name"),d.getString("surname"));
 
+        c.setId(d.getString("_id"));
         c.setNumbers(d.getList("numbers", String.class).toArray(new String[0]));
         c.setEmails(d.getList("emails", String.class).toArray(new String[0]));
         if(d.getString("image") != null)
