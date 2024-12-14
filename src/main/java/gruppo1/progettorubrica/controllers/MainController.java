@@ -162,6 +162,9 @@ public class MainController implements Initializable {
         this.contactDetailsPane.setVisible(true);
         deleteButton.setDisable(false);
         editButton.setDisable(false);
+
+        //Imposta immagine profilo di default
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));
         
         TextField numberField2=new TextField();
         TextField numberField3=new TextField();
