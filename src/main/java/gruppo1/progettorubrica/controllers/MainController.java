@@ -302,7 +302,7 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
             Parent root = loader.load();
             ConfirmPopupController cpc = loader.getController();
-            showPopup("Confirm_popup.fxml");
+            showPopup("Confirm_popup.fxml", "Conferma eliminazione");
             if (cpc.getChoice()) 
                 addressBook.removeContact(selectedContact); 
         }
@@ -347,7 +347,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showImportPopup(ActionEvent event) throws IOException{
-        this.showPopup("Import_popup.fxml");
+        this.showPopup("Import_popup.fxml", "Importa rubrica");
     }
 
     /**
@@ -361,7 +361,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showExportPopup(ActionEvent event) throws IOException {
-        this.showPopup("Export_popup.fxml");
+        this.showPopup("Export_popup.fxml", "Esporta rubrica");
     }
 
     /**
@@ -374,7 +374,7 @@ public class MainController implements Initializable {
      */
     @FXML
     private void showConfigPopup(ActionEvent event) throws IOException {
-        showPopup("Config_popup.fxml");
+        showPopup("Config_popup.fxml", "Configurazione database");
     }
 
 
@@ -388,8 +388,8 @@ public class MainController implements Initializable {
      * @see ManageTagsPopupController
      */
     @FXML
-    private void showManageTagsPopup(ActionEvent event) {
-
+    private void showManageTagsPopup(ActionEvent event) throws IOException {
+        showPopup("ManageTags_popup.fxml", "Gestione tag");
     }
 
     /**
@@ -423,13 +423,13 @@ public class MainController implements Initializable {
     }
     
     //Metodi di utilità
-
-    private void showPopup(String path) throws IOException{
+    private void showPopup(String path, String title) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
         Scene scene = new Scene(root);
 
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle(title);
         popup.setResizable(false);
         popup.setScene(scene);
         popup.showAndWait();
