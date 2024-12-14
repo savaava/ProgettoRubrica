@@ -1,5 +1,6 @@
 package gruppo1.progettorubrica.models;
 
+import java.io.IOException;
 import java.util.Collection;
 import javafx.collections.ObservableList;
 
@@ -14,7 +15,7 @@ public interface TagManager {
      * @pre nessuna (il parametro tag può essere null).
      * @post Aggiorna la lista dei tags dell'AddressBook inserendovi il nuovo tag
      */
-    void addTag(Tag tag);
+    void addTag(Tag tag) throws IOException;
 
     /**
      * @brief Aggiunge 1 o più tags dalla collezione alla rubrica telefonica.
@@ -22,7 +23,7 @@ public interface TagManager {
      * @pre nessuna (il parametro c può essere null).
      * @post Aggiorna la lista dei tags dell'AddressBook inserendovi gli eventuali tags da c.
      */
-    void addManyTags(Collection<Tag> c);
+    void addManyTags(Collection<Tag> c) throws IOException;
     
     /**
      * @brief Rimuove un tag.
@@ -30,7 +31,7 @@ public interface TagManager {
      * @pre nessuna (il parametro tag può essere null).
      * @post Aggiorna la lista dei tags dell'AddressBook rimuovendo il tag
      */
-    void removeTag(Tag tag);
+    void removeTag(Tag tag) throws IOException;
 
     /**
      * @brief Trova il tag corrispondente ad un certo id

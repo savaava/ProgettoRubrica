@@ -33,8 +33,8 @@ public class AddressBook implements TagManager, ContactManager {
     private final ObservableList<Tag> tags; ///< Insieme dei tag inseriti.
     private String dbUrl = ""; ///< Link del database.
     private Database db;
-    private final String pathData = "Data.bin";
-    private final String pathConfig = "Config.bin";
+    private final String pathData = "./bin/Data.bin";
+    private final String pathConfig = "./bin/Config.bin";
 
     /**
      * @brief Costruttore privato che crea crea l'istanza unica di AddressBook in 4 scenari diversi di inizializzazione:
@@ -48,7 +48,7 @@ public class AddressBook implements TagManager, ContactManager {
      * 1. salvataggio in locale se non è stato specificato un DB
      * 2. salvataggio in remoto sul DB, senza Data.bin, se questo è stato specificato ed è valido (dbUrl valido).
      */
-    private AddressBook() {
+    private AddressBook() throws IOException {
         this.contacts = FXCollections.observableArrayList();
         this.tags = FXCollections.observableArrayList();
         
@@ -72,7 +72,7 @@ public class AddressBook implements TagManager, ContactManager {
      * se non esisteva ancora viene creata.
      * @return L'istanza creata o quella già esistente.
      */
-    public static AddressBook getInstance() {
+    public static AddressBook getInstance() throws IOException  {
         if (instance == null) {
             instance = new AddressBook();
         }
@@ -87,7 +87,7 @@ public class AddressBook implements TagManager, ContactManager {
 
     
     @Override
-    public void addContact(Contact c) {
+    public void addContact(Contact c) throws IOException {
         if(c != null){
             contacts.add(c);
             if(Database.verifyDBUrl(dbUrl)){
@@ -105,7 +105,7 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     @Override
-    public void addManyContacts(Collection<Contact> c){
+    public void addManyContacts(Collection<Contact> c) throws IOException{
         if(c != null){
             contacts.addAll(c);
             if(Database.verifyDBUrl(dbUrl)){
@@ -123,7 +123,7 @@ public class AddressBook implements TagManager, ContactManager {
     }
     
     @Override
-    public void removeContact(Contact c) {
+    public void removeContact(Contact c) throws IOException{
         if(c != null){
             contacts.remove(c);
             if(Database.verifyDBUrl(dbUrl)){
@@ -161,7 +161,7 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     @Override
-    public void addTag(Tag tag) {
+    public void addTag(Tag tag) throws IOException {
         if(tag != null){
             tags.add(tag);
             if(Database.verifyDBUrl(dbUrl)){
@@ -179,7 +179,7 @@ public class AddressBook implements TagManager, ContactManager {
     }
     
     @Override
-    public void addManyTags(Collection<Tag> c){
+    public void addManyTags(Collection<Tag> c) throws IOException{
         if(c != null){
             tags.addAll(c);
             if(Database.verifyDBUrl(dbUrl)){
@@ -197,7 +197,7 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     @Override
-    public void removeTag(Tag tag) {
+    public void removeTag(Tag tag) throws IOException {
         if(tag != null){
             tags.remove(tag);
             if(Database.verifyDBUrl(dbUrl)){
@@ -220,21 +220,11 @@ public class AddressBook implements TagManager, ContactManager {
     /**
      * @brief Valorizza l'attributo dbUrl inserendo il link del database.
      * @param[in] dbUrl Link del database.
-     * @pre Il client fornisce una stringa qualsiasi, che dovrebbe essere il link al suo DB.
+     * @pre Il client fornisce una stringa valida, ossia l'url al suo DB.
      * @post L'istanza AddressBook possiede ora questo parametro in ingresso come il link del DB.
-     * @post Viene creato il file Config.bin o modificato se era già presente.
-     * @post Istanzia il database se il link è valido.
      */
     public void setDBUrl(String dbUrl) {
-        if(this.dbUrl.equals(dbUrl))
-            return ;
-        
         this.dbUrl = dbUrl;
-        
-        saveConfig();
-        
-        if(Database.verifyDBUrl(dbUrl))
-            initDB();
     }
 
     /**
@@ -253,8 +243,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @post Salva i contatti e i tag dell'AddressBook sul file di salvataggio Data.bin.
      * @throws IOException se il file non esiste o se non si riesce a fare la lettura.
      */
-    public void saveOBJ() {
-        System.out.print("Scrittura file Data.bin... ");
+    public void saveOBJ() throws IOException {
         
         /* FORMATO file Data.bin:
         listacontatti listatags
@@ -262,10 +251,6 @@ public class AddressBook implements TagManager, ContactManager {
         try(ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(pathData)))){
             oos.writeObject(new ArrayList<>(contacts));
             oos.writeObject(new ArrayList<>(tags));
-            System.out.println("completata con successo");
-        }catch(IOException ex){
-            System.out.print("ECCEZIONE in scrittura serializzata del file Data.bin -> ");
-            ex.printStackTrace();
         }
     }
 
@@ -277,18 +262,13 @@ public class AddressBook implements TagManager, ContactManager {
      * @throws  IOException se non trova il file Data.bin o se non riesce a caricare il contenuto.
      * @throws  ClassNotFoundException se non riesce a convertire il contenuto del file in una lista di Contact o Tag.
      */
-    public void loadOBJ() {
-        System.out.print("Lettura file Data.bin... ");
+    public void loadOBJ() throws IOException {
         
         try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
                 contacts.setAll((Collection<Contact>)ois.readObject());
                 tags.setAll((Collection<Tag>)ois.readObject());
             } catch (ClassNotFoundException ex) {ex.printStackTrace();}
-            System.out.println("completata con successo");
-        }catch(IOException ex){
-            System.out.println("ECCEZIONE in lettura serializzata del file Data.bin -> ");
-            ex.printStackTrace();
         }
     }
 
@@ -328,7 +308,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @pre esiste contemporaneamente il file Data.bin con eventuali contatti e tags.
      * @post tutti i contatti e tags del file Data.bin vengono inseriti nel DB.
      */
-    public void dataToDB(){
+    public void dataToDB() throws IOException{
         System.out.print("Trasferimento Data.bin sul DB... ");
         
         try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
@@ -341,10 +321,6 @@ public class AddressBook implements TagManager, ContactManager {
                 if(! tagsData.isEmpty())
                     db.insertManyTags(tagsData);
             } catch (ClassNotFoundException ex) {ex.printStackTrace();}
-            System.out.println("completato con successo");
-        }catch(IOException ex){
-            System.out.println("ECCEZIONE in lettura serializzata del file Data.bin -> ");
-            ex.printStackTrace();
         }
     }
 
@@ -364,15 +340,12 @@ public class AddressBook implements TagManager, ContactManager {
      * @post Preleva dal file Config.bin l'informazione del link del DB scelto dall'utente.
      * @throws IOException se non lo trova o se non riesce a leggere il file Config.bin.
      */
-    public void loadConfig() {
+    public void loadConfig() throws IOException {
         System.out.print("Lettura del file Config.bin... ");
         
         try(DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(pathConfig)))){
             dbUrl = dis.readUTF();
             System.out.println("completata con successo");
-        }catch(IOException ex){
-            System.out.print("ECCEZIONE in lettura del file Config.bin -> ");
-            ex.printStackTrace();
         }
     }
 
@@ -382,7 +355,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @post Crea il file Config.bin che conserva l'informazione del link del DB,
      * se già esiste allora lo sovrascrive.
      */
-    public void saveConfig() {
+    public void saveConfig() throws IOException {
         System.out.print("Scrittua file Config.bin... ");
         
         /* SCHEMA DI SALVATAGGIO: una sola stringa nell'unica riga
@@ -390,9 +363,6 @@ public class AddressBook implements TagManager, ContactManager {
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(dbUrl);
             System.out.println("completata con successo");
-        }catch(IOException ex){
-            System.out.print("ECCEZIONE in scrittura del file Config.bin -> ");
-            ex.printStackTrace();
         }
     }
 
@@ -406,7 +376,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @post Se la rubrica è vuota inizialmente (nessun Data.bin) allora la rubrica carica le informazioni dal DB.
      * @post Se la rubrica non è vuota (esiste Data.bin) allora la rubrica sovrascrive le informazioni sul DB con quelle di Data.bin.
      */
-    public void initDB() {
+    public void initDB() throws IOException {
         db = new Database(dbUrl);
         
         if(new File(pathData).exists()){

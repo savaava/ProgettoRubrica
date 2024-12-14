@@ -11,7 +11,6 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-@FixMethodOrder(MethodSorters.JVM)
 public class DatabaseTest {
 
     private Database database;
@@ -190,14 +189,14 @@ public class DatabaseTest {
         database.insertManyContacts(contacts);
         Collection<Contact> result = database.getAllContacts();
 
-        assertTrue(result.contains(c1));
-        assertTrue(result.contains(c2));
-        assertTrue(result.contains(c3));
-
         //Ripristino lo stato iniziale del database
         database.removeContact(c1);
         database.removeContact(c2);
         database.removeContact(c3);
+
+        assertTrue(result.contains(c1));
+        assertTrue(result.contains(c2));
+        assertTrue(result.contains(c3));
     }
 
     @Test
@@ -225,6 +224,62 @@ public class DatabaseTest {
         database.removeTag(t1);
         database.removeTag(t2);
         database.removeTag(t3);
+    }
+
+    @Test
+    public void testDeleteAllContacts() {
+        database = new Database(url);
+
+        //Salvo lo stato iniziale del database
+        Collection<Contact> savedContacts = database.getAllContacts();
+        database.deleteAllContacts();
+
+        Contact c1 = new Contact("Mario","Rossi");
+        Contact c2 = new Contact("Luca","Verdi");
+        Contact c3 = new Contact("Paolo","Bianchi");
+
+        database.insertContact(c1);
+        database.insertContact(c2);
+        database.insertContact(c3);
+
+        database.deleteAllContacts();
+        Collection<Contact> result = database.getAllContacts();
+
+        //Ripristino lo stato iniziale del database
+        if(!savedContacts.isEmpty())
+            database.insertManyContacts(savedContacts);
+
+        assertFalse(result.contains(c1));
+        assertFalse(result.contains(c2));
+        assertFalse(result.contains(c3));
+    }
+
+    @Test
+    public void testDeleteAllTags() {
+        database = new Database(url);
+
+        //Salvo lo stato iniziale del database
+        Collection<Tag> savedTags = database.getAllTags();
+        database.deleteAllTags();
+
+        Tag t1 = new Tag("Famiglia");
+        Tag t2 = new Tag("Amici");
+        Tag t3 = new Tag("Lavoro");
+
+        database.insertTag(t1);
+        database.insertTag(t2);
+        database.insertTag(t3);
+
+        database.deleteAllTags();
+        Collection<Tag> result = database.getAllTags();
+
+        //Ripristino lo stato iniziale del database
+        if(!savedTags.isEmpty())
+            database.insertManyTags(savedTags);
+
+        assertFalse(result.contains(t1));
+        assertFalse(result.contains(t2));
+        assertFalse(result.contains(t3));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package gruppo1.progettorubrica.models;
 
+import java.io.IOException;
 import java.util.Collection;
 import javafx.collections.ObservableList;
 
@@ -22,7 +23,7 @@ public interface ContactManager {
      * @pre nessuna (il parametro c può essere null).
      * @post Aggiorna la lista dei contatti dell'AddressBook inserendovi l'eventuale nuovo contatto c
      */
-    void addContact(Contact c);
+    void addContact(Contact c) throws IOException;
     
     /**
      * @brief Aggiunge 1 o più contatti dalla collezione alla rubrica telefonica.
@@ -30,7 +31,7 @@ public interface ContactManager {
      * @pre nessuna (il parametro c può essere null).
      * @post Aggiorna la lista dei contatti dell'AddressBook inserendovi gli eventuali contatti da c.
      */
-    void addManyContacts(Collection<Contact> c);
+    void addManyContacts(Collection<Contact> c) throws IOException;
 
     /**
      * @brief Rimuove la prima occorrenza del contatto.
@@ -38,5 +39,5 @@ public interface ContactManager {
      * @pre nessuna (il parametro c può essere null o non presente nella lista dei contatti).
      * @post Aggiorna la lista dei contatti dell'AddressBook rimuovendo il contatto c, se presente.
      */
-    void removeContact(Contact c);
+    void removeContact(Contact c) throws IOException;
 }

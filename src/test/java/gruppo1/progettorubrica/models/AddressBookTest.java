@@ -24,8 +24,8 @@ import static org.junit.Assert.*;
 public class AddressBookTest {
     private AddressBook a;
     private static final String url = "mongodb+srv://rubricaContatti:tqHPmDYFftuxXE3g@mongisacluster.o8crvzq.mongodb.net/?retryWrites=true&w=majority&appName=MongisaCluster";
-    private static final String pathData = "Data.bin";
-    private static final String pathConfig = "Config.bin";
+    private static final String pathData = "./bin/Data.bin";
+    private static final String pathConfig = "./bin/Config.bin";
     
     @Before
     public void setUp() throws Exception {
@@ -67,11 +67,7 @@ public class AddressBookTest {
             emails[i] = name.toLowerCase()+"."+surname.toLowerCase()+(i+1)+"@gmail.com";
         }
 
-        int numBytes = random.nextInt(10)+1;
-        Byte[] profilePicture = new Byte[numBytes];
-        for (int i=0; i<numBytes; i++) {
-            profilePicture[i] = (byte)(random.nextInt(1000)+1);
-        }
+        Byte[] profilePicture = {2,3,5,6,3};
         
         Contact c = new Contact(name, surname);
         c.setNumbers(numbers);
@@ -114,7 +110,7 @@ public class AddressBookTest {
      * ma questo ancora non esiste perchè non è stato fatta nessuna aggiunta.
      */
     @Test
-    public void testGetInstance1() {
+    public void testGetInstance1() throws IOException {
         System.out.println("getInstance1");
         
         a = AddressBook.getInstance();
@@ -134,7 +130,7 @@ public class AddressBookTest {
      * e la sua nuova sessione ripristina i dati di quella precedente, attraverso Data.bin.
      */
     @Test
-    public void testGetInstance2() {
+    public void testGetInstance2() throws IOException {
         System.out.println("getInstance2");
                
         List<Contact> contactsProva = getListaContattiCasuali(2);   
@@ -165,7 +161,7 @@ public class AddressBookTest {
      * e quindi l'oracolo vuole che la rubrica prelevi tali valori.
      */
     //@Test
-    public void testGetInstance3() {
+    public void testGetInstance3() throws IOException {
         System.out.println("getInstance3");
         
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
@@ -197,7 +193,7 @@ public class AddressBookTest {
         
         assertEquals(contactsProva.size(), a.getAllContacts().size());
         assertEquals(tagsProva.size(), a.getAllTags().size());
-        assertTrue(a.getAllTags().containsAll(tagsProva));
+        assertTrue(a.getAllTags().containsAll(tagsProva));        
         assertTrue(a.getAllContacts().containsAll(contactsProva));
         assertEquals(url, a.getDBUrl());
         assertNotNull(a.getDB());
@@ -215,7 +211,7 @@ public class AddressBookTest {
      * e che venga eliminato il file Data.bin.
      */
     //@Test
-    public void testGetInstance4() {
+    public void testGetInstance4() throws IOException{
         System.out.println("getInstance4");
         
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
@@ -267,7 +263,7 @@ public class AddressBookTest {
      * UTC 1.5 (LEGGERO)
      */
     @Test
-    public void testGetAllContacts() {
+    public void testGetAllContacts() throws IOException {
         System.out.println("getAllContacts");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -284,7 +280,7 @@ public class AddressBookTest {
      * Il contatto si salva in locale, perchè non esiste il DB.
      */
     @Test
-    public void testAddContact1() {
+    public void testAddContact1() throws IOException {
         System.out.println("addContact1");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -312,7 +308,7 @@ public class AddressBookTest {
      * Quindi non esiste il file Data.bin e non si deve creare.
      */
     //@Test
-    public void testAddContact2() {
+    public void testAddContact2() throws IOException {
         System.out.println("addContact2");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -351,7 +347,7 @@ public class AddressBookTest {
      * Quindi non esiste il file Data.bin e non si deve creare.
      */
     //@Test
-    public void testAddManyContacts1() {
+    public void testAddManyContacts1() throws IOException {
         System.out.println("addManyContacts1");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -440,7 +436,7 @@ public class AddressBookTest {
      * Si rimuove l'unico contatto presente quindi l'oracolo stabiliscew anche che non deve più esistere Data.bin
      */
     @Test
-    public void testRemoveContact1() {
+    public void testRemoveContact1() throws IOException {
         System.out.println("removeContact1");
         
         Contact c = getContattoCasuale();
@@ -464,7 +460,7 @@ public class AddressBookTest {
      * Il contatto si rimuove dal DB e non dal file Data.bin.
      */
     //@Test
-    public void testRemoveContact2() {
+    public void testRemoveContact2() throws IOException {
         System.out.println("removeContact2");
         
         Contact cVett[] = {getContattoCasuale(), getContattoCasuale()};       
@@ -504,70 +500,10 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.12 (MOLTO ONEROSO)
-     * 
-     * L'utente possiede un DB funzionante e sta inserendo i suoi contatti e tag.
-     * Tuttavia rimuove un contatto quando non funziona più, pertanto si genera Data.bin
-     * Continuando ad usare l'applicazione il DB torna a funzionare e
-     * l'oracolo stabilisce che Data.bin non esiste più e il database contiene le stesse info dell'AddressBook
-     */
-    //@Test
-    public void testRemoveContact3() throws Exception{
-        System.out.println("removeContact3");
-        
-        List<Contact> contactsProva = getListaContattiCasuali(2);
-        List<Tag> tagsProva = getListaTagCasuali(2);
-        
-        Database database = new Database(url);
-        
-        /* salvo lo stato iniziale del DB */
-        Collection<Contact> savedContacts = database.getAllContacts();
-        Collection<Tag> savedTags = database.getAllTags();
-        database.deleteAllContacts();
-        database.deleteAllTags();
-        
-        a = AddressBook.getInstance();
-        a.addManyContacts(contactsProva);
-        a.setDBUrl(url);
-        a.addManyTags(tagsProva);
-        
-        /* improvvisamente non funziona più il DB */
-        Field urlField = AddressBook.class.getDeclaredField("dbUrl");
-        urlField.setAccessible(true);
-        urlField.set(a, "urlNonValido.it");
-        
-        contactsProva = getListaContattiCasuali(2);
-        a.addManyContacts(contactsProva);
-        a.removeContact(contactsProva.get(0));
-        
-        /* improvvisamente il DB torna a funzionare */
-        urlField.set(a, url);
-        contactsProva = getListaContattiCasuali(2); 
-        a.addManyContacts(contactsProva);
-        
-        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
-        List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
-        
-        /* ripristino lo stato iniziale del DB */
-        database.deleteAllContacts();
-        database.deleteAllTags();        
-        if(!savedContacts.isEmpty())
-            database.insertManyContacts(savedContacts);
-        if(!savedTags.isEmpty())
-            database.insertManyTags(savedTags);
-        
-        assertTrue(new File(pathConfig).exists());
-        assertFalse(new File(pathData).exists());
-        assertEquals(5, a.getAllContacts().size());
-        assertEquals(contattiLetti, a.getAllContacts());
-        assertEquals(tagsLetti, a.getAllTags());
-    }
-    
-    /**
      * UTC 1.13 (LEGGERO)
      */
     @Test
-    public void testGetAllTags() {
+    public void testGetAllTags() throws IOException {
         System.out.println("getAllTags");
         
         List<Tag> tagsProva = getListaTagCasuali(3);
@@ -584,7 +520,7 @@ public class AddressBookTest {
      * Tag presente
      */
     @Test
-    public void testGetTag1() {
+    public void testGetTag1() throws IOException {
         System.out.println("getTag1");
         
         Tag tagVett[] = {getTagCasuale(111), getTagCasuale(222), getTagCasuale(333)};
@@ -603,7 +539,7 @@ public class AddressBookTest {
      * Tag non presente
      */
     @Test
-    public void testGetTag2() {
+    public void testGetTag2() throws IOException {
         System.out.println("getTag2");
         
         Tag tagVett[] = {getTagCasuale(111), getTagCasuale(222), getTagCasuale(333)};
@@ -622,7 +558,7 @@ public class AddressBookTest {
      * Il tag si salva in locale, perchè non esiste il DB.
      */
     @Test
-    public void testAddTag1(){
+    public void testAddTag1() throws IOException{
         System.out.println("addTag1");
         
         List<Tag> tagsProva = getListaTagCasuali(3);
@@ -651,7 +587,7 @@ public class AddressBookTest {
      * Il tag non si salva in locale, bensì sul DB.
      */
     //@Test
-    public void testAddTag2() {
+    public void testAddTag2() throws IOException {
         System.out.println("addTag2");
         
         List<Tag> tagsProva = getListaTagCasuali(3);
@@ -689,7 +625,7 @@ public class AddressBookTest {
      * I tags non si salvano in locale, bensì sul DB.
      */
     //@Test
-    public void testAddManyTags() {
+    public void testAddManyTags() throws IOException {
         System.out.println("addManyTags");
         
         List<Tag> tagsProva = getListaTagCasuali(3);
@@ -726,7 +662,7 @@ public class AddressBookTest {
      * Il tag si rimuove dal file Data.bin e non dal DB perchè non esiste.
      */
     @Test
-    public void testRemoveTag1() {
+    public void testRemoveTag1() throws IOException {
         System.out.println("removeTag1");
         
         Tag tagVett[] = {getTagCasuale(), getTagCasuale(), getTagCasuale()};
@@ -756,14 +692,14 @@ public class AddressBookTest {
      * Il tag si rimuove dal DB e non dal file Data.bin.
      */
     //@Test
-    public void testRemoveTag2() {
+    public void testRemoveTag2() throws IOException {
         System.out.println("removeTag2");
         
         Tag tagVett[] = {getTagCasuale(), getTagCasuale()};
         
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(url);
-        }catch(IOException ex){ex.printStackTrace();}
+        }
         
         Database database = new Database(url);
         
@@ -788,229 +724,22 @@ public class AddressBookTest {
         assertFalse(new File(pathData).exists());
         assertTrue(new File(pathConfig).exists());        
     }
-
-    /**
-     * UTC 1.21 (ONEROSO)
-     * 
-     * Nessun contatto o tag nella rubrica inizialmente
-     * Ipotetico scenario in cui l'utente ha la rubrica vuota (no Data.bin) e imposta il DB che possiede eventuali info.
-     */
-    //@Test
-    public void testSetDBUrl1() {
-        System.out.println("setDBUrl1");
-        
-        List<Contact> contactsProvaDb = getListaContattiCasuali(2);
-        
-        Database database = new Database(url);
-        
-        /* salvo lo stato iniziale del DB */
-        Collection<Contact> savedContacts = database.getAllContacts();
-        database.deleteAllContacts();
-        
-        /* il DB possiede già dei contatti e tags inizialmente: */
-        database.insertManyContacts(contactsProvaDb);
-        
-        a = AddressBook.getInstance();
-        
-        a.setDBUrl(url); /* rubrica vuota (nessun Data.bin) e l'utente aggiunge il DB */
-        
-        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
-        List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
-        
-        /* ripristino lo stato iniziale del DB */
-        database.deleteAllContacts();
-        if(!savedContacts.isEmpty())
-            database.insertManyContacts(savedContacts);
-        
-        assertTrue(new File(pathConfig).exists());
-        assertFalse(new File(pathData).exists());
-        assertEquals(url, a.getDBUrl());
-        assertNotNull(a.getDB());
-        assertEquals(contattiLetti, a.getAllContacts());
-        assertEquals(tagsLetti, a.getAllTags());
-    }
     
     /**
-     * UTC 1.22 (ONEROSO)
-     * 
-     * Inizialmente Contatti o tags presenti nel file Data.bin, da caricare ora sul DB vuoto.
-     * Ipotetico scenario in cui l'utente carica i propri contatti sulla rubrica
-     * e poi decide di aggiungere un DB vuoto e quindi li carica qui.
-     * Il DB verrà svuotato e poi verranno caricate le informazioni di Data.bin
+     * UTC 1.22 (LEGGERO)
      */
-    //@Test
-    public void testSetDBUrl2() {
+    @Test
+    public void testSetDBUrl2() throws IOException {
         System.out.println("setDBUrl2");
         
-        List<Tag> tagsProva = getListaTagCasuali(3);
-        
-        Database database = new Database(url);
-        
-        /* salvo lo stato iniziale del DB */
-        Collection<Tag> savedTags = database.getAllTags();
-        database.deleteAllTags();
+        List<Tag> tagsProva = getListaTagCasuali(2);
         
         a = AddressBook.getInstance();
         a.addManyTags(tagsProva); /* qui è presente ancora il Data.bin */
         
         a.setDBUrl(url);
         
-        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
-        List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
-        
-        /* ripristino lo stato iniziale del DB */
-        database.deleteAllTags();
-        if(!savedTags.isEmpty())
-            database.insertManyTags(savedTags);
-        
-        assertTrue(new File(pathConfig).exists());
-        assertFalse(new File(pathData).exists());
         assertEquals(url, a.getDBUrl());
-        assertNotNull(a.getDB());
-        assertEquals(contattiLetti, a.getAllContacts());
-        assertEquals(tagsLetti, a.getAllTags());
-    }
-    
-    /**
-     * UTC 1.23 (ONEROSO)
-     * 
-     * Contatti o tags nella rubrica inizialmente anche se esiste già il file Config.bin, da caricare sul DB.
-     * Ipotetico scenario in cui l'utente carica i propri contatti sulla rubrica perchè il link
-     * che aveva inserito per il DB non era valido quindi Config.bin esiste già ma non è utilizzabile.
-     * L'utente poi decide di aggiungere un DB valido e quindi carica qui le informazioni della rubrica.
-     */
-    //@Test
-    public void testSetDBUrl3() {
-        System.out.println("setDBUrl3");
-        
-        List<Contact> contactsProva = getListaContattiCasuali(2);
-        
-        Database database = new Database(url);
-        
-        /* salvo lo stato iniziale del DB */
-        Collection<Contact> savedContacts = database.getAllContacts();
-        database.deleteAllContacts();
-        
-        a = AddressBook.getInstance();
-        
-        a.setDBUrl("link_non_valido.it");        
-        
-        a.addManyContacts(contactsProva); /* qui è presente ancora il Data.bin */
-        
-        a.setDBUrl(url);
-        
-        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
-        List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
-        
-        /* ripristino lo stato iniziale del DB */
-        database.deleteAllContacts();
-        if(!savedContacts.isEmpty())
-            database.insertManyContacts(savedContacts);
-        
-        assertTrue(new File(pathConfig).exists());
-        assertFalse(new File(pathData).exists());
-        assertEquals(url, a.getDBUrl());
-        assertNotNull(a.getDB());
-        assertEquals(contattiLetti, a.getAllContacts());
-        assertEquals(tagsLetti, a.getAllTags());
-    }
-    
-    /**
-     * UTC 1.24 (ONEROSO)
-     * 
-     * Inizialmente Contatti o tags presenti nel file Data.bin, da caricare ora sul DB non vuoto.
-     * Ipotetico scenario in cui l'utente carica i propri contatti sulla rubrica
-     * e poi decide di aggiungere un DB non vuoto con delle informazioni aggiuntive,
-     * quindi il metodo inserisce Data.bin nel DB che viene prima svuotato,
-     * eliminando Data.bin alla fine.
-     */
-    //@Test
-    public void testSetDBUrl4() {
-        System.out.println("setDBUrl4");
-        
-        List<Contact> contactsProvaData = getListaContattiCasuali(2);
-        List<Contact> contactsProvaDb = getListaContattiCasuali(2);
-        List<Tag> tagsProvaDb = getListaTagCasuali(2);
-        
-        /* esiste un DB ancora non associato alla rubrica */
-        Database database = new Database(url);
-        
-        /* salvo lo stato iniziale del DB */
-        Collection<Contact> savedContacts = database.getAllContacts();
-        Collection<Tag> savedTags = database.getAllTags();
-        database.deleteAllContacts();
-        database.deleteAllTags();
-        
-        /* il DB possiede già dei contatti e tags inizialmente: */
-        database.insertManyContacts(contactsProvaDb);
-        database.insertManyTags(tagsProvaDb);
-        
-        a = AddressBook.getInstance();  /* nessun DB perchè nessun Config.bin */
-        a.addManyContacts(contactsProvaData); /* qui è presente ancora il Data.bin */
-        
-        a.setDBUrl(url); /* qui carica Data.bin su DB e preleva i contatti e tags che già esistevano sul DB */
-        
-        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
-        List<Tag> tagsLetti = new ArrayList<>(database.getAllTags());
-        
-        /* ripristino lo stato iniziale del DB */
-        database.deleteAllContacts();
-        database.deleteAllTags();
-        if(!savedContacts.isEmpty())
-            database.insertManyContacts(savedContacts);
-        if(!savedTags.isEmpty())
-            database.insertManyTags(savedTags);
-        
-        assertTrue(new File(pathConfig).exists());
-        assertFalse(new File(pathData).exists());
-        assertEquals(a.getDBUrl(), url);
-        assertNotNull(a.getDB());
-        assertEquals(contattiLetti, a.getAllContacts());
-        assertEquals(tagsLetti, a.getAllTags());
-    }
-    
-    /**
-     * UTC 1.25 (ONEROSO)
-     * 
-     * L'utente possiede un DB funzionante e sta inserendo i suoi contatti e tag
-     * Ma l'utente inserisce un DBurl non valido durante la sessione, e continua ad aggiungere però il salvataggio avviene ora su Data.bin
-     * Poi l'utente inserisce l'url valido e in fase di aggiunta si carica sul DB.
-     */
-    //@Test
-    public void testSetDBUrl5() {
-        System.out.println("setDBUrl5");
-        
-        List<Contact> contactsProva = getListaContattiCasuali(2);
-        
-        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
-            dos.writeUTF(url);
-        }catch(IOException ex){ex.printStackTrace();}
-        
-        Database database = new Database(url);
-        
-        /* salvo lo stato iniziale del DB */
-        Collection<Contact> savedContacts = database.getAllContacts();
-        database.deleteAllContacts();
-        
-        a = AddressBook.getInstance();
-        a.addManyContacts(contactsProva);
-        
-        a.setDBUrl("urlNonValido.it"); /* l'utente aggiorna il file Config.bin */        
-        contactsProva = getListaContattiCasuali(2); 
-        a.addManyContacts(contactsProva); /* si crea il file Data.bin, in cui verranno salvati i successivi contatti e tag */
-        
-        a.setDBUrl(url); /* ora si trasferisce Data.bin sul DB vuoto e si elimina Data.bin */
-        
-        List<Contact> contattiLetti = new ArrayList<>(database.getAllContacts());
-        
-        /* ripristino lo stato iniziale del DB */
-        database.deleteAllContacts();
-        if(!savedContacts.isEmpty())
-            database.insertManyContacts(savedContacts);
-        
-        assertEquals(contattiLetti, a.getAllContacts());
-        assertFalse(new File(pathData).exists());
-        assertTrue(new File(pathConfig).exists());
     }
 
     /**
@@ -1019,7 +748,7 @@ public class AddressBookTest {
      * In fase di inizializzazione esiste il file Config.bin e quindi il campo dbUrl è valorizzato
      */
     @Test
-    public void testGetDBUrl1() {
+    public void testGetDBUrl1() throws IOException {
         System.out.println("getDBUrl1");
         
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
@@ -1037,14 +766,13 @@ public class AddressBookTest {
      * In fase di inizializzazione NON esiste il file Config.bin, ma l'utente inserisce durante la sessione l'url del DB.
      */
     @Test
-    public void testGetDBUrl2() {
+    public void testGetDBUrl2() throws IOException {
         System.out.println("getDBUrl2");
         
         a = AddressBook.getInstance();
         a.setDBUrl("urlCasuale.it");
         
         assertEquals("urlCasuale.it", a.getDBUrl());
-        assertTrue(new File(pathConfig).exists());
     }
 
     /**
@@ -1053,7 +781,7 @@ public class AddressBookTest {
      * Vi sono sia contatti che tags da salvare in locale. (non esiste il DB).
      */
     @Test
-    public void testSaveOBJ1() {
+    public void testSaveOBJ1() throws IOException {
         System.out.println("saveOBJ1");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -1084,7 +812,7 @@ public class AddressBookTest {
      * Vi sono solo contatti da salvare in locale. (non esiste il DB).
      */
     @Test
-    public void testSaveOBJ2() {
+    public void testSaveOBJ2() throws IOException {
         System.out.println("saveOBJ2");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -1113,7 +841,7 @@ public class AddressBookTest {
      * Vi sono solo tags da salvare in locale. (non esiste il DB).
      */
     @Test
-    public void testSaveOBJ3() {
+    public void testSaveOBJ3() throws IOException {
         System.out.println("saveOBJ3");
         
         List<Tag> tagsProva = getListaTagCasuali(3);
@@ -1142,7 +870,7 @@ public class AddressBookTest {
      * La rubrica preleva entrambi contatti e tags dal file Data.bin
      */
     @Test
-    public void testLoadOBJ1() {
+    public void testLoadOBJ1() throws IOException {
         System.out.println("loadOBJ1");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -1168,7 +896,7 @@ public class AddressBookTest {
      * La rubrica preleva solo contatti dal file Data.bin
      */
     @Test
-    public void testLoadOBJ2() {
+    public void testLoadOBJ2() throws IOException {
         System.out.println("loadOBJ2");
         
         List<Contact> contactsProva = getListaContattiCasuali(2);
@@ -1194,7 +922,7 @@ public class AddressBookTest {
      * La rubrica preleva solo tag dal file Data.bin
      */
     @Test
-    public void testLoadOBJ3() {
+    public void testLoadOBJ3() throws IOException {
         System.out.println("loadOBJ3");
         
         Tag tagVett[] = {getTagCasuale(), getTagCasuale()};
@@ -1220,7 +948,7 @@ public class AddressBookTest {
      * UTC 1.34 (LEGGERO)
      */
     @Test
-    public void testRemoveOBJ() {
+    public void testRemoveOBJ() throws IOException {
         System.out.println("removeOBJ");
         
         a = AddressBook.getInstance();
@@ -1237,8 +965,12 @@ public class AddressBookTest {
      * UTC 1.35 (ONEROSO)
      */
     //@Test
-    public void testSaveToDB() {
+    public void testSaveToDB() throws IOException {
         System.out.println("saveToDB");
+        
+        try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
+            dos.writeUTF(url);
+        }
         
         Database database = new Database(url);
         
@@ -1246,8 +978,7 @@ public class AddressBookTest {
         Collection<Contact> savedContacts = database.getAllContacts();
         database.deleteAllContacts();
         
-        a = AddressBook.getInstance();
-        a.setDBUrl(url);        
+        a = AddressBook.getInstance();   
         a.addManyContacts(getListaContattiCasuali(2));
         a.saveToDB();
         

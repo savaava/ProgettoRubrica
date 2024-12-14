@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -58,7 +60,9 @@ public class ExportPopupController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.contactManager = AddressBook.getInstance();
+        try {
+            this.contactManager = AddressBook.getInstance();
+        } catch (IOException ex) {ex.printStackTrace();}
         saveButton.setDisable(true);
     }
 
