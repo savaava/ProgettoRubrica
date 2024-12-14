@@ -160,8 +160,8 @@ public class MainController implements Initializable {
     @FXML
     private void onAddContact(ActionEvent event) {
         this.contactDetailsPane.setVisible(true);
-        deleteButton.setDisable(false);
-        editButton.setDisable(false);
+        deleteButton.setDisable(true);
+        editButton.setDisable(true);
 
         //Imposta immagine profilo di default
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));
@@ -245,7 +245,7 @@ public class MainController implements Initializable {
         numberField.setDisable(false);
         
         saveButton.setDisable(true);
-        editButton.setDisable(true);
+        cancelButton.setDisable(true);
         
         Contact contactSelected=contactsTable.getSelectionModel().getSelectedItem();
         
