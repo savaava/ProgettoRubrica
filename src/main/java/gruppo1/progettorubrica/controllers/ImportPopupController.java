@@ -81,7 +81,7 @@ public class ImportPopupController implements Initializable {
                 new ExtensionFilter("VCard", "*.vcf")
         );
         this.file = fc.showOpenDialog(new Stage());
-        importButton.setDisable(false);
+        if(this.file.isFile()) importButton.setDisable(false);
     }
 
     /**

@@ -77,7 +77,7 @@ public class MainController implements Initializable {
     private FilteredList<Contact> filteredContacts;  ///< lista filtrata in base a tag e/o alla sottostringa presente in searchField
 
     private TextField numberField2,numberField3,emailField2,emailField3;
-    
+
     
     /**
      * @brief Inizializza il main controller
@@ -108,12 +108,12 @@ public class MainController implements Initializable {
 
         //Imposta immagine imbuto
         filterImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/filter.png"))));
-        
+
         numberField2=new TextField();
         numberField3=new TextField();
         emailField2=new TextField();
         emailField3=new TextField();
-        
+
         BooleanBinding op1 = nameField.textProperty().isEmpty();
         BooleanBinding op2 = surnameField.textProperty().isEmpty();
         saveButton.disableProperty().bind(op1.and(op2));
@@ -158,7 +158,11 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-
+        MenuItem m = new MenuItem("Filtri");
+        m.setDisable(true);
+        if(contextMenu.getItems().isEmpty())
+            contextMenu.getItems().add(m);
+        contextMenu.show(contactDetailsPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
     }
 
     /**
@@ -175,8 +179,8 @@ public class MainController implements Initializable {
         editButton.setDisable(true);
 
         //Imposta immagine profilo di default
-        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));       
-        
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));
+
         //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
         numberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
@@ -185,7 +189,7 @@ public class MainController implements Initializable {
                 if(!numberField2.getText().isEmpty()){ //prima di rimuovere il secondo TextField vedo se c'è scritto qualcosa e lo inserisco nel primo e cancello quanto scritto nel secondo
                     numberField.setText(numberField2.getText());
                     numberField2.clear();
-                }                
+                }
                 numbersPane.getChildren().remove(numberField2);
             }
         });
@@ -194,7 +198,7 @@ public class MainController implements Initializable {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField3))
                 numbersPane.add(numberField3, 1, 2);
             else if(newValue.isEmpty()){
-                if(!numberField3.getText().isEmpty()){ 
+                if(!numberField3.getText().isEmpty()){
                     numberField2.setText(numberField3.getText());
                     numberField3.clear();
                 }
@@ -206,7 +210,7 @@ public class MainController implements Initializable {
             if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField2))
                 emailsPane.add(emailField2, 1, 1);
             else if(newValue.isEmpty()){
-                if(!emailField2.getText().isEmpty()){ 
+                if(!emailField2.getText().isEmpty()){
                     emailField.setText(emailField2.getText());
                     emailField2.clear();
                 }
@@ -218,7 +222,7 @@ public class MainController implements Initializable {
             if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField3))
                 emailsPane.add(emailField3, 1, 2);
             else if(newValue.isEmpty()){
-                if(!emailField3.getText().isEmpty()){ 
+                if(!emailField3.getText().isEmpty()){
                     emailField2.setText(emailField3.getText());
                     emailField3.clear();;
                 }
@@ -240,10 +244,10 @@ public class MainController implements Initializable {
     @FXML
     private void onContactClicked(MouseEvent event) {
         Contact selectedContact=contactsTable.getSelectionModel().getSelectedItem();
-        
-        if(selectedContact == null) 
+
+        if(selectedContact == null)
             return;
-        
+
         this.contactDetailsPane.setVisible(true);
         
         nameField.setEditable(false);
@@ -283,7 +287,7 @@ public class MainController implements Initializable {
         profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
         
         for(Integer id: selectedContact.getAllTagIndexes())
-            tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));       
+            tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));
     }
     
 
@@ -323,9 +327,11 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
             Parent root = loader.load();
             ConfirmPopupController cpc = loader.getController();
-            showPopup("Confirm_popup.fxml", "Conferma eliminazione");
-            if (cpc.getChoice()) 
-                addressBook.removeContact(selectedContact); 
+            showPopup("Confirm_popup.fxml");
+            if (cpc.getChoice()){
+                System.out.println("elimi");
+                addressBook.removeContact(selectedContact);
+            }
         }
     }
 
@@ -336,7 +342,7 @@ public class MainController implements Initializable {
      * Questo metodo permette, una volta cliccato il pulsante "Salva", di modificare/creare il contatto in visione dettagliata.
      *
      * @pre c'è almeno un nome o un cognome da salvare
-     * 
+     *
      * @param[in] event
      * @see onModifyContact()
      */
@@ -353,7 +359,7 @@ public class MainController implements Initializable {
         if(! numberField.getText().isEmpty())
             num[0] = numberField.getText();
         contactToAdd.setNumbers(num);
-            
+
         String mail[] = new String[3];
         if(! emailField3.getText().isEmpty())
             mail[2] = emailField3.getText();
@@ -362,16 +368,16 @@ public class MainController implements Initializable {
         if(! emailField.getText().isEmpty())
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
-            
+
         //contactToAdd.setProfilePicture();
-            
+
         System.out.println("Contatto selezionato:\n "+selectedContact+"\n\nContatto nuovo: \n"+contactToAdd);
-        
+
         if (selectedContact != null){
             /* l'utente ha modificato il contatto */
             addressBook.removeContact(selectedContact);
-        }       
-        
+        }
+
         //addressBook.addContact(contactToAdd);
     }
 
@@ -391,11 +397,11 @@ public class MainController implements Initializable {
             /* se è in fase di aggiunta */
             nameField.setText("");
             surnameField.setText("");
-            
+
             if(! numberField3.getText().isEmpty()) numberField3.setText("");
             if(! numberField2.getText().isEmpty()) numberField2.setText("");
             numberField.setText("");
-            
+
             if(! emailField3.getText().isEmpty()) emailField3.setText("");
             if(! emailField2.getText().isEmpty()) emailField2.setText("");
             emailField.setText("");
@@ -468,24 +474,12 @@ public class MainController implements Initializable {
     private ContextMenu createContextMenu(){
         ContextMenu contextMenu = new ContextMenu();
 
-        // Opzione per ordinare per nome
-        MenuItem sortByNameAsc = new MenuItem("Ordina per Nome (A-Z)");
-        MenuItem sortByNameDesc = new MenuItem("Ordina per Nome (Z-A)");
-
-        // Opzione per ordinare per cognome
-        MenuItem sortByLastNameAsc = new MenuItem("Ordina per Cognome (A-Z)");
-        MenuItem sortByLastNameDesc = new MenuItem("Ordina per Cognome (Z-A)");
-
-        // Aggiungi MenuItem al ContextMenu
-        contextMenu.getItems().addAll(sortByNameAsc, sortByNameDesc, new SeparatorMenuItem(), sortByLastNameAsc, sortByLastNameDesc, new SeparatorMenuItem());
-        
         for(Tag t : addressBook.getAllTags()){
             CustomMenuItem tagItem = new CustomMenuItem(new CheckBox(t.getDescription()));
             tagItem.setHideOnClick(false);
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);
         }
-
         return contextMenu;
     }
     
@@ -493,8 +487,8 @@ public class MainController implements Initializable {
     private void showImagePopup(MouseEvent event) throws IOException {
         showPopup("Image_popup.fxml", "Gestione immagini",975,200);
         //profileImageView = getSelectedImage();
-    } 
-    
+    }
+
     //Metodi di utilità
     private void showPopup(String path, String title, double d1, double d2) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
@@ -509,5 +503,5 @@ public class MainController implements Initializable {
     }
     private void showPopup(String path, String title) throws IOException {
         showPopup(path, title, 300, 250);
-    }   
+    }
 }
