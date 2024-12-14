@@ -153,7 +153,7 @@ public class MainController implements Initializable {
                 GridPane.setColumnIndex(numberField2, 1);
                 numbersPane.getChildren().add(numberField2);
             }
-        else if(newValue.isEmpty()) {//cancello il secondo TextField se ha cancellato il contenuto del primo TextField e se il secondo TextField è vuoto
+            else if(newValue.isEmpty()) {//cancello il secondo TextField se ha cancellato il contenuto del primo TextField e se il secondo TextField è vuoto
                 if(!numberField2.getText().isEmpty() && numberField.getText().isEmpty()){
                     numberField.setText(numberField2.getText());
                     numberField2.setText("");
@@ -264,7 +264,7 @@ public class MainController implements Initializable {
             Parent root = loader.load();
             ConfirmPopupController cpc = loader.getController();
             showPopup("Confirm_popup.fxml");
-             if (cpc.getChoice()) 
+            if (cpc.getChoice()) 
                 addressBook.removeContact(selectedContact); 
         } 
     }
