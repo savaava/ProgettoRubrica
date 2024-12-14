@@ -76,7 +76,7 @@ public class MainController implements Initializable {
     private AnchorPane contactDetailsPane;   ///< Pane con la visione dettagliata del contatto
 
     @FXML
-    private GridPane numbersPane, emailsPane;  ///< GridPane appartenente a {@link MainController#contactsDetailsPane} che contiene gli eventuali numeri di telefono e/o emails
+    private GridPane numbersPane, emailsPane;  ///< GridPane appartenente a {@link MainController#contactsDetailsPane} che contiene gli eventuali numeri di telefono, emails e tag
 
     private ContextMenu contextMenu;  ///< menù per importare, esportare e configurare database
 
