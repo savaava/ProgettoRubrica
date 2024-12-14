@@ -91,7 +91,7 @@ public class MainController implements Initializable {
         this.contactsTable.setItems(addressBook.getAllContacts());
         nameColumn.setCellValueFactory(new PropertyValueFactory("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory("surname"));
-        
+        this.contextMenu = this.createContextMenu();
      
         
     }
@@ -257,8 +257,16 @@ public class MainController implements Initializable {
      * @see ConfirmPopupController
      */
     @FXML
-    private void onDeleteContact(ActionEvent event) {
-
+    private void onDeleteContact(ActionEvent event) throws IOException {
+        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+        if (selectedContact != null) {
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
+            Parent root = loader.load();
+            ConfirmPopupController cpc = loader.getController();
+            showPopup("Confirm_popup.fxml");
+             if (cpc.getChoice()) 
+                addressBook.removeContact(selectedContact); 
+        } 
     }
 
     /**
