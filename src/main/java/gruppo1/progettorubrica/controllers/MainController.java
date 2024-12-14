@@ -109,6 +109,11 @@ public class MainController implements Initializable {
         //Imposta immagine imbuto
         filterImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/filter.png"))));
         
+        numberField2=new TextField();
+        numberField3=new TextField();
+        emailField2=new TextField();
+        emailField3=new TextField();
+        
         BooleanBinding op1 = nameField.textProperty().isEmpty();
         BooleanBinding op2 = surnameField.textProperty().isEmpty();
         saveButton.disableProperty().bind(op1.and(op2));
@@ -170,26 +175,17 @@ public class MainController implements Initializable {
         editButton.setDisable(true);
 
         //Imposta immagine profilo di default
-        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));
-        
-        numberField2=new TextField();
-        numberField3=new TextField();
-        emailField2=new TextField();
-        emailField3=new TextField();
-        
-        
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));       
         
         //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
         numberField.textProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
                 numbersPane.add(numberField2, 1, 1);
-            }
-        else if(newValue.isEmpty()) {//se ha cancellato il contenuto del primo TextField devo rimuovere il secondo
+            }else if(newValue.isEmpty()) {//se ha cancellato il contenuto del primo TextField devo rimuovere il secondo
                 if(!numberField2.getText().isEmpty()){ //prima di rimuovere il secondo TextField vedo se c'è scritto qualcosa e lo inserisco nel primo e cancello quanto scritto nel secondo
                     numberField.setText(numberField2.getText());
                     numberField2.clear();
-                }
-                
+                }                
                 numbersPane.getChildren().remove(numberField2);
             }
         });
@@ -202,7 +198,7 @@ public class MainController implements Initializable {
                     numberField2.setText(numberField3.getText());
                     numberField3.clear();
                 }
-            numbersPane.getChildren().remove(numberField3);
+                numbersPane.getChildren().remove(numberField3);
             }
         });
         
@@ -248,7 +244,11 @@ public class MainController implements Initializable {
         nameField.setEditable(false);
         surnameField.setEditable(false);
         emailField.setEditable(false);
+        emailField2.setEditable(false);
+        emailField3.setEditable(false);
         numberField.setDisable(false);
+        numberField2.setDisable(false);
+        numberField3.setDisable(false);
         
         saveButton.setDisable(true);
         editButton.setDisable(true);
@@ -290,7 +290,14 @@ public class MainController implements Initializable {
      */
     @FXML
     private void onModifyContact(ActionEvent event) {
-
+        nameField.setEditable(true);
+        surnameField.setEditable(true);
+        emailField.setEditable(true);
+        emailField2.setEditable(true);
+        emailField3.setEditable(true);
+        numberField.setDisable(true);
+        numberField2.setDisable(true);
+        numberField3.setDisable(true);
     }
 
     /**
@@ -478,7 +485,7 @@ public class MainController implements Initializable {
     
     @FXML
     private void showImagePopup(MouseEvent event) throws IOException {
-        showPopup("Image_popup.fxml", "Gestione immagini",1000,200);
+        showPopup("Image_popup.fxml", "Gestione immagini",975,200);
         //profileImageView = getSelectedImage();
     } 
     
