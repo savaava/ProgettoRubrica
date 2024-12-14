@@ -18,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -57,6 +58,7 @@ public class ImportPopupController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.contactManager = AddressBook.getInstance();
+        importButton.setDisable(true);
     }
     
     /**
@@ -75,6 +77,7 @@ public class ImportPopupController implements Initializable {
                 new ExtensionFilter("VCard", "*.vcf")
         );
         this.file = fc.showOpenDialog(new Stage());
+        importButton.setDisable(false);
     }
 
     /**
@@ -86,12 +89,14 @@ public class ImportPopupController implements Initializable {
     
     @FXML
     private void onImport(ActionEvent event) {
+        Collection<Contact> contatti = new ArrayList<>();
         try {
             if (Converter.checkCSVFormat(this.file)) {
-                Converter.parseCSV(this.file);
+                contatti = Converter.parseCSV(this.file);
             } else if (Converter.checkVCardFormat(this.file)) {
-                Converter.parseVCard(this.file);
+                contatti = Converter.parseVCard(this.file);
             }
+            for(Contact c : contatti) contactManager.addContact(c);
         } catch (IOException ex) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");

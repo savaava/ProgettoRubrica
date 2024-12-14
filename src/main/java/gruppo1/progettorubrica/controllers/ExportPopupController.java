@@ -59,6 +59,7 @@ public class ExportPopupController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.contactManager = AddressBook.getInstance();
+        saveButton.setDisable(true);
     }
 
     /**
@@ -97,6 +98,7 @@ public class ExportPopupController implements Initializable {
                 ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
                 Converter.onExportCSV(c, this.file);
             }
+            saveButton.setDisable(true);
         } catch(IOException ex){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");

@@ -17,6 +17,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -87,13 +89,23 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.addressBook = AddressBook.getInstance();
+
+        //Nasconde la visione dettagliata
         this.contactDetailsPane.setVisible(false);
+
+        //Riempie la tabella con i contatti
         this.contactsTable.setItems(addressBook.getAllContacts());
-        nameColumn.setCellValueFactory(new PropertyValueFactory("name"));
-        surnameColumn.setCellValueFactory(new PropertyValueFactory("surname"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+
+        //Crea il menù contestuale
         this.contextMenu = this.createContextMenu();
      
-        
+        //Imposta immagine contatto circolare
+        this.setImageCircle();
+
+        //Imposta immagine imbuto
+        filterImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/filter.png"))));
     }
 
     /**
@@ -103,7 +115,18 @@ public class MainController implements Initializable {
      *
      */
     private void setImageCircle() {
+        int radius = 75;
 
+        profileImageView.setFitWidth(radius * 2);
+        profileImageView.setFitHeight(radius * 2);
+
+        Circle clip = new Circle(radius,radius, radius*0.75);
+        profileImageView.setClip(clip);
+
+        Circle border = new Circle(radius, radius, radius);
+        border.setStroke(Color.BLUE);
+        border.setStrokeWidth(4);
+        border.setFill(Color.TRANSPARENT);
     }
 
     /**
@@ -139,6 +162,9 @@ public class MainController implements Initializable {
         this.contactDetailsPane.setVisible(true);
         deleteButton.setDisable(false);
         editButton.setDisable(false);
+
+        //Imposta immagine profilo di default
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));
         
         TextField numberField2=new TextField();
         TextField numberField3=new TextField();
@@ -279,7 +305,7 @@ public class MainController implements Initializable {
             Parent root = loader.load();
             ConfirmPopupController cpc = loader.getController();
             showPopup("Confirm_popup.fxml");
-             if (cpc.getChoice()) 
+            if (cpc.getChoice()) 
                 addressBook.removeContact(selectedContact); 
         } 
     }

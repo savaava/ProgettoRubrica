@@ -47,7 +47,7 @@ public class Converter {
             s.useLocale(Locale.ITALY);
             List<Contact> contatti = new ArrayList<>();
             if (s.hasNext() == false) return Collections.emptyList();
-            s.nextLine();
+            s.nextLine();   //salta l'intestazione dei file .csv
             while (s.hasNext()) {
                 String nome = s.next();
                 String cognome = s.next();
