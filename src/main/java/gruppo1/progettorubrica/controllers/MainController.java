@@ -2,8 +2,9 @@ package gruppo1.progettorubrica.controllers;
 
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
-import java.io.ByteArrayInputStream;
 import gruppo1.progettorubrica.models.Tag;
+import java.awt.image.BufferedImage;
+
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,14 +22,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import javafx.embed.swing.SwingFXUtils;
+import javax.imageio.ImageIO;
 
 /**
  * @brief Controller che si occupa della scena iniziale.
@@ -36,7 +43,6 @@ import javafx.scene.image.Image;
  * In tale scena è possibile aggiungere, rimuovere, modificare e cercare contatti.
  * Inoltre è possibile aggiungere un'immagine profilo ad un contatto.
  */
-
 public class MainController implements Initializable {
     private AddressBook addressBook;
 
@@ -78,6 +84,11 @@ public class MainController implements Initializable {
 
     private TextField numberField2,numberField3,emailField2,emailField3;
     
+    private String pathsImages[] = {"/images/base_profile.jpg",
+                                    "/images/FotoProfilo1.jpg",
+                                    "/images/FotoProfilo2.jpg",
+                                    "/images/FotoProfilo3.jpg",
+                                    "/images/FotoProfilo4.jpg"};
     
     /**
      * @brief Inizializza il main controller
@@ -117,6 +128,8 @@ public class MainController implements Initializable {
         BooleanBinding op1 = nameField.textProperty().isEmpty();
         BooleanBinding op2 = surnameField.textProperty().isEmpty();
         saveButton.disableProperty().bind(op1.and(op2));
+               
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
     }
 
     /**
@@ -169,13 +182,22 @@ public class MainController implements Initializable {
      * @param[in] event
      */
     @FXML
-    private void onAddContact(ActionEvent event) {
+    private void onAddContact(ActionEvent event) {        
         this.contactDetailsPane.setVisible(true);
         deleteButton.setDisable(true);
         editButton.setDisable(true);
 
+        nameField.setEditable(true);
+        surnameField.setEditable(true);
+        emailField.setEditable(true);
+        emailField2.setEditable(true);
+        emailField3.setEditable(true);
+        numberField.setEditable(true);
+        numberField2.setEditable(true);
+        numberField3.setEditable(true);
+        
         //Imposta immagine profilo di default
-        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/base_profile.jpg"))));       
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));       
         
         //appena si inserisce 1 carattere nel primo numberTextField, compare il secondo TextField
         numberField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -185,8 +207,9 @@ public class MainController implements Initializable {
                 if(!numberField2.getText().isEmpty()){ //prima di rimuovere il secondo TextField vedo se c'è scritto qualcosa e lo inserisco nel primo e cancello quanto scritto nel secondo
                     numberField.setText(numberField2.getText());
                     numberField2.clear();
-                }                
-                numbersPane.getChildren().remove(numberField2);
+                }else{
+                    numbersPane.getChildren().remove(numberField2);
+                }
             }
         });
         
@@ -197,8 +220,9 @@ public class MainController implements Initializable {
                 if(!numberField3.getText().isEmpty()){ 
                     numberField2.setText(numberField3.getText());
                     numberField3.clear();
+                }else{
+                    numbersPane.getChildren().remove(numberField3);
                 }
-                numbersPane.getChildren().remove(numberField3);
             }
         });
         
@@ -209,8 +233,9 @@ public class MainController implements Initializable {
                 if(!emailField2.getText().isEmpty()){ 
                     emailField.setText(emailField2.getText());
                     emailField2.clear();
+                }else{
+                    emailsPane.getChildren().remove(emailField2);
                 }
-                emailsPane.getChildren().remove(emailField2);
             }
         });
         
@@ -220,15 +245,13 @@ public class MainController implements Initializable {
             else if(newValue.isEmpty()){
                 if(!emailField3.getText().isEmpty()){ 
                     emailField2.setText(emailField3.getText());
-                    emailField3.clear();;
+                    emailField3.clear();
+                }else{
+                    emailsPane.getChildren().remove(emailField3);
                 }
-                emailsPane.getChildren().remove(emailField3);
             }
-        });
-        
-        
+        });        
     }
-    
 
     /**
      * @brief Vista dettagliata del contatto
@@ -244,6 +267,10 @@ public class MainController implements Initializable {
         if(selectedContact == null) 
             return;
         
+        System.out.println("CONTATTO SELEZIONATO:\n"+selectedContact);
+        
+        deleteButton.setDisable(false);
+        editButton.setDisable(false);
         this.contactDetailsPane.setVisible(true);
         
         nameField.setEditable(false);
@@ -251,59 +278,128 @@ public class MainController implements Initializable {
         emailField.setEditable(false);
         emailField2.setEditable(false);
         emailField3.setEditable(false);
-        numberField.setDisable(false);
-        numberField2.setDisable(false);
-        numberField3.setDisable(false);
-
-        nameField.setEditable(false);
-        surnameField.setEditable(false);
-        emailField.setEditable(false);
-        numberField.setDisable(false);
+        numberField.setEditable(false);
+        numberField2.setEditable(false);
+        numberField3.setEditable(false);
         
-        saveButton.setDisable(true);
-        cancelButton.setDisable(true);
+        saveButton.setVisible(false);
+        //saveButton.setDisable(true);
+        //cancelButton.setDisable(true);
+        
+        byte image[] = toPrimitive(selectedContact.getProfilePicture());
+        profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
         
         nameField.setText(selectedContact.getName());
         surnameField.setText(selectedContact.getSurname());
         
         String emails[]=selectedContact.getEmails();
-        if(emails[0]!=null) emailField.setText(emails[0]);
-        if(emails[1]!=null) emailsPane.add(new TextField(emails[1]), 1, 1);
-        if(emails[2]!=null) emailsPane.add(new TextField(emails[2]), 1, 2);
+        if(emails[0]!=null) 
+            emailField.setText(emails[0]);
+        if(emails[1]!=null){
+            emailsPane.getChildren().remove(emailField2);
+            emailField2.setText(emails[1]);
+            emailsPane.add(emailField2, 1, 1);
+        }
+        if(emails[2]!=null){
+            emailsPane.getChildren().remove(emailField3);
+            emailField3.setText(emails[2]);
+            emailsPane.add(emailField3, 1, 2);
+        }
         
         String numbers[]=selectedContact.getNumbers();
-        if(numbers[0]!=null) numberField.setText(numbers[0]);
-        if(numbers[1]!=null) numbersPane.add(new TextField(numbers[1]), 1, 1);
-        if(numbers[2]!=null) numbersPane.add(new TextField(numbers[2]), 1, 2);
-        
-        Byte imageInByte[]=selectedContact.getProfilePicture();
-        byte image[]=new byte[imageInByte.length];
-        for(int i=0; i<imageInByte.length; i++)
-            image[i]=imageInByte[i];
-        profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        if(numbers[0]!=null)
+            numberField.setText(numbers[0]);        
+        if(numbers[1]!=null){
+            numbersPane.getChildren().remove(numberField2);
+            numberField2.setText(numbers[1]);
+            numbersPane.add(numberField2, 1, 1);
+        }
+        if(numbers[2]!=null){
+            numbersPane.getChildren().remove(numberField3);
+            numberField3.setText(numbers[2]);
+            numbersPane.add(numberField3, 1, 2);
+        }
         
         for(Integer id: selectedContact.getAllTagIndexes())
             tagVBox.getChildren().addAll(new Label(addressBook.getTag(id).getDescription()));       
     }
-    
 
     /**
-     * @brief Modifica contatto
+     * @brief Per modificare il contatto
      *
      * Questo metodo permette, una volta cliccato il pulsante "Modifica", di modificare il contatto in visione dettagliata.
-     *
+     * Ma non è finalizzato al salvataggio del contatto modficato (operazione delegata a onSave)
+     * 
+     * @see onSaveContact
      * @param[in] event
      */
     @FXML
     private void onModifyContact(ActionEvent event) {
+        deleteButton.setDisable(true);
+        editButton.setDisable(true);
+        
+        saveButton.setVisible(true);        
+        
         nameField.setEditable(true);
         surnameField.setEditable(true);
         emailField.setEditable(true);
         emailField2.setEditable(true);
         emailField3.setEditable(true);
-        numberField.setDisable(true);
-        numberField2.setDisable(true);
-        numberField3.setDisable(true);
+        numberField.setEditable(true);
+        numberField2.setEditable(true);
+        numberField3.setEditable(true);
+        
+        numberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField2)){
+                numbersPane.add(numberField2, 1, 1);
+            }else if(newValue.isEmpty()) {//se ha cancellato il contenuto del primo TextField devo rimuovere il secondo
+                if(!numberField2.getText().isEmpty()){ //prima di rimuovere il secondo TextField vedo se c'è scritto qualcosa e lo inserisco nel primo e cancello quanto scritto nel secondo
+                    numberField.setText(numberField2.getText());
+                    numberField2.clear();
+                }else{
+                    numbersPane.getChildren().remove(numberField2);
+                }
+            }
+        });
+        
+        numberField2.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue.isEmpty() && !numbersPane.getChildren().contains(numberField3))
+                numbersPane.add(numberField3, 1, 2);
+            else if(newValue.isEmpty()){
+                if(!numberField3.getText().isEmpty()){ 
+                    numberField2.setText(numberField3.getText());
+                    numberField3.clear();
+                }else{
+                    numbersPane.getChildren().remove(numberField3);
+                }
+            }
+        });
+        
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField2))
+                emailsPane.add(emailField2, 1, 1);
+            else if(newValue.isEmpty()){
+                if(!emailField2.getText().isEmpty()){ 
+                    emailField.setText(emailField2.getText());
+                    emailField2.clear();
+                }else{
+                    emailsPane.getChildren().remove(emailField2);
+                }
+            }
+        });
+        
+        emailField2.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue.isEmpty() && !emailsPane.getChildren().contains(emailField3))
+                emailsPane.add(emailField3, 1, 2);
+            else if(newValue.isEmpty()){
+                if(!emailField3.getText().isEmpty()){ 
+                    emailField2.setText(emailField3.getText());
+                    emailField3.clear();
+                }else{
+                    emailsPane.getChildren().remove(emailField3);
+                }
+            }
+        });
     }
 
     /**
@@ -362,8 +458,9 @@ public class MainController implements Initializable {
         if(! emailField.getText().isEmpty())
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
-            
-        //contactToAdd.setProfilePicture();
+        
+        Byte[] imageBytes = convertImageViewToByteArray(profileImageView);
+        contactToAdd.setProfilePicture(imageBytes);
             
         System.out.println("Contatto selezionato:\n "+selectedContact+"\n\nContatto nuovo: \n"+contactToAdd);
         
@@ -372,7 +469,7 @@ public class MainController implements Initializable {
             addressBook.removeContact(selectedContact);
         }       
         
-        //addressBook.addContact(contactToAdd);
+        addressBook.addContact(contactToAdd);
     }
 
     /**
@@ -387,19 +484,18 @@ public class MainController implements Initializable {
     @FXML
     private void onCancel(ActionEvent event) {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
-        if (selectedContact == null){
-            /* se è in fase di aggiunta */
-            nameField.setText("");
-            surnameField.setText("");
+        
+        nameField.clear();
+        surnameField.clear();
             
-            if(! numberField3.getText().isEmpty()) numberField3.setText("");
-            if(! numberField2.getText().isEmpty()) numberField2.setText("");
-            numberField.setText("");
+        if(! numberField3.getText().isEmpty()) numberField3.clear();
+        if(! numberField2.getText().isEmpty()) numberField2.clear();
+        numberField.clear();
             
-            if(! emailField3.getText().isEmpty()) emailField3.setText("");
-            if(! emailField2.getText().isEmpty()) emailField2.setText("");
-            emailField.setText("");
-        }
+        if(! emailField3.getText().isEmpty()) emailField3.clear();
+        if(! emailField2.getText().isEmpty()) emailField2.clear();
+        emailField.clear();
+        
         contactDetailsPane.setVisible(false);
     }
 
@@ -443,7 +539,6 @@ public class MainController implements Initializable {
     private void showConfigPopup(ActionEvent event) throws IOException {
         showPopup("Config_popup.fxml", "Configurazione database");
     }
-
 
     /**
      * @brief Mostra il popup di gestione dei tag
@@ -491,11 +586,30 @@ public class MainController implements Initializable {
     
     @FXML
     private void showImagePopup(MouseEvent event) throws IOException {
-        showPopup("Image_popup.fxml", "Gestione immagini",975,200);
-        //profileImageView = getSelectedImage();
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Image_popup.fxml")));
+        Parent root = loader.load();
+        ImagePopupController ImageController = loader.getController();
+                
+        Scene scene = new Scene(root, 975, 200);
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle("Gestione immagini");
+        popup.setResizable(false);
+        popup.setScene(scene);
+        popup.showAndWait();
+        
+        if(ImageController.getImageIndex() == 5){
+            File selectedImageFile = ImageController.getSelectedImage();
+            Image image = new Image(selectedImageFile.toURI().toString());
+            profileImageView.setImage(image);
+            return ;
+        }
+        
+        String pathImage = pathsImages[ImageController.getImageIndex()];
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
     } 
     
-    //Metodi di utilità
+    /* Metodi di utilità */
     private void showPopup(String path, String title, double d1, double d2) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
         Scene scene = new Scene(root,d1,d2);
@@ -510,4 +624,40 @@ public class MainController implements Initializable {
     private void showPopup(String path, String title) throws IOException {
         showPopup(path, title, 300, 250);
     }   
+    
+    private Byte[] toWrapper(byte[] byteArray) {
+        Byte[] byteObjects = new Byte[byteArray.length];
+        for(int i=0; i<byteArray.length; i++) {
+            byteObjects[i] = byteArray[i];
+        }
+        return byteObjects;
+    }
+    private byte[] toPrimitive(Byte[] byteObjectArray) {
+        byte[] byteArray = new byte[byteObjectArray.length];
+        for(int i=0; i<byteObjectArray.length; i++) {
+            byteArray[i] = byteObjectArray[i];
+        }
+        return byteArray;
+    }
+    private Byte[] convertImageViewToByteArray(ImageView imageView) throws IOException {
+        // Ottieni l'immagine dall'ImageView
+        Image fxImage = imageView.getImage();
+
+        if (fxImage == null) {
+            throw new IOException("L'ImageView non contiene nessuna immagine.");
+        }
+
+        // Converti l'immagine JavaFX in BufferedImage
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
+
+        // Scrivi l'immagine in un ByteArrayOutputStream
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+
+        // Ottieni l'array di byte
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        // Converti il byte[] in Byte[]
+        return toWrapper(byteArray);
+    }
 }
