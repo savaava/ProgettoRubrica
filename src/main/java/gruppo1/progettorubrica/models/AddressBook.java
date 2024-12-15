@@ -37,7 +37,7 @@ public class AddressBook implements TagManager, ContactManager {
     private final String pathConfig = "./bin/Config.bin";
 
     /**
-     * @brief Costruttore privato che crea crea l'istanza unica di AddressBook in 4 scenari diversi di inizializzazione:
+     * @brief Costruttore privato che crea l'istanza unica di AddressBook in 4 scenari diversi di inizializzazione:
      * 1. non esiste nè il DB, nè il file di salvataggio Data.bin (non vi sono contatti o tags da salvare);
      * 2. esiste solo il file Data.bin e nessun DB (dbUrl non inizializzato o non valido);
      * 3. esiste solo il dbUrl valido per il database -> il salvataggio non avverrà in locale con Data.bin;
@@ -427,6 +427,15 @@ public class AddressBook implements TagManager, ContactManager {
      */    
     public Database getDB(){
         return db;
+    }
+
+    /**
+     * @brief Elimina l'istanza del DB.
+     * @pre nessuna
+     * @post L'istanza del DB viene eliminata.
+     */
+    public void removeDB() {
+        this.db = null;
     }
     
     @Override

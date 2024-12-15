@@ -69,7 +69,13 @@ public class ExportPopupController implements Initializable {
         try {
             this.tagManager = AddressBook.getInstance();
             this.contactManager = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
         saveButton.setDisable(true);
         Collection<String> descriptionTags = new ArrayList<>();
         descriptionTags.add("Tutti i contatti");

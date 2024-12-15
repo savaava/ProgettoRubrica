@@ -7,10 +7,7 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
@@ -48,11 +45,17 @@ public class ManageTagsPopupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             this.tagManager = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
         
-        tagsListView.setItems(tagManager.getAllTags()); //lego la ListView e la lista osservabile dei tag
+        tagsListView.setItems(tagManager.getAllTags()); 
         
-        //indico cosa deve contenere ogni cella della ListView:
+        
         tagsListView.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>(){
             
             @Override
@@ -131,13 +134,13 @@ public class ManageTagsPopupController implements Initializable {
 private void onUpdate(ActionEvent event) throws IOException {
         this.updateButton.setDisable(true);
         
-        Tag tag=this.tagsListView.getSelectionModel().getSelectedItem(); //ottengo il tag selezionato dall'utente nella ListView
+        Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
         
         tagManager.removeTag(tag); 
         
-        tag.setDescription(this.nameField.getText()); //aggiorno il campo descrizione con quanto inserito dall'utente nel TextField
+        tag.setDescription(this.nameField.getText()); 
         
-        tagManager.addTag(tag); //inserisco il tag aggiornato
+        tagManager.addTag(tag); 
         
         nameField.clear();
         

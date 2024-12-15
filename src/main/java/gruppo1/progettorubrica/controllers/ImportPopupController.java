@@ -61,7 +61,13 @@ public class ImportPopupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             this.contactManager = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
         importButton.setDisable(true);
     }
     
