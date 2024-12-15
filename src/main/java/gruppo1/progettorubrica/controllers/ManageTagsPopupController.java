@@ -50,9 +50,9 @@ public class ManageTagsPopupController implements Initializable {
             this.tagManager = AddressBook.getInstance();
         } catch (IOException ex) {ex.printStackTrace();}
         
-        tagsListView.setItems(tagManager.getAllTags()); //lego la ListView e la lista osservabile dei tag
+        tagsListView.setItems(tagManager.getAllTags()); 
         
-        //indico cosa deve contenere ogni cella della ListView:
+        
         tagsListView.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>(){
             
             @Override
@@ -131,13 +131,13 @@ public class ManageTagsPopupController implements Initializable {
 private void onUpdate(ActionEvent event) throws IOException {
         this.updateButton.setDisable(true);
         
-        Tag tag=this.tagsListView.getSelectionModel().getSelectedItem(); //ottengo il tag selezionato dall'utente nella ListView
+        Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
         
         tagManager.removeTag(tag); 
         
-        tag.setDescription(this.nameField.getText()); //aggiorno il campo descrizione con quanto inserito dall'utente nel TextField
+        tag.setDescription(this.nameField.getText()); 
         
-        tagManager.addTag(tag); //inserisco il tag aggiornato
+        tagManager.addTag(tag); 
         
         nameField.clear();
         
