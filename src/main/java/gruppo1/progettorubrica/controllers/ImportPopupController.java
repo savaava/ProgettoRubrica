@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -96,7 +97,7 @@ public class ImportPopupController implements Initializable {
                 contatti = Converter.parseVCard(this.file);
             }
             contactManager.addManyContacts(contatti);
-            
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         } catch (IOException ex) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");

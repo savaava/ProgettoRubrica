@@ -24,14 +24,14 @@ deactivate mc
 ipc -> ipc : Initialize(...)
 activate ipc
 deactivate ipc
-u -> ipc : Inserisce percorso file .csv o .vCard
+u -> ipc : Inserisce percorso file .csv o .vcf
 ipc -> ipc : choosePath(...)
 activate ipc
 alt Il file scelto è in formato .csv
 deactivate ipc
 ipc -> ipc : checkCSVFormat();
 activate ipc
-else Il file scelto è in formato .VCard
+else Il file scelto è in formato .vcf
 deactivate ipc
 ipc -> ipc : checkVCardFormat();
 activate ipc

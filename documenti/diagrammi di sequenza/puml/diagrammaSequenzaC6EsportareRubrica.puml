@@ -18,7 +18,7 @@ EPC -> EPC : choosePath(...)
 activate EPC
 Utente -> EPC : sceglie percorso del file
 deactivate EPC
-EPC -> EPC : genera file .csv o .vCard
+EPC -> EPC : genera file .csv o .vcf
 activate EPC
 deactivate EPC
 Utente -> EPC : clicca sul pulsante "Esporta"
@@ -28,7 +28,7 @@ alt utente ha scelto .csv
 EPC -> EPC : onExportCSV(...)
 activate EPC
 deactivate EPC
-else utente ha scelto .vCard
+else utente ha scelto .vcf
 EPC -> EPC : onExportVCard(...)
 activate EPC
 deactivate EPC

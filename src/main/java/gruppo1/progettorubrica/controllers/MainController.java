@@ -568,26 +568,26 @@ public class MainController implements Initializable {
      * @see ConfirmPopupController
      */
     @FXML
-private void onDeleteContact(ActionEvent event) throws IOException {
-    Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
-    if (selectedContact != null) {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
-        Parent root = loader.load();
-        ConfirmPopupController cpc = loader.getController();
-        Scene scene = new Scene(root, 300, 200);
-        Stage popup = new Stage();
-        popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Conferma");
-        popup.setResizable(false);
-        popup.setScene(scene);
-        popup.showAndWait();
+    private void onDeleteContact(ActionEvent event) throws IOException {
+        Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+        if (selectedContact != null) {
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Confirm_popup.fxml")));
+            Parent root = loader.load();
+            ConfirmPopupController cpc = loader.getController();
+            Scene scene = new Scene(root, 300, 200);
+            Stage popup = new Stage();
+            popup.initModality(Modality.APPLICATION_MODAL);
+            popup.setTitle("Conferma");
+            popup.setResizable(false);
+            popup.setScene(scene);
+            popup.showAndWait();
 
-        if (cpc.getChoice()){
-            addressBook.removeContact(selectedContact);
-            this.contactDetailsPane.setVisible(false);
+            if (cpc.getChoice()){
+                addressBook.removeContact(selectedContact);
+                this.contactDetailsPane.setVisible(false);
+            }
         }
     }
-}
 
     /**
      * @brief Salva contatto
@@ -722,43 +722,6 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         showPopup("ManageTags_popup.fxml", "Gestione tag",500,500);
         this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
     }
-
-    /**
-     * @brief Crea menù contestuale
-     *
-     * Questo metodo, eseguito in fase di inizializzazione della rubrica o da {@link MainController#contactsTable}, crea il menù contestuale
-     * @return Il menù contestuale
-     */
-    private ContextMenu createContextMenu(){
-        ContextMenu contextMenu = new ContextMenu();
-        ToggleGroup n = new ToggleGroup();
-
-        //Aggiungo il radiobutton "Tutti" per visualizzare tutti i contatti
-        RadioButton r = new RadioButton("Tutti");
-        r.setToggleGroup(n);
-        r.setSelected(true);
-        r.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            onViewUpdate();
-        });
-        contextMenu.getItems().add(new CustomMenuItem(r));
-
-        //Aggiungo i radiobutton per visualizzare i contatti con un tag specifico
-        for(Tag t : addressBook.getAllTags()){
-            RadioButton cb = new RadioButton(t.getDescription());
-            cb.setToggleGroup(n);
-            cb.setId("rb");
-            cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-               onViewUpdate();
-            });
-
-            CustomMenuItem tagItem = new CustomMenuItem(cb);
-            tagItem.setHideOnClick(false);
-            tagItem.setId(String.valueOf(t.getId()));
-            contextMenu.getItems().add(tagItem);
-        }
-
-        return contextMenu;
-    }
     
     @FXML
     private void showImagePopup(MouseEvent event) throws IOException {
@@ -789,6 +752,31 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     } 
     
     /* Metodi di utilità */
+    
+    
+    /**
+     * @brief Crea menù contestuale
+     *
+     * Questo metodo, eseguito in fase di inizializzazione della rubrica o da {@link MainController#contactsTable}, crea il menù contestuale
+     * @return Il menù contestuale
+     */
+    private ContextMenu createContextMenu(){
+        ContextMenu contextMenu = new ContextMenu();
+
+        for(Tag t : addressBook.getAllTags()){
+            CheckBox cb = new CheckBox(t.getDescription());
+            cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+               onViewUpdate();
+            });
+
+            CustomMenuItem tagItem = new CustomMenuItem(cb);
+            tagItem.setHideOnClick(false);
+            tagItem.setId(String.valueOf(t.getId()));
+            contextMenu.getItems().add(tagItem);
+        }
+        return contextMenu;
+    }
+    
     private void showPopup(String path, String title, double d1, double d2) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/" + path)));
         Scene scene = new Scene(root,d1,d2);

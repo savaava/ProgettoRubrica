@@ -97,8 +97,8 @@ public class Converter {
                     fileContent = stringToByteArray(line.substring(line.indexOf(":") + 1));
                 } else if (line.startsWith("END:VCARD")) {
                     Contact c = new Contact(nome, cognome);
-                    c.setNumbers(n.toArray(new String[0]));
-                    c.setEmails(em.toArray(new String[0]));
+                    c.setNumbers(n.toArray(new String[3]));
+                    c.setEmails(em.toArray(new String[3]));
                     c.setProfilePicture(fileContent);
                     contatti.add(c);
                     nome = null;
@@ -127,8 +127,6 @@ public class Converter {
     public static boolean checkCSVFormat(File file) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String firstLine = br.readLine();
-            System.out.println(firstLine);
-            System.out.println("First Name,Middle Name,Last Name,Phonetic First Name,Phonetic Middle Name,Phonetic Last Name,Name Prefix,Name Suffix,Nickname,File As,Organization Name,Organization Title,Organization Department,Birthday,Notes,Photo,Labels,E-mail 1 - Label,E-mail 1 - Value,E-mail 2 - Label,E-mail 2 - Value,E-mail 3 - Label,E-mail 3 - Value,Phone 1 - Label,Phone 1 - Value,Phone 2 - Label,Phone 2 - Value,Phone 3 - Label,Phone 3 - Value,Custom Field 1 - Label,Custom Field 1 - Value\\n\"");
             return firstLine != null && firstLine.equalsIgnoreCase("First Name,Middle Name,Last Name,Phonetic First Name,Phonetic Middle Name,Phonetic Last Name,Name Prefix,Name Suffix,Nickname,File As,Organization Name,Organization Title,Organization Department,Birthday,Notes,Photo,Labels,E-mail 1 - Label,E-mail 1 - Value,E-mail 2 - Label,E-mail 2 - Value,E-mail 3 - Label,E-mail 3 - Value,Phone 1 - Label,Phone 1 - Value,Phone 2 - Label,Phone 2 - Value,Phone 3 - Label,Phone 3 - Value,Custom Field 1 - Label,Custom Field 1 - Value");
         }
     }
@@ -299,7 +297,9 @@ public class Converter {
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+        String format = bufferedImage.getColorModel().hasAlpha() ? "png" : "jpg";
+        
+        ImageIO.write(bufferedImage, format, byteArrayOutputStream);
 
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
