@@ -37,10 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
-import javax.imageio.ImageIO;
 
 /**
  * @brief Controller che si occupa della scena iniziale.
@@ -85,8 +81,6 @@ public class MainController implements Initializable {
     
     @FXML
     private ChoiceBox<String> choiceBoxTag;
-    
-    private ChoiceBox<String> choiceBoxTag2,choiceBoxTag3;
     
     private ContextMenu contextMenu;  ///< menù per esportare e configurare database
 
@@ -144,11 +138,12 @@ public class MainController implements Initializable {
         numberField3  = new TextField();
         emailField2   = new TextField();
         emailField3   = new TextField();
-        choiceBoxTag2 = new ChoiceBox<>();
-        choiceBoxTag3 = new ChoiceBox<>();
         
         pathImage = pathsImages[0];
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
+
+        //Gestione eventi
+        choiceBoxTag.setOnAction(this::onChoiceBoxSelected);
 
         searchFieldBinding();
     }
@@ -232,7 +227,7 @@ public class MainController implements Initializable {
         emailsPane.setVisible(true);
         numbersPane.setVisible(true);
         tagsPane.setVisible(true);
-        //tagVBox.setVisible(false);
+
         tagVBox.getChildren().clear();
         
         deleteButton.setDisable(true);
@@ -313,40 +308,12 @@ public class MainController implements Initializable {
             }
         });
         
-        Collection<String> descriptionTags = new ArrayList<>();
-        descriptionTags.add("⧫ Nessuno ⧫");
-        for(Tag tag : addressBook.getAllTags())
-            descriptionTags.add(tag.getDescription());
-        choiceBoxTag.getItems().setAll(descriptionTags);
-        choiceBoxTag2.getItems().setAll(descriptionTags);
-        choiceBoxTag3.getItems().setAll(descriptionTags);
-        choiceBoxTag.setValue("⧫ Nessuno ⧫");
-        
-        choiceBoxTag.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.equals("⧫ Nessuno ⧫") && !tagsPane.getChildren().contains(choiceBoxTag2)){
-                tagsPane.add(choiceBoxTag2, 1, 1);
-            }else if(newValue.equals("⧫ Nessuno ⧫")){
-                if(!choiceBoxTag2.getValue().equals("⧫ Nessuno ⧫")){
-                    choiceBoxTag.setValue(choiceBoxTag2.getValue());
-                    choiceBoxTag2.setValue("⧫ Nessuno ⧫");
-                }else{
-                    tagsPane.getChildren().remove(choiceBoxTag2);
-                }
-            }
-        });
-        
-        choiceBoxTag2.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.equals("⧫ Nessuno ⧫") && !tagsPane.getChildren().contains(choiceBoxTag3)){
-                tagsPane.add(choiceBoxTag3, 1, 2);
-            }else if(newValue.equals("⧫ Nessuno ⧫")){
-                if(!choiceBoxTag3.getValue().equals("⧫ Nessuno ⧫")){
-                    choiceBoxTag2.setValue(choiceBoxTag3.getValue());
-                    choiceBoxTag3.setValue("⧫ Nessuno ⧫");
-                }else{
-                    tagsPane.getChildren().remove(choiceBoxTag3);
-                }
-            }
-        });
+        choiceBoxTag.getItems().clear();
+
+        for(Tag tag : addressBook.getAllTags()) {
+            String description = tag.getDescription();
+            choiceBoxTag.getItems().add(description);
+        }
         
         emailField.clear();
         emailField2.clear();
@@ -367,10 +334,7 @@ public class MainController implements Initializable {
     private void onContactClicked(MouseEvent event) {
         Contact selectedContact=contactsTable.getSelectionModel().getSelectedItem();
 
-        if(selectedContact == null)
-            return;
-       
-        System.out.println("CONTATTO SELEZIONATO:\n"+selectedContact);
+        if(selectedContact == null) return;
        
         this.contactDetailsPane.setVisible(true);
         tagsPane.setVisible(false);
@@ -445,14 +409,15 @@ public class MainController implements Initializable {
         }
         
         tagVBox.getChildren().clear();
-        int i=0;
-        if(selectedContact.getAllTagIndexes().isEmpty())
-            tagVBox.getChildren().add(new Label("Nessun tag"));
-        for(Integer id: selectedContact.getAllTagIndexes()){
-            i++;
-            tagVBox.getChildren().add(new Label("Tag" + i + ":  " + addressBook.getTag(id).getDescription()));
+        for(int i : selectedContact.getAllTagIndexes()){
+            Label tagLabel = new Label(addressBook.getTag(i).getDescription());
+            tagLabel.setId(String.valueOf(i));
+            tagLabel.setOnMouseClicked(e -> {
+                if(!nameField.isEditable()) return;
+                tagVBox.getChildren().remove(tagLabel);
+            });
+            tagVBox.getChildren().add(tagLabel);
         }
-        
     }
 
     /**
@@ -482,9 +447,6 @@ public class MainController implements Initializable {
         emailsPane.setVisible(true);
         numbersPane.setVisible(true);
         tagsPane.setVisible(true);
-        tagVBox.getChildren().clear();
-//        tagsPane.add(choiceBoxTag2, 1, 1);
-//        tagsPane.add(choiceBoxTag3, 1, 2);
         
         nameField.setEditable(true);
         surnameField.setEditable(true);
@@ -548,64 +510,37 @@ public class MainController implements Initializable {
                 }
             }
         });
-        
-        Collection<String> descriptionTags = new ArrayList<>();
-        descriptionTags.add("⧫ Nessuno ⧫");
-        for(Tag tag : addressBook.getAllTags())
-            descriptionTags.add(tag.getDescription());
-        choiceBoxTag.getItems().setAll(descriptionTags);
-        choiceBoxTag2.getItems().setAll(descriptionTags);
-        choiceBoxTag3.getItems().setAll(descriptionTags);    
-//        tagsPane.getChildren().remove(choiceBoxTag2);
-//        tagsPane.getChildren().remove(choiceBoxTag3);
-//        System.out.println(tagsPane.getChildren().size());
-        
-        int i = 0;
-        for(Integer tagIndex : selectedContact.getAllTagIndexes()){
-            i++;
-            if(i==1)
-                choiceBoxTag.setValue(addressBook.getTag(tagIndex).getDescription());
-            if(i==2){
-                tagsPane.getChildren().remove(choiceBoxTag2);
-                tagsPane.add(choiceBoxTag2, 1, 1);
-                choiceBoxTag2.setValue(addressBook.getTag(tagIndex).getDescription());
-            }
-            if(i==3){
-                
-                tagsPane.add(choiceBoxTag3, 1, 2);
-                choiceBoxTag3.setValue(addressBook.getTag(tagIndex).getDescription());
-            }
+
+        choiceBoxTag.getItems().clear();
+
+        for(Tag tag : addressBook.getAllTags()) {
+            String description = tag.getDescription();
+            choiceBoxTag.getItems().add(description);
         }
-        if(i==0)
-            choiceBoxTag.setValue("⧫ Nessuno ⧫");
-             
-        choiceBoxTag.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.equals("⧫ Nessuno ⧫") && !tagsPane.getChildren().contains(choiceBoxTag2)){
-                tagsPane.add(choiceBoxTag2, 1, 1);
-                choiceBoxTag2.setValue("⧫ Nessuno ⧫");
-            }else if(newValue.equals("⧫ Nessuno ⧫")){
-                if(choiceBoxTag2.getValue()!=null && !choiceBoxTag2.getValue().equals("⧫ Nessuno ⧫")){
-                    choiceBoxTag.setValue(choiceBoxTag2.getValue());
-                    choiceBoxTag2.setValue("⧫ Nessuno ⧫");
-                }else{
-                    tagsPane.getChildren().remove(choiceBoxTag2);
-                }
-            }
-        });
         
-        choiceBoxTag2.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.equals("⧫ Nessuno ⧫") && !tagsPane.getChildren().contains(choiceBoxTag3)){
-                tagsPane.add(choiceBoxTag3, 1, 2);
-                choiceBoxTag3.setValue("⧫ Nessuno ⧫");
-            }else if(newValue.equals("⧫ Nessuno ⧫")){
-                if(choiceBoxTag3.getValue()!=null && !choiceBoxTag3.getValue().equals("⧫ Nessuno ⧫")){
-                    choiceBoxTag2.setValue(choiceBoxTag3.getValue());
-                    choiceBoxTag3.setValue("⧫ Nessuno ⧫");
-                }else{
-                    tagsPane.getChildren().remove(choiceBoxTag3);
-                }
-            }
+    }
+
+    @FXML
+    private void onChoiceBoxSelected(ActionEvent event) {
+        String selectedTag = choiceBoxTag.getValue();
+        if(selectedTag == null) return;
+        
+        Tag tag = addressBook.getTag(selectedTag);
+        if(tag == null) return;
+
+        if(tagVBox.getChildren().filtered(e -> ((Label) e).getText().equals(selectedTag)).size() > 0) {
+            choiceBoxTag.getSelectionModel().clearSelection();
+            return;
+        };
+        
+        Label tagLabel = new Label(selectedTag);
+        tagLabel.setId(String.valueOf(tag.getId()));
+        tagLabel.setOnMouseClicked(e -> {
+            tagVBox.getChildren().remove(tagLabel);
         });
+        tagVBox.getChildren().add(tagLabel);
+
+        choiceBoxTag.getSelectionModel().clearSelection();
     }
 
     /**
@@ -679,26 +614,12 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             contactToAdd.setProfilePicture(imageBytes);
         }
 
-        String tag1;
-        String tag2;
-        String tag3;
-        System.out.println(choiceBoxTag2.getValue());
-        if(!choiceBoxTag.getValue().equals("⧫ Nessuno ⧫")){
-            tag1 = choiceBoxTag.getValue();
-            contactToAdd.addTagIndex(addressBook.getTag(tag1).getId());
-        }
-        if(choiceBoxTag2.getValue()!=null){
-            if(!choiceBoxTag2.getValue().equals("⧫ Nessuno ⧫")){
-                tag2 = choiceBoxTag2.getValue();
-                contactToAdd.addTagIndex(addressBook.getTag(tag2).getId());
-            }
-        }
-        if(choiceBoxTag3.getValue()!=null){
-            if(!choiceBoxTag3.getValue().equals("⧫ Nessuno ⧫")){
-                tag3 = choiceBoxTag3.getValue();
-                contactToAdd.addTagIndex(addressBook.getTag(tag3).getId());
-            }
-        }
+        tagVBox.getChildren().forEach(e -> {
+            Label tagLabel = (Label) e;
+            System.out.println(tagLabel.getId());
+            contactToAdd.addTagIndex(Integer.parseInt(tagLabel.getId()));
+        });
+
         
         if (selectedContact != null){
             /* l'utente ha modificato il contatto */

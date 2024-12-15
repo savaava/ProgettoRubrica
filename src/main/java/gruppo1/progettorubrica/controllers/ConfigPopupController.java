@@ -8,9 +8,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -34,6 +36,9 @@ public class ConfigPopupController implements Initializable {
     @FXML
     private TextField textField; ///< Campo di testo per inserire l'URL del database.
 
+    @FXML
+    private VBox vBox;
+
     /**
      * @brief Inizializza il main controller.
      *
@@ -48,7 +53,13 @@ public class ConfigPopupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             this.addressBook = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
 
         BooleanBinding buttonBinding = new BooleanBinding() {
             {
@@ -61,6 +72,20 @@ public class ConfigPopupController implements Initializable {
         };
 
         verifyButton.disableProperty().bind(buttonBinding);
+
+        if(addressBook.getDBUrl() != null && !addressBook.getDBUrl().isEmpty()) {
+            System.out.println("URL: " + addressBook.getDBUrl());
+            Button removeConfig = new Button("Rimuovi configurazione");
+            vBox.getChildren().add(removeConfig);
+
+            removeConfig.setOnAction(e -> {
+                addressBook.setDBUrl("");
+                addressBook.removeDB();
+                addressBook.removeConfig();
+                ((Stage) ((Node) e.getSource()).getScene().getWindow()).close();
+            });
+
+        }
     }
 
     /**

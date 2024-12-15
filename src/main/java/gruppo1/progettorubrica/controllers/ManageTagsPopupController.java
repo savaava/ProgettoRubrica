@@ -7,10 +7,7 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
@@ -48,7 +45,13 @@ public class ManageTagsPopupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             this.tagManager = AddressBook.getInstance();
-        } catch (IOException ex) {ex.printStackTrace();}
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore di caricamento");
+            alert.setHeaderText("Impossibile caricare AddressBook");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
         
         tagsListView.setItems(tagManager.getAllTags()); 
         
