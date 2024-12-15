@@ -521,7 +521,9 @@ public class AddressBookTest {
     }
     
     /**
+     * UTC 1.12 (LEGGERO)
      * 
+     * metodo getTag in base alla stringa
      */
     @Test
     public void testGetTag() throws IOException{
@@ -532,11 +534,11 @@ public class AddressBookTest {
         a = AddressBook.getInstance();
         a.addManyTags(tagsProva);
         
-        Tag tagTrovato1 = a.getTag(tagsProva.get(1).getDescription());
-        Tag tagTrovato2 = a.getTag(tagsProva.get(2).getDescription());
+        Tag tagPrelevato1 = a.getTag(tagsProva.get(1).getDescription());
+        Tag tagPrelevato2 = a.getTag(tagsProva.get(2).getDescription());
         
-        assertEquals(tagsProva.get(1), tagTrovato1);
-        assertEquals(tagsProva.get(2), tagTrovato2);
+        assertEquals(tagsProva.get(1), tagPrelevato1);
+        assertEquals(tagsProva.get(2), tagPrelevato2);
     }
     
     /**
@@ -557,7 +559,7 @@ public class AddressBookTest {
     /**
      * UTC 1.14 (LEGGERO)
      * 
-     * Tag presente
+     * metodo getTag in base all'indice
      */
     @Test
     public void testGetTag1() throws IOException {
@@ -576,7 +578,7 @@ public class AddressBookTest {
     /**
      * UTC 1.15 (LEGGERO)
      * 
-     * Tag non presente
+     * metodo getTag in base all'indice
      */
     @Test
     public void testGetTag2() throws IOException {
@@ -727,7 +729,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC (LEGGERO)
+     * UTC 1.20 (LEGGERO)
      */
     @Test
     public void testGetContactsFromTag() throws IOException{
@@ -753,7 +755,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.20 (ONEROSO)
+     * UTC 1.21 (ONEROSO)
      * 
      * Il tag si rimuove dal DB e non dal file Data.bin.
      */
@@ -809,7 +811,7 @@ public class AddressBookTest {
     }
 
     /**
-     * UTC 1.26 (LEGGERO)
+     * UTC 1.23 (LEGGERO)
      * 
      * In fase di inizializzazione esiste il file Config.bin e quindi il campo dbUrl è valorizzato
      */
@@ -827,7 +829,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.27 (LEGGERO)
+     * UTC 1.24 (LEGGERO)
      * 
      * In fase di inizializzazione NON esiste il file Config.bin, ma l'utente inserisce durante la sessione l'url del DB.
      */
@@ -842,7 +844,7 @@ public class AddressBookTest {
     }
 
     /**
-     * UTC 1.28 (LEGGERO)
+     * UTC 1.25 (LEGGERO)
      * 
      * Vi sono sia contatti che tags da salvare in locale. (non esiste il DB).
      */
@@ -873,7 +875,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.29 (LEGGERO)
+     * UTC 1.26 (LEGGERO)
      * 
      * Vi sono solo contatti da salvare in locale. (non esiste il DB).
      */
@@ -902,7 +904,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.30 (LEGGERO)
+     * UTC 1.27 (LEGGERO)
      * 
      * Vi sono solo tags da salvare in locale. (non esiste il DB).
      */
@@ -931,7 +933,7 @@ public class AddressBookTest {
     }
 
     /**
-     * UTC 1.31 (LEGGERO)
+     * UTC 1.28 (LEGGERO)
      * 
      * La rubrica preleva entrambi contatti e tags dal file Data.bin
      */
@@ -957,7 +959,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.32 (LEGGERO)
+     * UTC 1.29 (LEGGERO)
      * 
      * La rubrica preleva solo contatti dal file Data.bin
      */
@@ -983,7 +985,7 @@ public class AddressBookTest {
     }
     
     /**
-     * UTC 1.33 (LEGGERO)
+     * UTC 1.30 (LEGGERO)
      * 
      * La rubrica preleva solo tag dal file Data.bin
      */
@@ -1011,7 +1013,7 @@ public class AddressBookTest {
     }
 
     /**
-     * UTC 1.34 (LEGGERO)
+     * UTC 1.31 (LEGGERO)
      */
     @Test
     public void testRemoveOBJ() throws IOException {
@@ -1028,7 +1030,7 @@ public class AddressBookTest {
     }
 
     /**
-     * UTC 1.35 (ONEROSO)
+     * UTC 1.32 (ONEROSO)
      */
     //@Test
     public void testSaveToDB() throws IOException {

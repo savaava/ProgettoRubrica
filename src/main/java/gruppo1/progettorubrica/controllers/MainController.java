@@ -99,6 +99,8 @@ public class MainController implements Initializable {
                                     "/images/FotoProfilo3.jpg",
                                     "/images/FotoProfilo4.jpg"};
     
+    private String pathImage;
+    
     /**
      * @brief Inizializza il main controller
      *
@@ -143,8 +145,9 @@ public class MainController implements Initializable {
         emailField3   = new TextField();
         choiceBoxTag2 = new ChoiceBox<>();
         choiceBoxTag3 = new ChoiceBox<>();
-               
-        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
+        
+        pathImage = pathsImages[0];
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
 
         searchFieldBinding();
     }
@@ -392,8 +395,12 @@ public class MainController implements Initializable {
         numberField2.clear();
         numberField3.clear();
         
-        byte image[] = toPrimitive(selectedContact.getProfilePicture());
-        profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        if(selectedContact.getProfilePicture().length != 0){
+            byte image[] = toPrimitive(selectedContact.getProfilePicture());
+            profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        }else{
+            profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
+        }
         
         nameField.setText(selectedContact.getName());
         surnameField.setText(selectedContact.getSurname());
@@ -591,8 +598,10 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
         
-        Byte[] imageBytes = ImageViewToByteArray(profileImageView);
-        contactToAdd.setProfilePicture(imageBytes);
+        if(! pathImage.equals(pathsImages[0])){
+            Byte[] imageBytes = ImageViewToByteArray(profileImageView);
+            contactToAdd.setProfilePicture(imageBytes);
+        }
 
         if (selectedContact != null){
             /* l'utente ha modificato il contatto */
@@ -717,17 +726,18 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         popup.setScene(scene);
         popup.showAndWait();
         
+        if(ImageController.getImageIndex() == -1)
+            return;
+        
         if(ImageController.getImageIndex() == 5){
+            pathImage = pathsImages[5];
             File selectedImageFile = ImageController.getSelectedImage();
             Image image = new Image(selectedImageFile.toURI().toString());
             profileImageView.setImage(image);
             return ;
         }
         
-        if(ImageController.getImageIndex() == -1)
-            return;
-        
-        String pathImage = pathsImages[ImageController.getImageIndex()];
+        pathImage = pathsImages[ImageController.getImageIndex()];
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
     } 
     
