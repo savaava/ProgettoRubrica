@@ -144,6 +144,15 @@ public class AddressBook implements TagManager, ContactManager {
     }
 
     @Override
+    public Tag getTag(String descrizione){
+        for(Tag tag : tags){
+            if(tag.getDescription().equals(descrizione))
+                return tag;
+        }
+        return null;
+    }
+    
+    @Override
     public ObservableList<Tag> getAllTags() {
         return tags;
     }

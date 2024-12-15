@@ -521,6 +521,25 @@ public class AddressBookTest {
     }
     
     /**
+     * 
+     */
+    @Test
+    public void testGetTag() throws IOException{
+        System.out.println("getTag");
+        
+        List<Tag> tagsProva = getListaTagCasuali(3);
+        
+        a = AddressBook.getInstance();
+        a.addManyTags(tagsProva);
+        
+        Tag tagTrovato1 = a.getTag(tagsProva.get(1).getDescription());
+        Tag tagTrovato2 = a.getTag(tagsProva.get(2).getDescription());
+        
+        assertEquals(tagsProva.get(1), tagTrovato1);
+        assertEquals(tagsProva.get(2), tagTrovato2);
+    }
+    
+    /**
      * UTC 1.13 (LEGGERO)
      */
     @Test
@@ -705,6 +724,32 @@ public class AddressBookTest {
         assertTrue(a.getAllTags().contains(tagVett[0])
                 && a.getAllTags().contains(tagVett[2]));
         assertEquals(tagLetti, a.getAllTags());
+    }
+    
+    /**
+     * UTC (LEGGERO)
+     */
+    @Test
+    public void testGetContactsFromTag() throws IOException{
+        System.out.println("getontactsFromTag");
+        
+        List<Tag> tagsProva = getListaTagCasuali(2);
+        List<Contact> contactsProva = getListaContattiCasuali(2);
+        contactsProva.get(0).addTagIndex(tagsProva.get(0).getId());
+        contactsProva.get(0).addTagIndex(tagsProva.get(1).getId());
+        contactsProva.get(1).addTagIndex(tagsProva.get(0).getId());
+        
+        a = AddressBook.getInstance();
+        a.addManyContacts(contactsProva);
+        a.addManyTags(tagsProva);
+        
+        Collection<Contact> collec1 = a.getContactsFromTag(tagsProva.get(0));
+        Collection<Contact> collec2 = a.getContactsFromTag(tagsProva.get(1));
+        
+        assertEquals(2, collec1.size());
+        assertEquals(contactsProva, collec1);
+        assertEquals(1, collec2.size());
+        assertTrue(collec2.contains(contactsProva.get(0)));
     }
     
     /**

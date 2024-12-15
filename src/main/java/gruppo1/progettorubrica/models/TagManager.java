@@ -40,6 +40,15 @@ public interface TagManager {
      * @return Il tag associato al parametro in ingresso id, null se non lo trova.
      */
     Tag getTag(int id);
+    
+    /**
+     * @brief Trova il tag corrispondente ad una certa stringa
+     * @param[in] descrizione 
+     * @pre nessuna
+     * @post il client ottiene l'eventuale tag che contiene la stringa descrizione in ingresso
+     * @return il tag associato a descrizione, null se non esiste.
+     */
+    Tag getTag(String descrizione);
 
     /**
      * @pre nessuna (ci possono essere 0 o più tags).
