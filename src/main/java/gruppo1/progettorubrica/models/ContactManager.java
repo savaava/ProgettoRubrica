@@ -40,4 +40,13 @@ public interface ContactManager {
      * @post Aggiorna la lista dei contatti dell'AddressBook rimuovendo il contatto c, se presente.
      */
     void removeContact(Contact c) throws IOException;
+    
+    /**
+     * @brief Restituisce la sottocollezione dei contatti a cui è associato il tag in ingresso
+     * @pre Il tag esiste, quindi è stato inserito dall'utente nell'elenco dei tag
+     * @post Il client ottiene i contatti interessati.
+     * @param[in] tag
+     * @return la collezione dei contatti, oppure una collezione vuota se non vi sono contatti associati a tag.
+     */
+    Collection<Contact> getContactsFromTag(Tag tag);
 }

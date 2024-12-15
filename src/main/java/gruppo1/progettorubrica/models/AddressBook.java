@@ -217,6 +217,20 @@ public class AddressBook implements TagManager, ContactManager {
         }
     }
 
+    @Override
+    public Collection<Contact> getContactsFromTag(Tag tag) {
+        Collection<Contact> out = new ArrayList<>();
+        
+        if(!tags.contains(tag))
+            return out;
+        
+        for(Contact c : contacts){
+            if(c.getAllTagIndexes().contains(tag.getId()))
+                out.add(c);
+        }        
+        return out;
+    }
+    
     /**
      * @brief Valorizza l'attributo dbUrl inserendo il link del database.
      * @param[in] dbUrl Link del database.
