@@ -18,17 +18,21 @@ import java.util.Scanner;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.nio.charset.StandardCharsets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 public class ConverterTest {
 
     private File csvFile;
-
     private File vcfFile;
-
+    private String img1;
+    private String img2;
+    
     @Before
     public void setUp() throws IOException {
-
+        this.img1 = Converter.byteArrayToString(Converter.imageViewToByteArray(new ImageView(new Image(getClass().getResourceAsStream("/images/FotoProfilo1.jpg")))));
+        this.img2 = Converter.byteArrayToString(Converter.imageViewToByteArray(new ImageView(new Image(getClass().getResourceAsStream("/images/FotoProfilo2.jpg")))));
     }
 
     ///UTC 3.1
@@ -163,8 +167,8 @@ public class ConverterTest {
         Converter.onExportCSV(contacts, tempFile);
         List<String> lines = Files.readAllLines(tempFile.toPath());
         assertTrue(lines.get(0).contains("First Name,Middle Name,Last Name,Phonetic First Name,Phonetic Middle Name,Phonetic Last Name,Name Prefix,Name Suffix,Nickname,File As,Organization Name,Organization Title,Organization Department,Birthday,Notes,Photo,Labels,E-mail 1 - Label,E-mail 1 - Value,E-mail 2 - Label,E-mail 2 - Value,E-mail 3 - Label,E-mail 3 - Value,Phone 1 - Label,Phone 1 - Value,Phone 2 - Label,Phone 2 - Value,Phone 3 - Label,Phone 3 - Value,Custom Field 1 - Label,Custom Field 1 - Value"));
-        assertTrue(lines.get(1).contains("Luca,,Rossi,,,,,,,,,,,,,profilePicture1,,,l.rossi@gmail.com,,rossil@outlook.com,,lucarossi@alice.it,,1234567890,,0987654321,,1122334455,,,"));
-        assertTrue(lines.get(2).contains("Mario,,Grigi,,,,,,,,,,,,,profilePicture2,,,m.grigi@gmail.com,,grigimar@outlook.com,,,,2233445566,,6655443322,,7788990011,,,"));
+        assertTrue(lines.get(1).contains("Luca,,Rossi,,,,,,,,,,,,," + img1 + ",,,l.rossi@gmail.com,,rossil@outlook.com,,lucarossi@alice.it,,1234567890,,0987654321,,1122334455,,,"));
+        assertTrue(lines.get(2).contains("Mario,,Grigi,,,,,,,,,,,,," + img2 + ",,,m.grigi@gmail.com,,grigimar@outlook.com,,,,2233445566,,6655443322,,7788990011,,,"));
     }
     ///UTC 3.11
     @Test
@@ -202,7 +206,7 @@ public class ConverterTest {
                 assertEquals("EMAIL;TYPE:l.rossi@gmail.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:rossil@outlook.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:lucarossi@alice.it", s.next().replaceAll("\\s+", ""));
-                assertEquals(("PHOTO:" + "profilePicture1"), s.next().replaceAll("\\s+", ""));
+                assertEquals(("PHOTO:" + img1), s.next().replaceAll("\\s+", ""));
                 assertEquals("END:VCARD", s.next().replaceAll("\\s+", ""));
                 assertEquals("BEGIN:VCARD", s.next().replaceAll("\\s+", ""));  //Secondo contatto
                 assertEquals("VERSION:3.0", s.next().replaceAll("\\s+", ""));
@@ -213,7 +217,7 @@ public class ConverterTest {
                 assertEquals("TEL;TYPE:7788990011", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:m.grigi@gmail.com", s.next().replaceAll("\\s+", ""));
                 assertEquals("EMAIL;TYPE:grigimar@outlook.com", s.next().replaceAll("\\s+", ""));
-                assertEquals(("PHOTO:profilePicture2"), s.next().replaceAll("\\s+", ""));
+                assertEquals(("PHOTO:" + img2), s.next().replaceAll("\\s+", ""));
                 assertEquals("END:VCARD", s.next().replaceAll("\\s+", "").replaceAll("\\s+", ""));
             }
         }
@@ -258,18 +262,18 @@ public class ConverterTest {
         }
     }
 
-    private List<Contact> createContacts(){
+    private List<Contact> createContacts() throws IOException{
         List<Contact> contacts = new ArrayList<>();
         Contact contact1 = new Contact("Luca", "Rossi");
         contact1.setNumbers(new String[]{"1234567890", "0987654321", "1122334455"});
         contact1.setEmails(new String[]{"l.rossi@gmail.com","rossil@outlook.com","lucarossi@alice.it"});
-        contact1.setProfilePicture(Converter.stringToByteArray("profilePicture1"));
+        contact1.setProfilePicture(Converter.imageViewToByteArray(new ImageView(new Image(getClass().getResourceAsStream("/images/FotoProfilo1.jpg")))));
         contacts.add(contact1);
 
         Contact contact2 = new Contact("Mario", "Grigi");
         contact2.setNumbers(new String[]{"2233445566", "6655443322", "7788990011"});
         contact2.setEmails(new String[]{"m.grigi@gmail.com","grigimar@outlook.com",""});
-        contact2.setProfilePicture(Converter.stringToByteArray("profilePicture2"));
+        contact2.setProfilePicture(Converter.imageViewToByteArray(new ImageView(new Image(getClass().getResourceAsStream("/images/FotoProfilo2.jpg")))));
         contacts.add(contact2);
 
         return contacts;
