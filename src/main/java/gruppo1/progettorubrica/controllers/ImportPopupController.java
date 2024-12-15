@@ -101,7 +101,7 @@ public class ImportPopupController implements Initializable {
                 contatti = Converter.parseVCard(this.file);
             }
             contactManager.addManyContacts(contatti);
-            System.out.println(contatti);
+            
         } catch (IOException ex) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");

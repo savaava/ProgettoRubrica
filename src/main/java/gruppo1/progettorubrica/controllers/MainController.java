@@ -208,7 +208,7 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
+        
         this.contextMenu.show(filterImage, mouseEvent.getScreenX(), mouseEvent.getScreenY());  
     }
 
@@ -711,6 +711,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     @FXML
     private void showManageTagsPopup(ActionEvent event) throws IOException {
         showPopup("ManageTags_popup.fxml", "Gestione tag",500,500);
+        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
     }
 
     /**
