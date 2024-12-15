@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+
+package "gruppo1.progettorubrica" {
+    class AddressBookMain
+
+    package "controllers" {
+        class ConfigPopupController
+        class ConfirmPopupController
+        class ExportPopupController
+        class ImagePopupController
+        class ImportPopupController
+        class MainController
+        class ManageTagsPopupController
+    }
+
+    package "models" {
+        class AddressBook
+        class Contact
+        interface ContactManager
+        class Tag
+        interface TagManager
+    }
+
+    package "services" {
+        class Converter
+        class Database
+    }
+}
+
+package "Test Packages" {
+    package "models" {
+        class AddressBookTest
+        class ContactTest
+        class TagTest
+    }
+
+    package "services" {
+        class ConverterTest
+        class DatabaseTest
+    }
+}
+@enduml

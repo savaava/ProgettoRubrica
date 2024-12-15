@@ -32,6 +32,7 @@ public class ContactTest {
     @Test
     public void testGetId() {
         System.out.println("getId");
+        
         c.setId("pluto");
         assertEquals("pluto", c.getId());
     }
@@ -42,6 +43,7 @@ public class ContactTest {
     @Test
     public void testSetId() {
         System.out.println("setId");
+        
         c.setId("paperino");
         assertEquals("paperino", c.getId());
     }
@@ -143,6 +145,7 @@ public class ContactTest {
     @Test
     public void testGetEmails() {
         System.out.println("getEmails");
+        
         String emails[]=c.getEmails();
         assertNull(emails[0]);
         assertNull(emails[1]);
@@ -183,6 +186,7 @@ public class ContactTest {
     @Test
     public void testSetProfilePicture() {
         System.out.println("setProfilePicture");
+        
         Byte profilePicture[]={3,4,5};
         c.setProfilePicture(profilePicture);
         Byte profilePicture1[]=c.getProfilePicture();
@@ -225,7 +229,7 @@ public class ContactTest {
         Set<Integer> tags2=c.getAllTagIndexes();
         
         assertTrue(c.removeTagIndex(2));
-        assertFalse(c.removeTagIndex(5)); //provo a rimuovere un tag non presente
+        assertFalse(c.removeTagIndex(5));
         assertFalse(tags2.contains(2));
     }
     
@@ -245,6 +249,7 @@ public class ContactTest {
         assertTrue(tags.contains(1));
         assertTrue(tags.contains(2));
         assertTrue(tags.contains(3));
+        assertFalse(tags.contains(4));
         
     }
 
@@ -255,6 +260,7 @@ public class ContactTest {
     @Test
     public void testEquals1() {
         System.out.println("equals1");
+        
         String s="paperino";
         
         Contact c1=new Contact("pippo", "paperino");
@@ -286,10 +292,10 @@ public class ContactTest {
         c.setProfilePicture(image1);
         c1.setProfilePicture(image2);
         
-        assertNotEquals(c, null); //confronto Contact c con un riferimento null
-        assertEquals(c, c); //confronto Contact c con se stesso
-        assertNotEquals(c, s); //confronto Contact c con un'istanza di una classe diversa da Contact
-        assertNotEquals(c, c1); //confronto Contact c e c1 i quali contengono stessi valori
+        assertNotEquals(c, null);
+        assertEquals(c, c); 
+        assertNotEquals(c, s); 
+        assertNotEquals(c, c1);
     }
     
     

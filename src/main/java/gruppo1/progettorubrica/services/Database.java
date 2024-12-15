@@ -2,6 +2,7 @@ package gruppo1.progettorubrica.services;
 
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UpdateOptions;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import org.bson.Document;
@@ -60,7 +61,7 @@ public class Database {
      */
     public void insertContact(Contact c) {
         if(c == null) return;
-        mongoDb.getCollection("contacts").insertOne(this.contactToDocument(c));
+        mongoDb.getCollection("contacts").updateOne(Filters.eq("_id", c.getId()), new Document("$set", this.contactToDocument(c)), new UpdateOptions().upsert(true));
     }
 
     /**
@@ -82,7 +83,7 @@ public class Database {
      */
     public void insertTag(Tag tag) {
         if(tag == null) return;
-        mongoDb.getCollection("tags").insertOne(this.tagToDocument(tag));
+        mongoDb.getCollection("tags").updateOne(Filters.eq("_id", tag.getId()), new Document("$set", this.tagToDocument(tag)), new UpdateOptions().upsert(true));
     }
 
     /**

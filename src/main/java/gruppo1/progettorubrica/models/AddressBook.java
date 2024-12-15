@@ -89,6 +89,7 @@ public class AddressBook implements TagManager, ContactManager {
     @Override
     public void addContact(Contact c) throws IOException {
         if(c != null){
+            contacts.remove(c);
             contacts.add(c);
             if(Database.verifyDBUrl(dbUrl)){
                 if(new File(pathData).exists()){
@@ -332,7 +333,7 @@ public class AddressBook implements TagManager, ContactManager {
      * @post tutti i contatti e tags del file Data.bin vengono inseriti nel DB.
      */
     public void dataToDB() throws IOException{
-        System.out.print("Trasferimento Data.bin sul DB... ");
+        //System.out.print("Trasferimento Data.bin sul DB... ");
         
         try(ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(pathData)))){
             try {
@@ -364,11 +365,11 @@ public class AddressBook implements TagManager, ContactManager {
      * @throws IOException se non lo trova o se non riesce a leggere il file Config.bin.
      */
     public void loadConfig() throws IOException {
-        System.out.print("Lettura del file Config.bin... ");
+        //System.out.print("Lettura del file Config.bin... ");
         
         try(DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(pathConfig)))){
             dbUrl = dis.readUTF();
-            System.out.println("completata con successo");
+            //System.out.println("completata con successo");
         }
     }
 
@@ -379,13 +380,13 @@ public class AddressBook implements TagManager, ContactManager {
      * se già esiste allora lo sovrascrive.
      */
     public void saveConfig() throws IOException {
-        System.out.print("Scrittua file Config.bin... ");
+        //System.out.print("Scrittua file Config.bin... ");
         
         /* SCHEMA DI SALVATAGGIO: una sola stringa nell'unica riga
         path_file_Config.bin */
         try(DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(pathConfig)))){
             dos.writeUTF(dbUrl);
-            System.out.println("completata con successo");
+            //System.out.println("completata con successo");
         }
     }
 

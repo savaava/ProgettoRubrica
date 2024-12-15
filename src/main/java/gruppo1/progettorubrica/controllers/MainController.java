@@ -127,6 +127,9 @@ public class MainController implements Initializable {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
+        //Sorting per cognome di default
+        contactsTable.getSortOrder().add(surnameColumn);
+
         //Crea il menù contestuale
         this.contextMenu = this.createContextMenu();
      
@@ -369,7 +372,7 @@ public class MainController implements Initializable {
         numberField.clear();
         numberField2.clear();
         numberField3.clear();
-        
+
         if(selectedContact.getProfilePicture() != null){
             byte[] image = Converter.toPrimitive(selectedContact.getProfilePicture());
             profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
@@ -381,39 +384,45 @@ public class MainController implements Initializable {
         surnameField.setText(selectedContact.getSurname());
         
         String[] emails = selectedContact.getEmails();
-        if(emails[0] == null){
-            emailsPane.setVisible(false);
-        }else{
-            emailsPane.setVisible(true);
-            emailField.setText(emails[0]);
-            if(emails[1]!=null){
-                emailsPane.getChildren().remove(emailField2);
-                emailField2.setText(emails[1]);
-                emailsPane.add(emailField2, 1, 1);
-            }
-            if(emails[2]!=null){
-                emailsPane.getChildren().remove(emailField3);
-                emailField3.setText(emails[2]);
-                emailsPane.add(emailField3, 1, 2);
-            }
+        emailsPane.setVisible(emails[0] != null && !emails[0].isEmpty());
+        emailField.setText(emails[0] != null ? emails[0] : "");
+        emailsPane.getChildren().removeAll(emailField2, emailField3);
+
+        if (emails[1] != null && !emails[1].isEmpty()) {
+            emailField2.setText(emails[1]);
+            emailsPane.add(emailField2, 1, 1);
+        } else {
+            emailField2.clear();
+            emailsPane.getChildren().remove(emailField2);
+        }
+
+        if (emails[2] != null && !emails[2].isEmpty()) {
+            emailField3.setText(emails[2]);
+            emailsPane.add(emailField3, 1, 2);
+        } else {
+            emailField3.clear();
+            emailsPane.getChildren().remove(emailField3);
         }
         
         String[] numbers = selectedContact.getNumbers();
-        if(numbers[0] == null){
-            numbersPane.setVisible(false);
-        }else{
-            numbersPane.setVisible(true);
-            numberField.setText(numbers[0]);
-            if(numbers[1]!=null){
-            numbersPane.getChildren().remove(numberField2);
+        numbersPane.setVisible(numbers[0] != null && !numbers[0].isEmpty());
+        numberField.setText(numbers[0] != null ? numbers[0] : "");
+        numbersPane.getChildren().removeAll(numberField2, numberField3);
+
+        if (numbers[1] != null && !numbers[1].isEmpty()) {
             numberField2.setText(numbers[1]);
             numbersPane.add(numberField2, 1, 1);
+        } else {
+            numberField2.clear();
+            numbersPane.getChildren().remove(numberField2);
         }
-        if(numbers[2]!=null){
-            numbersPane.getChildren().remove(numberField3);
+
+        if (numbers[2] != null && !numbers[2].isEmpty()) {
             numberField3.setText(numbers[2]);
             numbersPane.add(numberField3, 1, 2);
-        }
+        } else {
+            numberField3.clear();
+            numbersPane.getChildren().remove(numberField3);
         }
         
         tagVBox.getChildren().clear();
@@ -603,6 +612,11 @@ public class MainController implements Initializable {
     @FXML
     private void onSaveContact(ActionEvent event) throws IOException {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+
+        numberField.textProperty().unbind();
+        numberField2.textProperty().unbind();
+        emailField.textProperty().unbind();
+        emailField2.textProperty().unbind();
         
         Contact contactToAdd = new Contact(nameField.getText(),surnameField.getText());
         String num[] = new String[3];
@@ -635,13 +649,20 @@ public class MainController implements Initializable {
 
         
         if (selectedContact != null){
-            /* l'utente ha modificato il contatto */
-            addressBook.removeContact(selectedContact);
+            contactToAdd.setId(selectedContact.getId());
         }
         
         addressBook.addContact(contactToAdd);
         
         contactDetailsPane.setVisible(false);
+
+        if(contactsTable.getSortOrder() != null && !contactsTable.getSortOrder().isEmpty()) {
+            //Riordina la tabella in base all'ordinamento corrente, se presente
+            TableColumn<Contact, ?> c = contactsTable.getSortOrder().get(0);
+
+            contactsTable.getSortOrder().clear();
+            contactsTable.getSortOrder().add(c);
+        }
     }
 
     /**
@@ -737,7 +758,10 @@ public class MainController implements Initializable {
         popup.setScene(scene);
         popup.showAndWait();
         
-        if(imageController.getImageIndex() == -1) return;
+        if(imageController.getImageIndex() == -1) {
+            pathImage = pathsImages[imageController.getImageIndex()];
+            return;
+        };
         
         if(imageController.getImageIndex() == 5){
             File selectedImageFile = imageController.getSelectedImage();
