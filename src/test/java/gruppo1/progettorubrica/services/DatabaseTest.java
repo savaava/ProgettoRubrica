@@ -5,9 +5,7 @@ import gruppo1.progettorubrica.models.Tag;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.bson.Document;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.util.*;
@@ -178,6 +176,10 @@ public class DatabaseTest {
     public void testInsertManyContacts() {
         database = new Database(url);
 
+        //Salvo lo stato iniziale del database
+        Collection<Contact> savedContacts = database.getAllContacts();
+        database.deleteAllContacts();
+
         List<Contact> contacts = new ArrayList<>();
 
         Contact c1 = new Contact("Mario","Rossi");
@@ -196,6 +198,9 @@ public class DatabaseTest {
         database.removeContact(c2);
         database.removeContact(c3);
 
+        if(!savedContacts.isEmpty())
+            database.insertManyContacts(savedContacts);
+
         assertTrue(result.contains(c1));
         assertTrue(result.contains(c2));
         assertTrue(result.contains(c3));
@@ -204,6 +209,10 @@ public class DatabaseTest {
     @Test
     public void testInsertManyTags() {
         database = new Database(url);
+
+        //Salvo lo stato iniziale del database
+        Collection<Tag> savedTags = database.getAllTags();
+        database.deleteAllTags();
 
         List<Tag> tags = new ArrayList<>();
 
@@ -218,14 +227,17 @@ public class DatabaseTest {
         database.insertManyTags(tags);
         Collection<Tag> result = database.getAllTags();
 
-        assertTrue(result.contains(t1));
-        assertTrue(result.contains(t2));
-        assertTrue(result.contains(t3));
-
         //Ripristino lo stato iniziale del database
         database.removeTag(t1);
         database.removeTag(t2);
         database.removeTag(t3);
+
+        if(!savedTags.isEmpty())
+            database.insertManyTags(savedTags);
+
+        assertTrue(result.contains(t1));
+        assertTrue(result.contains(t2));
+        assertTrue(result.contains(t3));
     }
 
     @Test
@@ -355,7 +367,7 @@ public class DatabaseTest {
         Document doc = database.tagToDocument(t);
 
         assertEquals(description, doc.get("description"));
-        assertEquals(id, doc.get("id"));
+        assertEquals(id, doc.get("_id"));
     }
 
     @Test
@@ -367,7 +379,7 @@ public class DatabaseTest {
         int id = 1;
 
         doc.append("description", description);
-        doc.append("id", id);
+        doc.append("_id", id);
 
         Tag t = database.documentToTag(doc);
 

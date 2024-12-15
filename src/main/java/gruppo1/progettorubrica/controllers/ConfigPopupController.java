@@ -2,7 +2,6 @@ package gruppo1.progettorubrica.controllers;
 
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.services.Database;
-import java.io.IOException;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -74,7 +74,6 @@ public class ConfigPopupController implements Initializable {
         verifyButton.disableProperty().bind(buttonBinding);
 
         if(addressBook.getDBUrl() != null && !addressBook.getDBUrl().isEmpty()) {
-            System.out.println("URL: " + addressBook.getDBUrl());
             Button removeConfig = new Button("Rimuovi configurazione");
             vBox.getChildren().add(removeConfig);
 
@@ -82,6 +81,15 @@ public class ConfigPopupController implements Initializable {
                 addressBook.setDBUrl("");
                 addressBook.removeDB();
                 addressBook.removeConfig();
+                try {
+                    addressBook.saveOBJ();
+                } catch (IOException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Errore di caricamento");
+                    alert.setHeaderText("Impossibile caricare AddressBook");
+                    alert.setContentText(ex.getMessage());
+                    alert.showAndWait();
+                }
                 ((Stage) ((Node) e.getSource()).getScene().getWindow()).close();
             });
 

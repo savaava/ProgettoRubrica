@@ -3,10 +3,10 @@ package gruppo1.progettorubrica.controllers;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
-import java.awt.image.BufferedImage;
-
 import gruppo1.progettorubrica.services.Converter;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -23,18 +25,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.beans.binding.BooleanBinding;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -120,10 +115,20 @@ public class MainController implements Initializable {
 
         this.filteredContacts = new FilteredList<>(addressBook.getAllContacts());
 
-        //Riempie la tabella con i contatti
-        this.contactsTable.setItems(filteredContacts);
+        // Crea una SortedList dalla FilteredList
+        SortedList<Contact> sortedContacts = new SortedList<>(this.filteredContacts);
+
+        // Associa il comparatore della SortedList al comparatore della TableView
+        sortedContacts.comparatorProperty().bind(this.contactsTable.comparatorProperty());
+
+        // Riempie la tabella con i contatti ordinabili
+        this.contactsTable.setItems(sortedContacts);
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+
+        //Sorting per cognome di default
+        contactsTable.getSortOrder().add(surnameColumn);
 
         //Crea il menù contestuale
         this.contextMenu = this.createContextMenu();
@@ -133,6 +138,10 @@ public class MainController implements Initializable {
 
         //Imposta immagine imbuto
         filterImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/filter.png"))));
+
+        //Gestisce larghezza delle colonne
+        nameColumn.prefWidthProperty().bind(contactsTable.widthProperty().divide(2));
+        surnameColumn.prefWidthProperty().bind(contactsTable.widthProperty().divide(2));
 
         numberField2  = new TextField();
         numberField3  = new TextField();
@@ -144,6 +153,9 @@ public class MainController implements Initializable {
 
         //Gestione eventi
         choiceBoxTag.setOnAction(this::onChoiceBoxSelected);
+
+        //Set font size
+        tagVBox.setStyle("-fx-font-size: 16px;");
 
         searchFieldBinding();
     }
@@ -187,7 +199,7 @@ public class MainController implements Initializable {
                     contact.getName().toLowerCase().contains(searchField.getText().toLowerCase()) ||
                     contact.getSurname().toLowerCase().contains(searchField.getText().toLowerCase());
 
-            FilteredList<MenuItem> selectedTagItems = contextMenu.getItems().filtered(e -> e.getId() != null && ((CheckBox) ((CustomMenuItem) e).getContent()).isSelected());
+            FilteredList<MenuItem> selectedTagItems = contextMenu.getItems().filtered(e -> "rb".equals(((RadioButton) ((CustomMenuItem) e).getContent()).getId()) && ((RadioButton) ((CustomMenuItem) e).getContent()).isSelected());
 
             boolean matchesTag = selectedTagItems.isEmpty() || selectedTagItems.stream().anyMatch(e -> contact.getAllTagIndexes().contains(Integer.parseInt(e.getId())));
 
@@ -204,7 +216,6 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-        
         this.contextMenu.show(filterImage, mouseEvent.getScreenX(), mouseEvent.getScreenY());  
     }
 
@@ -361,7 +372,7 @@ public class MainController implements Initializable {
         numberField.clear();
         numberField2.clear();
         numberField3.clear();
-        
+
         if(selectedContact.getProfilePicture() != null){
             byte[] image = Converter.toPrimitive(selectedContact.getProfilePicture());
             profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
@@ -373,44 +384,55 @@ public class MainController implements Initializable {
         surnameField.setText(selectedContact.getSurname());
         
         String[] emails = selectedContact.getEmails();
-        if(emails[0] == null){
-            emailsPane.setVisible(false);
-        }else{
-            emailsPane.setVisible(true);
-            emailField.setText(emails[0]);
-            if(emails[1]!=null){
-                emailsPane.getChildren().remove(emailField2);
-                emailField2.setText(emails[1]);
-                emailsPane.add(emailField2, 1, 1);
-            }
-            if(emails[2]!=null){
-                emailsPane.getChildren().remove(emailField3);
-                emailField3.setText(emails[2]);
-                emailsPane.add(emailField3, 1, 2);
-            }
+        emailsPane.setVisible(emails[0] != null && !emails[0].isEmpty());
+        emailField.setText(emails[0] != null ? emails[0] : "");
+        emailsPane.getChildren().removeAll(emailField2, emailField3);
+
+        if (emails[1] != null && !emails[1].isEmpty()) {
+            emailField2.setText(emails[1]);
+            emailsPane.add(emailField2, 1, 1);
+        } else {
+            emailField2.clear();
+            emailsPane.getChildren().remove(emailField2);
+        }
+
+        if (emails[2] != null && !emails[2].isEmpty()) {
+            emailField3.setText(emails[2]);
+            emailsPane.add(emailField3, 1, 2);
+        } else {
+            emailField3.clear();
+            emailsPane.getChildren().remove(emailField3);
         }
         
         String[] numbers = selectedContact.getNumbers();
-        if(numbers[0] == null){
-            numbersPane.setVisible(false);
-        }else{
-            numbersPane.setVisible(true);
-            numberField.setText(numbers[0]);
-            if(numbers[1]!=null){
-            numbersPane.getChildren().remove(numberField2);
+        numbersPane.setVisible(numbers[0] != null && !numbers[0].isEmpty());
+        numberField.setText(numbers[0] != null ? numbers[0] : "");
+        numbersPane.getChildren().removeAll(numberField2, numberField3);
+
+        if (numbers[1] != null && !numbers[1].isEmpty()) {
             numberField2.setText(numbers[1]);
             numbersPane.add(numberField2, 1, 1);
+        } else {
+            numberField2.clear();
+            numbersPane.getChildren().remove(numberField2);
         }
-        if(numbers[2]!=null){
-            numbersPane.getChildren().remove(numberField3);
+
+        if (numbers[2] != null && !numbers[2].isEmpty()) {
             numberField3.setText(numbers[2]);
             numbersPane.add(numberField3, 1, 2);
-        }
+        } else {
+            numberField3.clear();
+            numbersPane.getChildren().remove(numberField3);
         }
         
         tagVBox.getChildren().clear();
         for(int i : selectedContact.getAllTagIndexes()){
-            Label tagLabel = new Label(addressBook.getTag(i).getDescription());
+            Tag tag = addressBook.getTag(i);
+            if(tag == null) {
+                selectedContact.removeTagIndex(i);
+                continue;
+            }
+            Label tagLabel = new Label(tag.getDescription());
             tagLabel.setId(String.valueOf(i));
             tagLabel.setOnMouseClicked(e -> {
                 if(!nameField.isEditable()) return;
@@ -528,7 +550,7 @@ public class MainController implements Initializable {
         Tag tag = addressBook.getTag(selectedTag);
         if(tag == null) return;
 
-        if(tagVBox.getChildren().filtered(e -> ((Label) e).getText().equals(selectedTag)).size() > 0) {
+        if(tagVBox.getChildren().filtered(e -> ((Label) e).getText().equals(selectedTag)).size() > 0 || tagVBox.getChildren().size() == 3){
             choiceBoxTag.getSelectionModel().clearSelection();
             return;
         };
@@ -536,6 +558,7 @@ public class MainController implements Initializable {
         Label tagLabel = new Label(selectedTag);
         tagLabel.setId(String.valueOf(tag.getId()));
         tagLabel.setOnMouseClicked(e -> {
+            if(!nameField.isEditable()) return;
             tagVBox.getChildren().remove(tagLabel);
         });
         tagVBox.getChildren().add(tagLabel);
@@ -589,6 +612,11 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     @FXML
     private void onSaveContact(ActionEvent event) throws IOException {
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
+
+        numberField.textProperty().unbind();
+        numberField2.textProperty().unbind();
+        emailField.textProperty().unbind();
+        emailField2.textProperty().unbind();
         
         Contact contactToAdd = new Contact(nameField.getText(),surnameField.getText());
         String num[] = new String[3];
@@ -609,26 +637,32 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
         
-        if(! pathImage.equals(pathsImages[0])){
+        if(!pathImage.equals(pathsImages[0])){
             Byte[] imageBytes = Converter.imageViewToByteArray(profileImageView);
             contactToAdd.setProfilePicture(imageBytes);
         }
 
         tagVBox.getChildren().forEach(e -> {
             Label tagLabel = (Label) e;
-            System.out.println(tagLabel.getId());
             contactToAdd.addTagIndex(Integer.parseInt(tagLabel.getId()));
         });
 
         
         if (selectedContact != null){
-            /* l'utente ha modificato il contatto */
-            addressBook.removeContact(selectedContact);
+            contactToAdd.setId(selectedContact.getId());
         }
         
         addressBook.addContact(contactToAdd);
         
         contactDetailsPane.setVisible(false);
+
+        if(contactsTable.getSortOrder() != null && !contactsTable.getSortOrder().isEmpty()) {
+            //Riordina la tabella in base all'ordinamento corrente, se presente
+            TableColumn<Contact, ?> c = contactsTable.getSortOrder().get(0);
+
+            contactsTable.getSortOrder().clear();
+            contactsTable.getSortOrder().add(c);
+        }
     }
 
     /**
@@ -718,9 +752,22 @@ private void onDeleteContact(ActionEvent event) throws IOException {
      */
     private ContextMenu createContextMenu(){
         ContextMenu contextMenu = new ContextMenu();
+        ToggleGroup n = new ToggleGroup();
 
+        //Aggiungo il radiobutton "Tutti" per visualizzare tutti i contatti
+        RadioButton r = new RadioButton("Tutti");
+        r.setToggleGroup(n);
+        r.setSelected(true);
+        r.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            onViewUpdate();
+        });
+        contextMenu.getItems().add(new CustomMenuItem(r));
+
+        //Aggiungo i radiobutton per visualizzare i contatti con un tag specifico
         for(Tag t : addressBook.getAllTags()){
-            CheckBox cb = new CheckBox(t.getDescription());
+            RadioButton cb = new RadioButton(t.getDescription());
+            cb.setToggleGroup(n);
+            cb.setId("rb");
             cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
                onViewUpdate();
             });
@@ -730,6 +777,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);
         }
+
         return contextMenu;
     }
     
@@ -737,7 +785,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     private void showImagePopup(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Image_popup.fxml")));
         Parent root = loader.load();
-        ImagePopupController ImageController = loader.getController();
+        ImagePopupController imageController = loader.getController();
                 
         Scene scene = new Scene(root, 975, 250);
         Stage popup = new Stage();
@@ -747,18 +795,20 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         popup.setScene(scene);
         popup.showAndWait();
         
-        if(ImageController.getImageIndex() == -1)
+        if(imageController.getImageIndex() == -1) {
+            pathImage = pathsImages[imageController.getImageIndex()];
             return;
+        };
         
-        if(ImageController.getImageIndex() == 5){
-            pathImage = pathsImages[5];
-            File selectedImageFile = ImageController.getSelectedImage();
+        if(imageController.getImageIndex() == 5){
+            File selectedImageFile = imageController.getSelectedImage();
             Image image = new Image(selectedImageFile.toURI().toString());
             profileImageView.setImage(image);
+            pathImage = selectedImageFile.toURI().toString();
             return ;
         }
         
-        pathImage = pathsImages[ImageController.getImageIndex()];
+        pathImage = pathsImages[imageController.getImageIndex()];
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
     } 
     
