@@ -759,10 +759,7 @@ public class MainController implements Initializable {
         popup.setScene(scene);
         popup.showAndWait();
         
-        if(imageController.getImageIndex() == -1) {
-            pathImage = pathsImages[imageController.getImageIndex()];
-            return;
-        };
+        if(imageController.getImageIndex() == -1) return;
         
         if(imageController.getImageIndex() == 5){
             File selectedImageFile = imageController.getSelectedImage();
@@ -787,11 +784,27 @@ public class MainController implements Initializable {
      */
     private ContextMenu createContextMenu(){
         ContextMenu contextMenu = new ContextMenu();
+        ToggleGroup n = new ToggleGroup();
 
+        //Aggiungo il radiobutton "Tutti" per visualizzare tutti i contatti
+        RadioButton r = new RadioButton("Tutti");
+        r.setToggleGroup(n);
+        r.setSelected(true);
+        r.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            onViewUpdate();
+        });
+        CustomMenuItem rItem = new CustomMenuItem(r);
+        rItem.setHideOnClick(false);
+
+        contextMenu.getItems().add(rItem);
+
+        //Aggiungo i radiobutton per visualizzare i contatti con un tag specifico
         for(Tag t : addressBook.getAllTags()){
-            CheckBox cb = new CheckBox(t.getDescription());
+            RadioButton cb = new RadioButton(t.getDescription());
+            cb.setToggleGroup(n);
+            cb.setId("rb");
             cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-               onViewUpdate();
+                onViewUpdate();
             });
 
             CustomMenuItem tagItem = new CustomMenuItem(cb);
@@ -799,6 +812,7 @@ public class MainController implements Initializable {
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);
         }
+
         return contextMenu;
     }
     
