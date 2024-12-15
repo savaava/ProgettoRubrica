@@ -63,6 +63,7 @@ class AddressBook {
     + void removeContact(Contact c)
     + ObservableList<Tag> getAllTags()
     + Tag getTag(int id)
+    + Tag getTag(String description)
     + void addTag(Tag tag)
     + void addManyTags(Collection<Tag> c)
     + void removeTag(Tag tag)
@@ -232,6 +233,7 @@ interface ContactManager {
     +{abstract} void addContact(Contact c)
     +{abstract} void addManyContacts(Collection<Contact> c)
     +{abstract} void removeContact(Contact c)
+    +{abstract} Collection<Contact> getContactsFromTag(Tag tag)
 }
 
 interface TagManager {
@@ -239,6 +241,7 @@ interface TagManager {
     +{abstract} void addManyTags(Collection<Tag> c)
     +{abstract} void removeTag(Tag tag)
     +{abstract} Tag getTag(int id)
+    +{abstract} Tag getTag(String descrizione)
     +{abstract} ObservableList<Tag> getAllTags()
 }
 

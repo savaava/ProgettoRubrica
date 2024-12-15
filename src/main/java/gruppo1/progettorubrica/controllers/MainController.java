@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javax.imageio.ImageIO;
 
@@ -85,7 +87,7 @@ public class MainController implements Initializable {
     
     private ChoiceBox<String> choiceBoxTag2,choiceBoxTag3;
     
-    private ContextMenu contextMenu;  ///< menù per importare, esportare e configurare database
+    private ContextMenu contextMenu;  ///< menù per esportare e configurare database
 
     private FilteredList<Contact> filteredContacts;  ///< lista filtrata in base a tag e/o alla sottostringa presente in searchField
 
@@ -203,11 +205,8 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-        MenuItem m = new MenuItem("Filtri");
-        m.setDisable(true);
-        if(contextMenu.getItems().isEmpty())
-            contextMenu.getItems().add(m);
-        contextMenu.show(contactDetailsPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
+        this.contextMenu.show(filterImage, mouseEvent.getScreenX(), mouseEvent.getScreenY());  
     }
 
     /**
@@ -708,7 +707,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     /**
      * @brief Crea menù contestuale
      *
-     * Questo metodo, eseguito solo in fase di inizializzazione della rubrica, crea il menù contestuale
+     * Questo metodo, eseguito in fase di inizializzazione della rubrica o da {@link MainController#contactsTable}, crea il menù contestuale
      * @return Il menù contestuale
      */
     private ContextMenu createContextMenu(){
@@ -720,7 +719,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
                onViewUpdate();
             });
 
-            CustomMenuItem tagItem = new CustomMenuItem();
+            CustomMenuItem tagItem = new CustomMenuItem(cb);
             tagItem.setHideOnClick(false);
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);

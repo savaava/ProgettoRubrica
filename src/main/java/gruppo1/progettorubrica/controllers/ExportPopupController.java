@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.ContactManager;
+import gruppo1.progettorubrica.models.Tag;
+import gruppo1.progettorubrica.models.TagManager;
 import gruppo1.progettorubrica.services.Converter;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -20,11 +22,13 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -36,6 +40,8 @@ import javafx.stage.Stage;
 
 public class ExportPopupController implements Initializable {
     private ContactManager contactManager; ///< Riferimento all'interfaccia ContactManager, implementata da AddressBook.
+    
+    private TagManager tagManager;  ///< Riferimento all'interfaccia ContactManager, implementata da AddressBook.
     
     private File file;  ///< Riferimento al percorso di export del file
 
@@ -61,9 +67,16 @@ public class ExportPopupController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            this.tagManager = AddressBook.getInstance();
             this.contactManager = AddressBook.getInstance();
         } catch (IOException ex) {ex.printStackTrace();}
         saveButton.setDisable(true);
+        Collection<String> descriptionTags = new ArrayList<>();
+        descriptionTags.add("Tutti i contatti");
+        for(Tag tag : tagManager.getAllTags())
+            descriptionTags.add(tag.getDescription());
+        exportChoiceBox.getItems().setAll(descriptionTags);
+        //disattiva Choicebox
     }
 
     /**
@@ -75,11 +88,21 @@ public class ExportPopupController implements Initializable {
      * @param[in] event
      */
     @FXML
-    private void choosePath(ActionEvent event) {
-        FileChooser filechooser = new FileChooser();
-        filechooser.setTitle("Scegliere percorso file");
-        this.file = filechooser.showSaveDialog(new Stage());
+private void choosePath(ActionEvent event) {
+    FileChooser filechooser = new FileChooser();
+    filechooser.setTitle("Scegliere percorso file");
+    filechooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("CSV", "*.csv"),
+            new FileChooser.ExtensionFilter("VCard", "*.vcf")
+    );
+    this.file = filechooser.showSaveDialog(((Node) event.getSource()).getScene().getWindow());
+    if (file != null) {
+        saveButton.setDisable(false);
+        System.out.println("File path: " + file.getAbsolutePath());
+    } else {
+        System.out.println("File selection was cancelled.");
     }
+}
 
     /**
      * @brief Esporta la rubrica.
@@ -93,16 +116,28 @@ public class ExportPopupController implements Initializable {
     private void onExport(ActionEvent event) {
         String f = this.file.toString();
         String ext = f.substring(f.indexOf(".") + 1);
+        String selectedTag = exportChoiceBox.getValue();
+        ArrayList<Contact> c = null;
         try{
             if(ext.equalsIgnoreCase("csv")){
-                ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
+                if(selectedTag.equals("Tutti i contatti"))
+                   c = new ArrayList<>(this.contactManager.getAllContacts());
+                else{
+                    c = new ArrayList<>(contactManager.getContactsFromTag(tagManager.getTag(selectedTag)));
+                }  
                 Converter.onExportCSV(c, this.file);
             }
+            
             else if(ext.equalsIgnoreCase("vcf")){
-                ArrayList<Contact> c = new ArrayList<>(this.contactManager.getAllContacts());
+                if(selectedTag.equals("Tutti i contatti"))
+                   c = new ArrayList<>(this.contactManager.getAllContacts());
+                else{
+                    c = new ArrayList<>(contactManager.getContactsFromTag(tagManager.getTag(selectedTag)));
+                }
+                c = new ArrayList<>(this.contactManager.getAllContacts());
                 Converter.onExportVCard(c, this.file);
             }
-            saveButton.setDisable(true);
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         } catch(IOException ex){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errore");
