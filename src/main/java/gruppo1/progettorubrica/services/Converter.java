@@ -299,7 +299,7 @@ public class Converter {
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+        ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
 
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
