@@ -2,11 +2,14 @@ package gruppo1.progettorubrica.services;
 
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.bson.Document;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -47,20 +50,19 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testInsertContact() {
+    public void testInsertContact() throws IOException {
         database = new Database(url);
 
         String name = "Mario";
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mariorossi@gmail.com","rossimario@gmail.com","mrossi@gmail.com"};
-        Byte[] profilePicture = {2,3,5,6,3};
         Integer[] tags = {32,3,43};
 
         Contact c = new Contact(name,surname);
         c.setNumbers(numbers);
         c.setEmails(emails);
-        c.setProfilePicture(profilePicture);
+        c.setProfilePicture(Converter.imageViewToByteArray(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/FotoProfilo1.jpg"))))));
         for(int tag : tags) {
             c.addTagIndex(tag);
         }
@@ -283,14 +285,14 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testContactToDocument() {
+    public void testContactToDocument() throws IOException {
         database = new Database(url);
 
         String name = "Mario";
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mariorossi@gmail.com"};
-        Byte[] profilePicture = {2,3,5,6,3};
+        Byte[] profilePicture = Converter.imageViewToByteArray(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/FotoProfilo1.jpg")))));
         Integer[] tags = {32,3,43};
 
         Contact c = new Contact(name,surname);
@@ -312,7 +314,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testDocumentToContact() {
+    public void testDocumentToContact() throws IOException {
         database = new Database(url);
         Document doc = new Document();
 
@@ -320,7 +322,7 @@ public class DatabaseTest {
         String surname = "Rossi";
         String[] numbers = {"3229384403","4578906546","5467965434"};
         String[] emails = {"mrossi@gmail.com"};
-        String profilePicture = "aabbccdd";
+        String profilePicture = Converter.byteArrayToString(Converter.imageViewToByteArray(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/FotoProfilo1.jpg"))))));
         Integer[] tags = {32};
 
         doc.append("name", name);

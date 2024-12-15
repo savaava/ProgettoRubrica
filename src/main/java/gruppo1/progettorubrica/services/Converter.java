@@ -1,23 +1,15 @@
 package gruppo1.progettorubrica.services;
 
 import gruppo1.progettorubrica.models.Contact;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -232,23 +224,85 @@ public class Converter {
         }
     }
 
+    /**
+     * @brief Converte una stringa in un array di byte.
+     * @param[in] originalString La stringa da convertire.
+     * @return L'array di byte corrispondente alla stringa.
+     * 
+     * @pre La stringa non deve essere vuota.
+     * @post L'array di byte restituito è la decodifica Base64 della stringa.
+     */
     public static Byte[] stringToByteArray(String originalString) {
-        // Converti la stringa in un array di byte
-        byte[] byteArray = originalString.getBytes(StandardCharsets.UTF_8);
-        // Converti byte[] in Byte[]
-        Byte[] byteObjectArray = new Byte[byteArray.length];
-        for (int i = 0; i < byteArray.length; i++) {
-            byteObjectArray[i] = byteArray[i];
-        } return byteObjectArray;
+        return Converter.toWrapper(Base64.getDecoder().decode(originalString));
     }
 
+    /**
+     * @brief Converte un array di byte in una stringa.
+     * @param[in] byteObjectArray L'array di byte da convertire.
+     * @return La stringa corrispondente all'array di byte.
+     * 
+     * @pre L'array di byte non deve essere vuoto.
+     * @post La stringa restituita è la codifica Base64 dell'array di byte.
+     * 
+     */
     public static String byteArrayToString(Byte[] byteObjectArray) {
-        // Converti Byte[] in byte[]
+        return Base64.getEncoder().encodeToString(Converter.toPrimitive(byteObjectArray));
+    }
+
+    /**
+     * @brief Converte un array di byte in un array di Byte.
+     * @param[in] byteArray L'array di byte da convertire.
+     * @return L'array di Byte corrispondente all'array di byte.
+     * 
+     * @pre L'array di byte non deve essere vuoto.
+     * @post L'array di Byte restituito è una copia dell'array di byte.
+     * 
+     */
+    public static Byte[] toWrapper(byte[] byteArray) {
+        Byte[] byteObjects = new Byte[byteArray.length];
+        for(int i=0; i<byteArray.length; i++) {
+            byteObjects[i] = byteArray[i];
+        }
+        return byteObjects;
+    }
+
+    /**
+     * @brief Converte un array di Byte in un array di byte.
+     * @param[in] byteObjectArray L'array di Byte da convertire.
+     * @return L'array di byte corrispondente all'array di Byte.
+     * 
+     * @pre L'array di Byte non deve essere vuoto.
+     * @post L'array di byte restituito è una copia dell'array di Byte.
+     * 
+     */
+    public static byte[] toPrimitive(Byte[] byteObjectArray) {
         byte[] byteArray = new byte[byteObjectArray.length];
-        for (int i = 0; i < byteObjectArray.length; i++) {
+        for(int i=0; i<byteObjectArray.length; i++) {
             byteArray[i] = byteObjectArray[i];
         }
-        // Converti l'array di byte di nuovo nella stringa originale
-        return new String(byteArray, StandardCharsets.UTF_8);
+        return byteArray;
+    }
+
+    /**
+     * @brief Converte un'immagine in un array di Byte.
+     * @param[in] imageView L'immagine da convertire.
+     * @return L'array di Byte corrispondente all'immagine.
+     * 
+     * @pre L'ImageView non deve essere null
+     * @post L'array di Byte restituito è la rappresentazione in byte dell'immagine.
+     * 
+     */
+    public static Byte[] imageViewToByteArray(ImageView imageView) throws IOException {
+        Image fxImage = imageView.getImage();
+        if (fxImage == null) throw new IOException("L'ImageView non contiene nessuna immagine.");
+
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        return toWrapper(byteArray);
     }
 }
