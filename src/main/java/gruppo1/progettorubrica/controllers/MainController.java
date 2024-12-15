@@ -656,10 +656,13 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         
         contactDetailsPane.setVisible(false);
 
-        TableColumn<Contact, ?> c = contactsTable.getSortOrder().get(0);
+        if(contactsTable.getSortOrder() != null && !contactsTable.getSortOrder().isEmpty()) {
+            //Riordina la tabella in base all'ordinamento corrente, se presente
+            TableColumn<Contact, ?> c = contactsTable.getSortOrder().get(0);
 
-        contactsTable.getSortOrder().clear();
-        contactsTable.getSortOrder().add(c);
+            contactsTable.getSortOrder().clear();
+            contactsTable.getSortOrder().add(c);
+        }
     }
 
     /**
