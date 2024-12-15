@@ -76,7 +76,6 @@ public class ExportPopupController implements Initializable {
         for(Tag tag : tagManager.getAllTags())
             descriptionTags.add(tag.getDescription());
         exportChoiceBox.getItems().setAll(descriptionTags);
-        //disattiva Choicebox
     }
 
     /**
@@ -96,12 +95,8 @@ private void choosePath(ActionEvent event) {
             new FileChooser.ExtensionFilter("VCard", "*.vcf")
     );
     this.file = filechooser.showSaveDialog(((Node) event.getSource()).getScene().getWindow());
-    if (file != null) {
+    if (file != null && exportChoiceBox.getValue() != null)
         saveButton.setDisable(false);
-        System.out.println("File path: " + file.getAbsolutePath());
-    } else {
-        System.out.println("File selection was cancelled.");
-    }
 }
 
     /**

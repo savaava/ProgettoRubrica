@@ -5,6 +5,7 @@ import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import java.awt.image.BufferedImage;
 
+import gruppo1.progettorubrica.services.Converter;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -208,7 +209,7 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
+        
         this.contextMenu.show(filterImage, mouseEvent.getScreenX(), mouseEvent.getScreenY());  
     }
 
@@ -398,7 +399,7 @@ public class MainController implements Initializable {
         numberField3.clear();
         
         if(selectedContact.getProfilePicture() != null){
-            byte image[] = toPrimitive(selectedContact.getProfilePicture());
+            byte[] image = Converter.toPrimitive(selectedContact.getProfilePicture());
             profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
         }else{
             profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
@@ -407,7 +408,7 @@ public class MainController implements Initializable {
         nameField.setText(selectedContact.getName());
         surnameField.setText(selectedContact.getSurname());
         
-        String emails[]=selectedContact.getEmails();
+        String[] emails = selectedContact.getEmails();
         if(emails[0] == null){
             emailsPane.setVisible(false);
         }else{
@@ -425,7 +426,7 @@ public class MainController implements Initializable {
             }
         }
         
-        String numbers[]=selectedContact.getNumbers();
+        String[] numbers = selectedContact.getNumbers();
         if(numbers[0] == null){
             numbersPane.setVisible(false);
         }else{
@@ -674,7 +675,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         contactToAdd.setEmails(mail);
         
         if(! pathImage.equals(pathsImages[0])){
-            Byte[] imageBytes = ImageViewToByteArray(profileImageView);
+            Byte[] imageBytes = Converter.imageViewToByteArray(profileImageView);
             contactToAdd.setProfilePicture(imageBytes);
         }
 
@@ -785,6 +786,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     @FXML
     private void showManageTagsPopup(ActionEvent event) throws IOException {
         showPopup("ManageTags_popup.fxml", "Gestione tag",500,500);
+        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
     }
 
     /**
@@ -853,41 +855,5 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     }
     private void showPopup(String path, String title) throws IOException {
         showPopup(path, title, 300, 250);
-    }   
-    
-    private Byte[] toWrapper(byte[] byteArray) {
-        Byte[] byteObjects = new Byte[byteArray.length];
-        for(int i=0; i<byteArray.length; i++) {
-            byteObjects[i] = byteArray[i];
-        }
-        return byteObjects;
-    }
-    private byte[] toPrimitive(Byte[] byteObjectArray) {
-        byte[] byteArray = new byte[byteObjectArray.length];
-        for(int i=0; i<byteObjectArray.length; i++) {
-            byteArray[i] = byteObjectArray[i];
-        }
-        return byteArray;
-    }
-    private Byte[] ImageViewToByteArray(ImageView imageView) throws IOException {
-        // Ottieni l'immagine dall'ImageView
-        Image fxImage = imageView.getImage();
-
-        if (fxImage == null) {
-            throw new IOException("L'ImageView non contiene nessuna immagine.");
-        }
-
-        // Converti l'immagine JavaFX in BufferedImage
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
-
-        // Scrivi l'immagine in un ByteArrayOutputStream
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-
-        // Ottieni l'array di byte
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-        // Converti il byte[] in Byte[]
-        return toWrapper(byteArray);
     }
 }
