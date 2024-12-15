@@ -89,14 +89,15 @@ public class ManageTagsPopupController implements Initializable {
                 if(tagManager.getAllTags().contains(new Tag(newValue))){
                     addButton.setDisable(true);
                     updateButton.setDisable(true);
+                    deleteButton.setDisable(false);
                 }
-                else if(!newValue.equals("⧫ Nessuno ⧫")){
+                else{
                     addButton.setDisable(false);
                     updateButton.setDisable(true);
                 }
                 
                 if(!tagsListView.getSelectionModel().getSelectedItems().isEmpty() 
-                        && !tagManager.getAllTags().contains(new Tag(nameField.getText())) && (!newValue.equals("⧫ Nessuno ⧫"))){
+                        && !tagManager.getAllTags().contains(new Tag(nameField.getText()))){
                     addButton.setDisable(false);
                     updateButton.setDisable(false);
                 }
@@ -159,7 +160,7 @@ private void onUpdate(ActionEvent event) throws IOException {
     private void onDelete(ActionEvent event) throws IOException {
         this.deleteButton.setDisable(true);
         
-        Tag tag=this.tagsListView.getSelectionModel().getSelectedItem();
+        Tag tag=new Tag(nameField.getText());
         this.tagManager.removeTag(tag);
         nameField.clear();
         
