@@ -119,7 +119,10 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <VBox fx:id="tagVBox" spacing="5.0" />
+                        <VBox fx:id="tagVBox" fillWidth="false" spacing="5.0">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding></VBox>
                         <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="286.0" prefWidth="313.0">
