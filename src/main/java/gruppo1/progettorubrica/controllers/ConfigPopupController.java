@@ -74,7 +74,6 @@ public class ConfigPopupController implements Initializable {
         verifyButton.disableProperty().bind(buttonBinding);
 
         if(addressBook.getDBUrl() != null && !addressBook.getDBUrl().isEmpty()) {
-            System.out.println("URL: " + addressBook.getDBUrl());
             Button removeConfig = new Button("Rimuovi configurazione");
             vBox.getChildren().add(removeConfig);
 
