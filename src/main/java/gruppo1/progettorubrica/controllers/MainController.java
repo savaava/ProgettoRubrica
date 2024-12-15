@@ -754,6 +754,7 @@ public class MainController implements Initializable {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Gestione immagini");
+        popup.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo_rubrica.png"))));
         popup.setResizable(false);
         popup.setScene(scene);
         popup.showAndWait();
@@ -809,6 +810,7 @@ public class MainController implements Initializable {
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle(title);
         popup.setResizable(false);
+        popup.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo_rubrica.png"))));
         popup.setScene(scene);
         popup.showAndWait();
     }
