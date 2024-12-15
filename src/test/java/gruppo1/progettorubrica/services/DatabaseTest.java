@@ -5,9 +5,7 @@ import gruppo1.progettorubrica.models.Tag;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.bson.Document;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.util.*;
@@ -355,7 +353,7 @@ public class DatabaseTest {
         Document doc = database.tagToDocument(t);
 
         assertEquals(description, doc.get("description"));
-        assertEquals(id, doc.get("id"));
+        assertEquals(id, doc.get("_id"));
     }
 
     @Test
@@ -367,7 +365,7 @@ public class DatabaseTest {
         int id = 1;
 
         doc.append("description", description);
-        doc.append("id", id);
+        doc.append("_id", id);
 
         Tag t = database.documentToTag(doc);
 

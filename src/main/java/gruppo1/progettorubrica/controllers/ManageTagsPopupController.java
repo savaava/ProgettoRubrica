@@ -3,7 +3,6 @@ package gruppo1.progettorubrica.controllers;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Tag;
 import gruppo1.progettorubrica.models.TagManager;
-import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,9 +10,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.input.KeyEvent;
 
 /**
  * @brief Controller che visualizza il popup dei tag.

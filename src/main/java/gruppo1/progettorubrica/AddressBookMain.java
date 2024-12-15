@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @brief Questa classe visualizzerà la scena principale all'avvio dell'applicazione.
@@ -38,7 +39,7 @@ public class AddressBookMain extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/Main.fxml"));
             Parent root = fxmlLoader.load();
             primaryStage.setScene(new Scene(root, 1000, 600));
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo_rubrica.png")));
+            primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo_rubrica.png"))));
             primaryStage.setTitle("Rubrica Gruppo 1");
             primaryStage.show();
         } catch (IOException e) {
