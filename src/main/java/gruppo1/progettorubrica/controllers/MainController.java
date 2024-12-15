@@ -636,11 +636,9 @@ public class MainController implements Initializable {
         if(! emailField.getText().isEmpty())
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
-        
-        if(!pathImage.equals(pathsImages[0])){
-            Byte[] imageBytes = Converter.imageViewToByteArray(profileImageView);
-            contactToAdd.setProfilePicture(imageBytes);
-        }
+
+        Byte[] imageBytes = Converter.imageViewToByteArray(profileImageView);
+        contactToAdd.setProfilePicture(imageBytes);
 
         tagVBox.getChildren().forEach(e -> {
             Label tagLabel = (Label) e;

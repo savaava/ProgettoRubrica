@@ -72,6 +72,7 @@ public class ExportPopupController implements Initializable {
         for(Tag tag : tagManager.getAllTags())
             descriptionTags.add(tag.getDescription());
         exportChoiceBox.getItems().setAll(descriptionTags);
+        exportChoiceBox.getSelectionModel().selectFirst();
     }
 
     /**
