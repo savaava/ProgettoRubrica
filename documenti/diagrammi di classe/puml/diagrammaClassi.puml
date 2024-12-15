@@ -25,10 +25,10 @@ class Contact {
     - String[] emails
     - Byte[] profilePicture
     - Set<Integer> tagIndexes
-    - int id
+    - String id
 
     + Contact(String name, String surname)
-    + int getId()
+    + String getId()
     + void setId()
     + String getName()
     + void setName(String name)
@@ -81,55 +81,42 @@ class AddressBook {
     + void saveConfig()
     + void initDB()
     + Database getDB()
+    + void removeDB()
     + String toString()
 }
 
 class MainController {
     - AddressBook addressBook
-    - Button deleteButton
-    - Button saveButton
-    - Button editButton
-    - Button cancelButton
-    - VBox tagVBox
-    - TextField searchField
-    - TextField nameField
-    - TextField surnameField
-    - TextField emailField
-    - TextField numberField
-    - ImageView profileImageView
-    - ImageView filterImage
-    - TableView<Contact> contactsTable
-    - TableColumn<Contact,String> nameColumn
-    - TableColumn<Contact,String> surnameColumn
-    - AnchorPane contactDetailsPane
-    - GridPane numbersPane
-    - GridPane emailsPane
-    - ContextMenu contextMenu
 
     + void initialize()
     - void setImageCircle()
     - void searchFieldBinding()    
-    - void onFilterClicked()
+    - void onFilterIconClicked()
     - void onAddContact()
-    - void onContactClicked(MouseEvent event)
-    - void onSaveContact()
+    - void onContactClicked()
     - void onModifyContact()
-    - void onRemoveContact()
+    - void onDeleteContact()
+    - void onSaveContact()
     - void onCancel()
     - void showImportPopup()
     - void showExportPopup()
     - void showConfigPopup()
-    - void showImagePopup()
     - void showManageTagsPopup()
+    - void showImagePopup()
 }
 
 class Converter {
-    + {static} Collection<Contact> parseCSV(File file)
-    + {static} Collection<Contact> parseVCard(File file)
+    + {static} String byteArrayToString(Byte[] byteObjectArray)
     + {static} boolean checkCSVFormat(File file)
     + {static} boolean checkVCardFormat(File file)
+    + {static} Byte[] imageViewToByteArray(ImageView imageView)
     + {static} void onExportCSV(Collection<Contact> contacts, File file)
     + {static} void onExportVCard(Collection<Contact> contacts, File file)
+    + {static} Collection<Contact> parseCSV(File file)
+    + {static} Collection<Contact> parseVCard(File file)
+    + {static} Byte[] stringToByteArray(String originalString)
+    + {static} byte[] toPrimitive(Byte[] byteObjectArray)
+    + {static} Byte[] toWrapper(byte[] byteArray)
 }
 
 class ImportPopupController {
@@ -144,6 +131,7 @@ class ImportPopupController {
 
 class ExportPopupController {
     - ContactManager contactManager
+    - TagManager tagManager
     - File file
     - ChoiceBox<String> exportChoiceBox
     - Button saveButton
@@ -182,6 +170,7 @@ class ImagePopupController {
     - void onImageClicked3()
     - void onImageClicked4()
     - void onImageClicked5()
+    - void onRestoreButton()
 }
 
 class ConfirmPopupController {
@@ -247,9 +236,9 @@ interface TagManager {
 
 
 '****************** RELAZIONI ******************
-Contact ..|> Serializable
+Contact .|> Serializable
 
-Tag ..|> Serializable
+Tag .|> Serializable
 
 AddressBook "1" o-- "0..*" Contact
 AddressBook "1" *-- "0..1" Database
@@ -260,6 +249,7 @@ AddressBook ..|> ContactManager
 MainController "1" o-- "1" AddressBook
 MainController ..> ImagePopupController
 MainController ..> ConfirmPopupController
+MainController ..> Converter
 
 Converter ..> Contact
 
@@ -267,9 +257,10 @@ ImportPopupController "1" o-- "1" ContactManager
 ImportPopupController ..> Converter
 
 ExportPopupController "1" o-- "1" ContactManager
+ExportPopupController "1" o-- "1" TagManager
 ExportPopupController ..> Converter
 
-ManageTagsPopupController ..> ConfirmPopupController
+ManageTagsPopupController .> ConfirmPopupController
 ManageTagsPopupController "1" o-- "1" TagManager
 
 ConfigPopupController "1" o-- "1" AddressBook

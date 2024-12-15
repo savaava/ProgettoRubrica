@@ -59,6 +59,7 @@ class ImportPopupController {
 
 class ExportPopupController {
     - ContactManager contactManager
+    - TagManager tagManager
     - void onExport()
 }
 
@@ -121,6 +122,7 @@ AddressBook ..|> ContactManager
 MainController "1" o-- "1" AddressBook
 MainController ..> ImagePopupController
 MainController ..> ConfirmPopupController
+MainController ..> Converter
 
 Converter ..> Contact
 
@@ -128,11 +130,14 @@ ImportPopupController "1" o-- "1" ContactManager
 ImportPopupController ..> Converter
 
 ExportPopupController "1" o-- "1" ContactManager
+ExportPopupController "1" o-- "1" TagManager
 ExportPopupController ..> Converter
 
-ManageTagsPopupController ..> ConfirmPopupController
+ManageTagsPopupController .> ConfirmPopupController
 ManageTagsPopupController "1" o-- "1" TagManager
 
 ConfigPopupController "1" o-- "1" AddressBook
+
+Database ..> Converter
 
 @enduml
