@@ -250,9 +250,9 @@ public class MainController implements Initializable {
         numberField.clear();
         numberField2.clear();
         numberField3.clear();
-        choiceBoxTag.setValue("Nessuno");
-        choiceBoxTag2.setValue("Nessuno");
-        choiceBoxTag3.setValue("Nessuno");
+        choiceBoxTag.setValue("⧫ Nessuno ⧫");
+        choiceBoxTag2.setValue("⧫ Nessuno ⧫");
+        choiceBoxTag3.setValue("⧫ Nessuno ⧫");
         
         //Imposta immagine profilo di default
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
@@ -312,7 +312,7 @@ public class MainController implements Initializable {
         });
         
         Collection<String> descriptionTags = new ArrayList<>();
-        descriptionTags.add("Nessuno");
+        descriptionTags.add("⧫ Nessuno ⧫");
         for(Tag tag : addressBook.getAllTags())
             descriptionTags.add(tag.getDescription());
         choiceBoxTag.getItems().setAll(descriptionTags);
@@ -320,12 +320,12 @@ public class MainController implements Initializable {
         choiceBoxTag3.getItems().setAll(descriptionTags);
         
         choiceBoxTag.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.equals("Nessuno") && !tagsPane.getChildren().contains(choiceBoxTag2)){
+            if(!newValue.equals("⧫ Nessuno ⧫") && !tagsPane.getChildren().contains(choiceBoxTag2)){
                 tagsPane.add(choiceBoxTag2, 1, 1);
-            }else if(newValue.equals("Nessuno")){
-                if(!choiceBoxTag2.getValue().equals("Nessuno")){
+            }else if(newValue.equals("⧫ Nessuno ⧫")){
+                if(!choiceBoxTag2.getValue().equals("⧫ Nessuno ⧫")){
                     choiceBoxTag.setValue(choiceBoxTag2.getValue());
-                    choiceBoxTag2.setValue("Nessuno");
+                    choiceBoxTag2.setValue("⧫ Nessuno ⧫");
                 }else{
                     tagsPane.getChildren().remove(choiceBoxTag2);
                 }
@@ -333,12 +333,12 @@ public class MainController implements Initializable {
         });
         
         choiceBoxTag2.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue.equals("Nessuno") && !tagsPane.getChildren().contains(choiceBoxTag3)){
+            if(!newValue.equals("⧫ Nessuno ⧫") && !tagsPane.getChildren().contains(choiceBoxTag3)){
                 tagsPane.add(choiceBoxTag3, 1, 2);
-            }else if(newValue.equals("Nessuno")){
-                if(!choiceBoxTag3.getValue().equals("Nessuno")){
+            }else if(newValue.equals("⧫ Nessuno ⧫")){
+                if(!choiceBoxTag3.getValue().equals("⧫ Nessuno ⧫")){
                     choiceBoxTag2.setValue(choiceBoxTag3.getValue());
-                    choiceBoxTag3.setValue("Nessuno");
+                    choiceBoxTag3.setValue("⧫ Nessuno ⧫");
                 }else{
                     tagsPane.getChildren().remove(choiceBoxTag3);
                 }
@@ -439,10 +439,17 @@ public class MainController implements Initializable {
             numberField3.setText(numbers[2]);
             numbersPane.add(numberField3, 1, 2);
         }
-        
-        for(Integer id: selectedContact.getAllTagIndexes())
-            tagVBox.getChildren().add(new Label(addressBook.getTag(id).getDescription()));
         }
+        
+        tagVBox.getChildren().clear();
+        int i=0;
+        if(selectedContact.getAllTagIndexes().isEmpty())
+            tagVBox.getChildren().add(new Label("Nessun tag"));
+        for(Integer id: selectedContact.getAllTagIndexes()){
+            i++;
+            tagVBox.getChildren().add(new Label("Tag" + i + ":  " + addressBook.getTag(id).getDescription()));
+        }
+        
     }
 
     /**
@@ -577,6 +584,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
      */
     @FXML
     private void onSaveContact(ActionEvent event) throws IOException {
+        contactDetailsPane.setVisible(false);
         Contact selectedContact = contactsTable.getSelectionModel().getSelectedItem();
         
         Contact contactToAdd = new Contact(nameField.getText(),surnameField.getText());
@@ -607,6 +615,22 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             /* l'utente ha modificato il contatto */
             addressBook.removeContact(selectedContact);
         }       
+        
+        String tag1=null;
+        String tag2=null;
+        String tag3=null;
+        if(!choiceBoxTag.getValue().equals("Nessuno")){
+            tag1=choiceBoxTag.getValue();
+            contactToAdd.addTagIndex(addressBook.getTag(tag1).getId());
+        }
+        if(!choiceBoxTag2.getValue().equals("Nessuno")){
+            tag2=choiceBoxTag2.getValue();
+            contactToAdd.addTagIndex(addressBook.getTag(tag2).getId());
+        }
+        if(!choiceBoxTag3.getValue().equals("Nessuno")){
+            tag3=choiceBoxTag3.getValue();
+            contactToAdd.addTagIndex(addressBook.getTag(tag3).getId());
+        }
         
         addressBook.addContact(contactToAdd);
     }

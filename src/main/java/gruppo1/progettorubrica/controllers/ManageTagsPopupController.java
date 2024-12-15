@@ -88,13 +88,13 @@ public class ManageTagsPopupController implements Initializable {
                     addButton.setDisable(true);
                     updateButton.setDisable(true);
                 }
-                else{
+                else if(!newValue.equals("⧫ Nessuno ⧫")){
                     addButton.setDisable(false);
                     updateButton.setDisable(true);
                 }
                 
                 if(!tagsListView.getSelectionModel().getSelectedItems().isEmpty() 
-                        && !tagManager.getAllTags().contains(new Tag(nameField.getText()))){
+                        && !tagManager.getAllTags().contains(new Tag(nameField.getText())) && (!newValue.equals("⧫ Nessuno ⧫"))){
                     addButton.setDisable(false);
                     updateButton.setDisable(false);
                 }
