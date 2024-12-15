@@ -5,6 +5,7 @@ import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
 import java.awt.image.BufferedImage;
 
+import gruppo1.progettorubrica.services.Converter;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -99,6 +100,8 @@ public class MainController implements Initializable {
                                     "/images/FotoProfilo3.jpg",
                                     "/images/FotoProfilo4.jpg"};
     
+    private String pathImage;
+    
     /**
      * @brief Inizializza il main controller
      *
@@ -143,8 +146,9 @@ public class MainController implements Initializable {
         emailField3   = new TextField();
         choiceBoxTag2 = new ChoiceBox<>();
         choiceBoxTag3 = new ChoiceBox<>();
-               
-        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
+        
+        pathImage = pathsImages[0];
+        profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
 
         searchFieldBinding();
     }
@@ -205,7 +209,7 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
+        
         this.contextMenu.show(filterImage, mouseEvent.getScreenX(), mouseEvent.getScreenY());  
     }
 
@@ -392,13 +396,17 @@ public class MainController implements Initializable {
         numberField2.clear();
         numberField3.clear();
         
-        byte image[] = toPrimitive(selectedContact.getProfilePicture());
-        profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        if(selectedContact.getProfilePicture().length != 0){
+            byte[] image = Converter.toPrimitive(selectedContact.getProfilePicture());
+            profileImageView.setImage(new Image(new ByteArrayInputStream(image)));
+        }else{
+            profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathsImages[0]))));
+        }
         
         nameField.setText(selectedContact.getName());
         surnameField.setText(selectedContact.getSurname());
         
-        String emails[]=selectedContact.getEmails();
+        String[] emails = selectedContact.getEmails();
         if(emails[0] == null){
             emailsPane.setVisible(false);
         }else{
@@ -416,7 +424,7 @@ public class MainController implements Initializable {
             }
         }
         
-        String numbers[]=selectedContact.getNumbers();
+        String[] numbers = selectedContact.getNumbers();
         if(numbers[0] == null){
             numbersPane.setVisible(false);
         }else{
@@ -599,8 +607,10 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
         
-        Byte[] imageBytes = ImageViewToByteArray(profileImageView);
-        contactToAdd.setProfilePicture(imageBytes);
+        if(! pathImage.equals(pathsImages[0])){
+            Byte[] imageBytes = Converter.imageViewToByteArray(profileImageView);
+            contactToAdd.setProfilePicture(imageBytes);
+        }
 
         if (selectedContact != null){
             /* l'utente ha modificato il contatto */
@@ -702,6 +712,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     @FXML
     private void showManageTagsPopup(ActionEvent event) throws IOException {
         showPopup("ManageTags_popup.fxml", "Gestione tag",500,500);
+        this.contextMenu = createContextMenu();  //ricreo il contextMenu per aggiornarla con i tag eventualmente aggiunti dopo l'apertura della rubrica
     }
 
     /**
@@ -741,17 +752,18 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         popup.setScene(scene);
         popup.showAndWait();
         
+        if(ImageController.getImageIndex() == -1)
+            return;
+        
         if(ImageController.getImageIndex() == 5){
+            pathImage = pathsImages[5];
             File selectedImageFile = ImageController.getSelectedImage();
             Image image = new Image(selectedImageFile.toURI().toString());
             profileImageView.setImage(image);
             return ;
         }
         
-        if(ImageController.getImageIndex() == -1)
-            return;
-        
-        String pathImage = pathsImages[ImageController.getImageIndex()];
+        pathImage = pathsImages[ImageController.getImageIndex()];
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
     } 
     
@@ -769,41 +781,5 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     }
     private void showPopup(String path, String title) throws IOException {
         showPopup(path, title, 300, 250);
-    }   
-    
-    private Byte[] toWrapper(byte[] byteArray) {
-        Byte[] byteObjects = new Byte[byteArray.length];
-        for(int i=0; i<byteArray.length; i++) {
-            byteObjects[i] = byteArray[i];
-        }
-        return byteObjects;
-    }
-    private byte[] toPrimitive(Byte[] byteObjectArray) {
-        byte[] byteArray = new byte[byteObjectArray.length];
-        for(int i=0; i<byteObjectArray.length; i++) {
-            byteArray[i] = byteObjectArray[i];
-        }
-        return byteArray;
-    }
-    private Byte[] ImageViewToByteArray(ImageView imageView) throws IOException {
-        // Ottieni l'immagine dall'ImageView
-        Image fxImage = imageView.getImage();
-
-        if (fxImage == null) {
-            throw new IOException("L'ImageView non contiene nessuna immagine.");
-        }
-
-        // Converti l'immagine JavaFX in BufferedImage
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
-
-        // Scrivi l'immagine in un ByteArrayOutputStream
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-
-        // Ottieni l'array di byte
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-        // Converti il byte[] in Byte[]
-        return toWrapper(byteArray);
     }
 }

@@ -10,6 +10,13 @@ import javafx.collections.ObservableList;
  */
 public interface TagManager {
     /**
+     * @pre nessuna (ci possono essere 0 o più tags).
+     * @post Il client ottiene la lista completa dei tags dell'AddressBook
+     * @return L'insieme di tag presenti nell'AddressBook.
+     */
+    ObservableList<Tag> getAllTags();
+    
+    /**
      * @brief Aggiunge un tag.
      * @param[in] tag Tag da aggiungere.
      * @pre nessuna (il parametro tag può essere null).
@@ -48,12 +55,5 @@ public interface TagManager {
      * @post il client ottiene l'eventuale tag che contiene la stringa descrizione in ingresso
      * @return il tag associato a descrizione, null se non esiste.
      */
-    Tag getTag(String descrizione);
-
-    /**
-     * @pre nessuna (ci possono essere 0 o più tags).
-     * @post Il client ottiene la lista completa dei tags dell'AddressBook
-     * @return L'insieme di tag presenti nell'AddressBook.
-     */
-    ObservableList<Tag> getAllTags();
+    Tag getTag(String description);
 }

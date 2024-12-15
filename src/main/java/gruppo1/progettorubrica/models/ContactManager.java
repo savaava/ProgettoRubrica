@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
  * @brief Interfaccia per la gestione dei contatti.
  */
 public interface ContactManager {
-
     /**
      * @brief Ottiene la lista osservabile di tutti i contatti.
      * @pre nessuna (ci possono essere 0 o più contatti).
