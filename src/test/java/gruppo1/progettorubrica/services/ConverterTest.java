@@ -2,7 +2,9 @@ package gruppo1.progettorubrica.services;
 
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.services.Converter;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,8 +20,11 @@ import java.util.Scanner;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.nio.charset.StandardCharsets;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javax.imageio.ImageIO;
 
 
 public class ConverterTest {
@@ -33,6 +38,9 @@ public class ConverterTest {
     public void setUp() throws IOException {
         this.img1 = Converter.byteArrayToString(Converter.imageViewToByteArray(new ImageView(new Image(getClass().getResourceAsStream("/images/FotoProfilo1.jpg")))));
         this.img2 = Converter.byteArrayToString(Converter.imageViewToByteArray(new ImageView(new Image(getClass().getResourceAsStream("/images/FotoProfilo2.jpg")))));
+        new JFXPanel();   // Forziamo l'inizializzazione del toolkit JavaFX 
+        Platform.runLater(() -> { // Esegue il codice fornito all'interno del blocco Runnable sulla thread della applicazione JavaFX, ciò garantisce che il thread JavaFX sia in esecuzione nel thread corretto
+        });
     }
 
     ///UTC 3.1
@@ -222,7 +230,95 @@ public class ConverterTest {
             }
         }
     }
+    
+    ///UTC 3.13
+    @Test
+    public void testStringToByteArrayToString(){
+        String original = "prova";
+        String encodedString = Base64.getEncoder().encodeToString(original.getBytes(StandardCharsets.UTF_8));
+        Byte[] res = Converter.stringToByteArray(encodedString);
+        String result = Converter.byteArrayToString(res);
+        assertEquals(result, encodedString);
+    }
 
+    ///UTC 3.14
+    @Test public void testToWrapper() {
+        byte[] byteArray = {1, 2, 3, 4, 5};
+        Byte[] expected = {1, 2, 3, 4, 5};
+        // Chiamata al metodo da testare 
+        Byte[] result = Converter.toWrapper(byteArray);
+        // Verifica se il risultato è uguale a quello atteso
+        assertArrayEquals(expected, result); 
+    } 
+    
+    ///UTC 3.15
+    @Test 
+    public void testToWrapper_EmptyArray() { 
+        byte[] byteArray = {};
+        Byte[] expected = {}; 
+        // Chiamata al metodo da testare 
+        Byte[] result = Converter.toWrapper(byteArray); 
+        // Verifica se il risultato è uguale a quello atteso 
+        assertArrayEquals(expected, result); 
+    }
+    
+   ///UTC 3.16
+   @Test
+   public void testToPrimitive() {
+       Byte[] byteObjectArray = {1, 2, 3, 4, 5};
+       byte[] expected = {1, 2, 3, 4, 5};
+       // Chiamata al metodo da testare 
+       byte[] result = Converter.toPrimitive(byteObjectArray);
+       // Verifica se il risultato è uguale a quello atteso 
+       assertArrayEquals(expected, result);
+   } 
+   
+    ///UTC 3.17
+    @Test 
+    public void testToPrimitive_EmptyArray() {
+       Byte[] byteObjectArray = {};
+       byte[] expected = {};
+       // Chiamata al metodo da testare 
+       byte[] result = Converter.toPrimitive(byteObjectArray);
+       // Verifica se il risultato è uguale a quello atteso 
+       assertArrayEquals(expected, result);
+   } 
+   
+    ///UTC 3.18
+    @Test
+    public void testImageViewToByteArray1() throws IOException {
+        Image image = new Image("/images/FotoProfilo1.jpg");
+        ImageView imageView = new ImageView(image);
+        Byte[] byteArray = Converter.imageViewToByteArray(imageView); 
+        assertNotNull(byteArray); 
+        assertTrue(byteArray.length > 0);
+    }
+    
+    
+    ///UTC 3.19
+    @Test
+    public void testImageViewToByteArray2() throws IOException {
+        Image image = new Image("/images/FotoProfilo1.jpg");
+        ImageView imageView = new ImageView(image);
+        Byte[] byteArray = Converter.imageViewToByteArray(imageView); 
+        byte[] primitiveArray = Converter.toPrimitive(byteArray);
+        ByteArrayInputStream bais = new ByteArrayInputStream(primitiveArray);
+        BufferedImage bufferedImage = ImageIO.read(bais);
+        assertNotNull(bufferedImage);
+    } 
+    
+    ///UTC 3.20
+    @Test 
+    public void testImageViewToByteArray_NullImage() {
+        ImageView imageView = new ImageView();
+        Exception exception = assertThrows(IOException.class, () -> {
+            Converter.imageViewToByteArray(imageView); 
+        }); 
+        // Verifica il messaggio dell'eccezione 
+        String expectedMessage = "L'ImageView non contiene nessuna immagine.";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
 
     private void writeCsv() throws IOException{
         csvFile = File.createTempFile("contacts", ".csv");

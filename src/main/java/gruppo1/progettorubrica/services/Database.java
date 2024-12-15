@@ -253,7 +253,7 @@ public class Database {
         if(tag == null) return null;
         Document doc = new Document();
 
-        doc.put("id",tag.getId());
+        doc.put("_id",tag.getId());
         doc.put("description", tag.getDescription());
 
         return doc;
@@ -268,6 +268,6 @@ public class Database {
      */
     public Tag documentToTag(Document d) {
         if(d == null) return null;
-        return new Tag(d.getString("description"),d.getInteger("id"));
+        return new Tag(d.getString("description"),d.getInteger("_id"));
     }
 }

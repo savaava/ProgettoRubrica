@@ -3,10 +3,10 @@ package gruppo1.progettorubrica.controllers;
 import gruppo1.progettorubrica.models.AddressBook;
 import gruppo1.progettorubrica.models.Contact;
 import gruppo1.progettorubrica.models.Tag;
-import java.awt.image.BufferedImage;
-
 import gruppo1.progettorubrica.services.Converter;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -23,18 +25,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.beans.binding.BooleanBinding;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -120,8 +115,15 @@ public class MainController implements Initializable {
 
         this.filteredContacts = new FilteredList<>(addressBook.getAllContacts());
 
-        //Riempie la tabella con i contatti
-        this.contactsTable.setItems(filteredContacts);
+        // Crea una SortedList dalla FilteredList
+        SortedList<Contact> sortedContacts = new SortedList<>(this.filteredContacts);
+
+        // Associa il comparatore della SortedList al comparatore della TableView
+        sortedContacts.comparatorProperty().bind(this.contactsTable.comparatorProperty());
+
+        // Riempie la tabella con i contatti ordinabili
+        this.contactsTable.setItems(sortedContacts);
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
@@ -134,6 +136,10 @@ public class MainController implements Initializable {
         //Imposta immagine imbuto
         filterImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/filter.png"))));
 
+        //Gestisce larghezza delle colonne
+        nameColumn.prefWidthProperty().bind(contactsTable.widthProperty().divide(2));
+        surnameColumn.prefWidthProperty().bind(contactsTable.widthProperty().divide(2));
+
         numberField2  = new TextField();
         numberField3  = new TextField();
         emailField2   = new TextField();
@@ -144,6 +150,9 @@ public class MainController implements Initializable {
 
         //Gestione eventi
         choiceBoxTag.setOnAction(this::onChoiceBoxSelected);
+
+        //Set font size
+        tagVBox.setStyle("-fx-font-size: 16px;");
 
         searchFieldBinding();
     }
@@ -187,7 +196,7 @@ public class MainController implements Initializable {
                     contact.getName().toLowerCase().contains(searchField.getText().toLowerCase()) ||
                     contact.getSurname().toLowerCase().contains(searchField.getText().toLowerCase());
 
-            FilteredList<MenuItem> selectedTagItems = contextMenu.getItems().filtered(e -> e.getId() != null && ((CheckBox) ((CustomMenuItem) e).getContent()).isSelected());
+            FilteredList<MenuItem> selectedTagItems = contextMenu.getItems().filtered(e -> "rb".equals(((RadioButton) ((CustomMenuItem) e).getContent()).getId()) && ((RadioButton) ((CustomMenuItem) e).getContent()).isSelected());
 
             boolean matchesTag = selectedTagItems.isEmpty() || selectedTagItems.stream().anyMatch(e -> contact.getAllTagIndexes().contains(Integer.parseInt(e.getId())));
 
@@ -204,7 +213,6 @@ public class MainController implements Initializable {
      */
     @FXML
     public void onFilterIconClicked(MouseEvent mouseEvent) {
-        
         this.contextMenu.show(filterImage, mouseEvent.getScreenX(), mouseEvent.getScreenY());  
     }
 
@@ -410,7 +418,12 @@ public class MainController implements Initializable {
         
         tagVBox.getChildren().clear();
         for(int i : selectedContact.getAllTagIndexes()){
-            Label tagLabel = new Label(addressBook.getTag(i).getDescription());
+            Tag tag = addressBook.getTag(i);
+            if(tag == null) {
+                selectedContact.removeTagIndex(i);
+                continue;
+            }
+            Label tagLabel = new Label(tag.getDescription());
             tagLabel.setId(String.valueOf(i));
             tagLabel.setOnMouseClicked(e -> {
                 if(!nameField.isEditable()) return;
@@ -528,7 +541,7 @@ public class MainController implements Initializable {
         Tag tag = addressBook.getTag(selectedTag);
         if(tag == null) return;
 
-        if(tagVBox.getChildren().filtered(e -> ((Label) e).getText().equals(selectedTag)).size() > 0) {
+        if(tagVBox.getChildren().filtered(e -> ((Label) e).getText().equals(selectedTag)).size() > 0 || tagVBox.getChildren().size() == 3){
             choiceBoxTag.getSelectionModel().clearSelection();
             return;
         };
@@ -536,6 +549,7 @@ public class MainController implements Initializable {
         Label tagLabel = new Label(selectedTag);
         tagLabel.setId(String.valueOf(tag.getId()));
         tagLabel.setOnMouseClicked(e -> {
+            if(!nameField.isEditable()) return;
             tagVBox.getChildren().remove(tagLabel);
         });
         tagVBox.getChildren().add(tagLabel);
@@ -609,14 +623,13 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             mail[0] = emailField.getText();
         contactToAdd.setEmails(mail);
         
-        if(! pathImage.equals(pathsImages[0])){
+        if(!pathImage.equals(pathsImages[0])){
             Byte[] imageBytes = Converter.imageViewToByteArray(profileImageView);
             contactToAdd.setProfilePicture(imageBytes);
         }
 
         tagVBox.getChildren().forEach(e -> {
             Label tagLabel = (Label) e;
-            System.out.println(tagLabel.getId());
             contactToAdd.addTagIndex(Integer.parseInt(tagLabel.getId()));
         });
 
@@ -718,9 +731,22 @@ private void onDeleteContact(ActionEvent event) throws IOException {
      */
     private ContextMenu createContextMenu(){
         ContextMenu contextMenu = new ContextMenu();
+        ToggleGroup n = new ToggleGroup();
 
+        //Aggiungo il radiobutton "Tutti" per visualizzare tutti i contatti
+        RadioButton r = new RadioButton("Tutti");
+        r.setToggleGroup(n);
+        r.setSelected(true);
+        r.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            onViewUpdate();
+        });
+        contextMenu.getItems().add(new CustomMenuItem(r));
+
+        //Aggiungo i radiobutton per visualizzare i contatti con un tag specifico
         for(Tag t : addressBook.getAllTags()){
-            CheckBox cb = new CheckBox(t.getDescription());
+            RadioButton cb = new RadioButton(t.getDescription());
+            cb.setToggleGroup(n);
+            cb.setId("rb");
             cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
                onViewUpdate();
             });
@@ -730,6 +756,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
             tagItem.setId(String.valueOf(t.getId()));
             contextMenu.getItems().add(tagItem);
         }
+
         return contextMenu;
     }
     
@@ -737,7 +764,7 @@ private void onDeleteContact(ActionEvent event) throws IOException {
     private void showImagePopup(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/Image_popup.fxml")));
         Parent root = loader.load();
-        ImagePopupController ImageController = loader.getController();
+        ImagePopupController imageController = loader.getController();
                 
         Scene scene = new Scene(root, 975, 250);
         Stage popup = new Stage();
@@ -747,18 +774,17 @@ private void onDeleteContact(ActionEvent event) throws IOException {
         popup.setScene(scene);
         popup.showAndWait();
         
-        if(ImageController.getImageIndex() == -1)
-            return;
+        if(imageController.getImageIndex() == -1) return;
         
-        if(ImageController.getImageIndex() == 5){
-            pathImage = pathsImages[5];
-            File selectedImageFile = ImageController.getSelectedImage();
+        if(imageController.getImageIndex() == 5){
+            File selectedImageFile = imageController.getSelectedImage();
             Image image = new Image(selectedImageFile.toURI().toString());
             profileImageView.setImage(image);
+            pathImage = selectedImageFile.toURI().toString();
             return ;
         }
         
-        pathImage = pathsImages[ImageController.getImageIndex()];
+        pathImage = pathsImages[imageController.getImageIndex()];
         profileImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pathImage))));
     } 
     

@@ -2,7 +2,6 @@ package gruppo1.progettorubrica.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-//import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 import java.io.File;
@@ -10,7 +9,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;

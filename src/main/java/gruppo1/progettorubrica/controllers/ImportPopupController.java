@@ -3,33 +3,22 @@ package gruppo1.progettorubrica.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import gruppo1.progettorubrica.models.ContactManager;
-import gruppo1.progettorubrica.models.AddressBook;
-import gruppo1.progettorubrica.models.Contact;
-import gruppo1.progettorubrica.services.Converter;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import gruppo1.progettorubrica.models.AddressBook;
+import gruppo1.progettorubrica.models.Contact;
+import gruppo1.progettorubrica.models.ContactManager;
+import gruppo1.progettorubrica.services.Converter;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ResourceBundle;
 
 /**
  * @brief Controller che visualizza il popup per l'import di una rubrica.
@@ -87,7 +76,7 @@ public class ImportPopupController implements Initializable {
                 new ExtensionFilter("VCard", "*.vcf")
         );
         this.file = fc.showOpenDialog(new Stage());
-        if(this.file.isFile()) importButton.setDisable(false);
+        if(this.file.isFile() && this.file != null) importButton.setDisable(false);
     }
 
     /**
